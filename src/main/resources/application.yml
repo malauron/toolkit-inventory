@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/toolkit-inventory
+    username: genesis
+    password: svgfile#828
+
+  data:
+    rest:
+      base-path: api

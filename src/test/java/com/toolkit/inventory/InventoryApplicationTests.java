@@ -1,4 +1,4 @@
-package com.toolkit.Inventory;
+package com.toolkit.inventory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
