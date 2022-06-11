@@ -6,4 +6,16 @@ spring:
 
   data:
     rest:
+      detection-strategy: ANNOTATED
       base-path: api
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+allowed:
+  origins: http://localhost:8100
+
+server:
+  port: 8443

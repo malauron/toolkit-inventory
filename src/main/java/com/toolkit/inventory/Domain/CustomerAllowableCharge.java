@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -15,24 +15,30 @@ import java.util.Date;
 @Setter
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "customerId")
-@Table(name = "customers")
-public class Customer {
+        property = "customerAllowableChargeId")
+@Table(name = "customer_allowable_charges")
+public class CustomerAllowableCharge {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "customer_allowable_charge_id")
+    private Long customerAllowableChargeId;
+
+//    @ManyToOne
+//    @JoinColumn(name = "customer_id")
+//    private Customer customer;
+
     @Column(name = "customer_id")
     private Long customerId;
 
-    @Column(name = "customer_name")
-    private String customerName;
+    @Column(name = "charge_type_id")
+    private Long chargeTypeId;
 
-//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-//    Set<CustomerAllowableCharge> customerAllowableCharges = new HashSet<>();
+    @Column(name = "limit_amt")
+    private BigDecimal limitAmt;
 
-    @CreationTimestamp
-    @Column(name = "date_created")
-    private Date dateCreated;
+    @Column(name = "total_purchase")
+    private BigDecimal totalPurchase;
 
     @UpdateTimestamp
     @Column(name = "date_updated")

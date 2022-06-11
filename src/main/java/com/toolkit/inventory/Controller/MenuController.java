@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Controller;
 
+import com.toolkit.inventory.Domain.MenuIngredient;
 import com.toolkit.inventory.Dto.MenuDto;
 import com.toolkit.inventory.Service.MenuService;
 import org.springframework.web.bind.annotation.*;
@@ -24,4 +25,12 @@ public class MenuController {
     public void update(@RequestBody MenuDto menuDto) {
         menuService.save(menuDto);
     }
+
+    @PutMapping("/menus/menuIngredient")
+    public String updateMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
+        menuService.updateMenuIngredient(menuIngredient);
+        return "Ok";
+    }
+
+
 }

@@ -4,6 +4,7 @@ import com.toolkit.inventory.Domain.ItemUom;
 import com.toolkit.inventory.Service.ItemUomService;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class ItemUomController {

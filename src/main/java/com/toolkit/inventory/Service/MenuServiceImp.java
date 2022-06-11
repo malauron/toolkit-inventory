@@ -3,21 +3,22 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.Menu;
 import com.toolkit.inventory.Domain.MenuIngredient;
 import com.toolkit.inventory.Dto.MenuDto;
+import com.toolkit.inventory.Repository.MenuIngredientRepository;
 import com.toolkit.inventory.Repository.MenuRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Set;
 
-import static java.awt.SystemColor.menu;
-
 @Service
 public class MenuServiceImp implements MenuService {
 
     private MenuRepository menuRepository;
+    private MenuIngredientRepository menuIngredientRepository;
 
-    public MenuServiceImp(MenuRepository menuRepository) {
+    public MenuServiceImp(MenuRepository menuRepository, MenuIngredientRepository menuIngredientRepository) {
         this.menuRepository = menuRepository;
+        this.menuIngredientRepository= menuIngredientRepository;
     }
 
     @Transactional
@@ -59,5 +60,11 @@ public class MenuServiceImp implements MenuService {
         Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredient();
         menuIngredients.forEach( ing -> menu.addIngredient(ing));
         menuRepository.save(menu);
+    }
+
+    @Transactional
+    @Override
+    public void updateMenuIngredient(MenuIngredient menuIngredientParam) {
+        menuIngredientRepository.save(menuIngredientParam);
     }
 }
