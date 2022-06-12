@@ -9,11 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class ItemUomController {
 
-//  private ItemService itemService;
   private ItemUomService itemUomService;
-
-//  public ItemUomController(ItemService itemService) {
-//    this.itemService = itemService;
 
   public ItemUomController(ItemUomService itemUomService) {
     this.itemUomService = itemUomService;
@@ -42,7 +38,6 @@ public class ItemUomController {
   @DeleteMapping("/itemUoms")
   public ItemUom delete(@RequestBody ItemUom itemUomParam) {
 
-    System.out.println("Deleting.... " + itemUomParam.toString());
     itemUomService.delete(itemUomParam);
     return itemUomParam;
   }

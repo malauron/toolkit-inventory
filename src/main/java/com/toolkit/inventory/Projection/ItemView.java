@@ -13,5 +13,5 @@ public interface ItemView {
   String getItemName();
   Uom getUom();
   Date getDateCreated();
-//  Set<ItemUom> getItemUom();
+
 }
