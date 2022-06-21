@@ -5,6 +5,7 @@ import com.toolkit.inventory.Dto.MenuDto;
 import com.toolkit.inventory.Service.MenuService;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class MenuController {
