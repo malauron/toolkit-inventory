@@ -54,11 +54,11 @@ public class MenuServiceImp implements MenuService {
 
     @Transactional
     @Override
-    public void update(MenuDto menuDto) {
+    public void update(Menu menu) {
 
-        Menu menu = menuDto.getMenu();
-        Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredient();
-        menuIngredients.forEach( ing -> menu.addIngredient(ing));
+//        Menu menu = menuDto.getMenu();
+//        Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredient();
+//        menuIngredients.forEach( ing -> menu.addIngredient(ing));
         menuRepository.save(menu);
     }
 

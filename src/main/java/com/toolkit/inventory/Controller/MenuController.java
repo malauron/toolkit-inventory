@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Controller;
 
+import com.toolkit.inventory.Domain.Menu;
 import com.toolkit.inventory.Domain.MenuIngredient;
 import com.toolkit.inventory.Dto.MenuDto;
 import com.toolkit.inventory.Service.MenuService;
@@ -22,9 +23,14 @@ public class MenuController {
         return menuDto;
     }
 
+//    @PutMapping("/menus")
+//    public void update(@RequestBody MenuDto menuDto) {
+//        menuService.save(menuDto);
+//    }
+
     @PutMapping("/menus")
-    public void update(@RequestBody MenuDto menuDto) {
-        menuService.save(menuDto);
+    public void update(@RequestBody Menu menu) {
+        menuService.update(menu);
     }
 
     @PutMapping("/menus/menuIngredient")
