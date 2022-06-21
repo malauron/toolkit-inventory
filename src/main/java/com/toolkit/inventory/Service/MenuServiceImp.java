@@ -28,29 +28,8 @@ public class MenuServiceImp implements MenuService {
         Menu menu = menuDto.getMenu();
         Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredient();
         menuIngredients.forEach( ing -> menu.addIngredient(ing));
-
-//        menuDto.getMenuIngredient()
-//                .forEach( ing -> menu.addIngredient(ing));
-
-
-//        menu.getMenuIngredient().forEach(
-//                ingredient -> ingredient.setMenu(menu)
-//        );
-//        menu.getMenuIngredient().forEach(
-//                ingredient -> dispaly(ingredient)
-//                );
         menuRepository.save(menu);
     }
-
-//    private void dispaly(MenuIngredient ingredient) {
-//
-//        System.out.println(ingredient.toString());
-//        System.out.println(ingredient.getMenu().toString());
-//        System.out.println(ingredient.getItem().toString());
-//        System.out.println(ingredient.getRequiredUom().toString());
-//        System.out.println(ingredient.getRequiredQty().toString());
-//
-//    }
 
     @Transactional
     @Override
@@ -64,7 +43,7 @@ public class MenuServiceImp implements MenuService {
 
     @Transactional
     @Override
-    public void updateMenuIngredient(MenuIngredient menuIngredientParam) {
+    public void saveMenuIngredient(MenuIngredient menuIngredientParam) {
         menuIngredientRepository.save(menuIngredientParam);
     }
 }

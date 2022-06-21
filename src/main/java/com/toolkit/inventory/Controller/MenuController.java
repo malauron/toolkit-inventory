@@ -33,10 +33,9 @@ public class MenuController {
         menuService.update(menu);
     }
 
-    @PutMapping("/menus/menuIngredient")
-    public String updateMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
-        menuService.updateMenuIngredient(menuIngredient);
-        return "Ok";
+    @PostMapping("/menus/menuIngredient")
+    public void saveMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
+        menuService.saveMenuIngredient(menuIngredient);
     }
 
 

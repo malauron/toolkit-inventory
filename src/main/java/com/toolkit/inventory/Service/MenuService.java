@@ -7,5 +7,5 @@ import com.toolkit.inventory.Dto.MenuDto;
 public interface MenuService {
     void save(MenuDto menuDto);
     void update(Menu menu);
-    void updateMenuIngredient(MenuIngredient menuIngredient);
+    void saveMenuIngredient(MenuIngredient menuIngredient);
 }
