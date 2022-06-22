@@ -23,20 +23,19 @@ public class MenuController {
         return menuDto;
     }
 
-//    @PutMapping("/menus")
-//    public void update(@RequestBody MenuDto menuDto) {
-//        menuService.save(menuDto);
-//    }
-
     @PutMapping("/menus")
     public void update(@RequestBody Menu menu) {
         menuService.update(menu);
     }
 
-    @PostMapping("/menus/menuIngredient")
-    public void saveMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
-        menuService.saveMenuIngredient(menuIngredient);
-    }
-
+//    @PostMapping("/menus/menuIngredient")
+//    public void saveMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
+//        menuService.saveMenuIngredient(menuIngredient);
+//    }
+//
+//    @DeleteMapping("/menus/menuIngredient")
+//    public void deleteMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
+//        menuService.deleteMenuIngredient(menuIngredient);
+//    }
 
 }
