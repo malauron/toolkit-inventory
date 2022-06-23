@@ -33,6 +33,9 @@ public class Menu {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "remarks")
+    private String remarks;
+
 //    @JsonManagedReference
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     Set<MenuIngredient> menuIngredient  = new HashSet<>();
