@@ -36,6 +36,9 @@ public class Menu {
     @Column(name = "remarks")
     private String remarks;
 
+    @Column(name = "alt_remarks")
+    private String altRemarks;
+
 //    @JsonManagedReference
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     Set<MenuIngredient> menuIngredient  = new HashSet<>();

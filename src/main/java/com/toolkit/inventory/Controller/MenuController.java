@@ -28,14 +28,4 @@ public class MenuController {
         menuService.update(menu);
     }
 
-//    @PostMapping("/menus/menuIngredient")
-//    public void saveMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
-//        menuService.saveMenuIngredient(menuIngredient);
-//    }
-//
-//    @DeleteMapping("/menus/menuIngredient")
-//    public void deleteMenuIngredient(@RequestBody MenuIngredient menuIngredient) {
-//        menuService.deleteMenuIngredient(menuIngredient);
-//    }
-
 }
