@@ -21,7 +21,4 @@ public class Uom {
   @Column(name="uom_name")
   private String uomName;
 
-//  @OneToMany(mappedBy = "uom")
-//  private Set<ItemUom> itemUom;
-
 }
