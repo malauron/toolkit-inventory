@@ -4,9 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,4 +36,27 @@ public class CartMenu {
 
     @Column(name = "line_total")
     private BigDecimal lineTotal;
+
+    @OneToMany(mappedBy = "cartMenu", cascade = CascadeType.ALL)
+    Set<CartMenuIngredient> cartMenuIngredients = new HashSet<>();
+
+    @CreationTimestamp
+    @Column(name = "date_created")
+    private Date dateCreated;
+
+    @UpdateTimestamp
+    @Column(name = "date_updated")
+    private Date dateUpdated;
+
+    public void addIngredient(CartMenuIngredient cartMenuIngredient) {
+        if (cartMenuIngredient != null) {
+            if (cartMenuIngredients == null) {
+                cartMenuIngredients = new HashSet<>();
+            }
+
+            cartMenuIngredients.add(cartMenuIngredient);
+            cartMenuIngredient.setCartMenu(this);
+        }
+    }
+
 }
