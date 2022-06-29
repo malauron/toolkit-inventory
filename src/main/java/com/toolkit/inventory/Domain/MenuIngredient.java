@@ -35,7 +35,6 @@ public class MenuIngredient {
     @JoinColumn(name = "required_uom_id")
     private Uom requiredUom;
 
-
     @Column(name = "required_qty")
     private BigDecimal requiredQty;
 

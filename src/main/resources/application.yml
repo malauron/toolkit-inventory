@@ -15,7 +15,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
 allowed:
-  origins: http://localhost:8100
+  origins: "*"
 
 
 server:
