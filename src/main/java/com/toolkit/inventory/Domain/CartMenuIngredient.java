@@ -27,6 +27,10 @@ public class CartMenuIngredient {
     private CartMenu cartMenu;
 
     @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    @ManyToOne
     @JoinColumn(name = "base_uom_id")
     private Uom baseUom;
 

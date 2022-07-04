@@ -32,7 +32,7 @@ public class CartMenu {
     private Menu menu;
 
     @Column(name = "order_qty")
-    private BigDecimal price;
+    private BigDecimal orderQty;
 
     @Column(name = "line_total")
     private BigDecimal lineTotal;
