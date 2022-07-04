@@ -34,6 +34,9 @@ public class CartMenu {
     @Column(name = "order_qty")
     private BigDecimal orderQty;
 
+    @Column(name = "price")
+    private BigDecimal price;
+
     @Column(name = "line_total")
     private BigDecimal lineTotal;
 
