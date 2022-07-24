@@ -1,6 +1,7 @@
 package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Domain.CartMenu;
+import com.toolkit.inventory.Domain.Menu;
 import com.toolkit.inventory.Dto.CartMenuDto;
 import com.toolkit.inventory.Service.CartMenuService;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,11 @@ public class CartMenuController {
     public CartMenuDto save(@RequestBody CartMenuDto cartMenuDto) {
         this.cartMenuService.save(cartMenuDto);
         return cartMenuDto;
+    }
+
+    @PostMapping("/cartMenus")
+    public void save(@RequestBody Menu menu) {
+        this.cartMenuService.saveMenu(menu.getMenuId());
     }
 
     @PutMapping("/cartMenus")
