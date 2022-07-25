@@ -22,9 +22,9 @@ public class CartMenuController {
         return cartMenuDto;
     }
 
-    @PostMapping("/cartMenus")
+    @PostMapping("/cartSingleMenu")
     public void save(@RequestBody Menu menu) {
-        this.cartMenuService.saveMenu(menu.getMenuId());
+        this.cartMenuService.saveSingleMenu(menu.getMenuId());
     }
 
     @PutMapping("/cartMenus")

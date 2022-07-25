@@ -24,7 +24,7 @@ public class CartMenu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "card_menu_id")
+    @Column(name = "cart_menu_id")
     private Long cartMenuId;
 
     @ManyToOne

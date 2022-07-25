@@ -9,6 +9,7 @@ import com.toolkit.inventory.Repository.MenuRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,8 +40,39 @@ public class CartMenuServiceImp implements  CartMenuService {
 
     @Transactional
     @Override
-    public void saveMenu(Long menuId) {
+    public void saveSingleMenu(Long menuId) {
         Optional<Menu> result = this.menuRepository.findById(menuId);
-        System.out.println(result.get());
+
+        Menu menu = null;
+
+        if (result.isPresent()) {
+            menu = result.get();
+        } else {
+
+        }
+
+        CartMenu cartMenu = new CartMenu();
+        cartMenu.setMenu(menu);
+        cartMenu.setOrderQty(new BigDecimal(1));
+        cartMenu.setPrice(new BigDecimal(0));
+        cartMenu.setLineTotal(new BigDecimal(0));
+
+        menu.getMenuIngredient().forEach(ing -> {
+            CartMenuIngredient cartMenuIngredient = new CartMenuIngredient();
+
+            cartMenuIngredient.setItem(ing.getItem());
+            cartMenuIngredient.setBaseUom(ing.getItem().getUom());
+            cartMenuIngredient.setBaseQty(new BigDecimal(1));
+            cartMenuIngredient.setRequiredUom(ing.getRequiredUom());
+            cartMenuIngredient.setRequiredQty(ing.getRequiredQty());
+            cartMenuIngredient.setOrderedQty(new BigDecimal(1));
+
+            cartMenu.addIngredient(cartMenuIngredient);
+
+        });
+
+
+        this.cartMenuRepository.save(cartMenu);
+//        System.out.println(menu.getMenuIngredient());
     }
 }

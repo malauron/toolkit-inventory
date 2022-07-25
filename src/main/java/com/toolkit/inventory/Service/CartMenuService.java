@@ -6,5 +6,5 @@ import com.toolkit.inventory.Dto.CartMenuDto;
 public interface CartMenuService {
     void save(CartMenuDto cartMenuDto);
     void update(CartMenu cartMenu);
-    void saveMenu(Long menuId);
+    void saveSingleMenu(Long menuId);
 }

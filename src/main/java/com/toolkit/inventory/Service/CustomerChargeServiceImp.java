@@ -5,11 +5,11 @@ import com.toolkit.inventory.Repository.CustomerChargeRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CustomerChargeImp implements CustomerChargeService {
+public class CustomerChargeServiceImp implements CustomerChargeService {
 
   private CustomerChargeRepository customerChargeRepository;
 
-  public CustomerChargeImp(CustomerChargeRepository customerChargeRepository) {
+  public CustomerChargeServiceImp(CustomerChargeRepository customerChargeRepository) {
     this.customerChargeRepository = customerChargeRepository;
   }
 

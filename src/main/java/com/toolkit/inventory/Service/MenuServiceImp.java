@@ -14,12 +14,6 @@ import java.util.Set;
 public class MenuServiceImp implements MenuService {
 
     private MenuRepository menuRepository;
-//    private MenuIngredientRepository menuIngredientRepository;
-
-//    public MenuServiceImp(MenuRepository menuRepository, MenuIngredientRepository menuIngredientRepository) {
-//        this.menuRepository = menuRepository;
-//        this.menuIngredientRepository = menuIngredientRepository;
-//    }
 
     public MenuServiceImp(MenuRepository menuRepository) {
         this.menuRepository = menuRepository;
@@ -38,16 +32,7 @@ public class MenuServiceImp implements MenuService {
     @Transactional
     @Override
     public void update(Menu menu) {
-
-//        Menu menu = menuDto.getMenu();
-//        Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredient();
-//        menuIngredients.forEach( ing -> menu.addIngredient(ing));
         menuRepository.save(menu);
     }
 
-//    @Transactional
-//    @Override
-//    public void saveMenuIngredient(MenuIngredient menuIngredientParam) {
-//        menuIngredientRepository.save(menuIngredientParam);
-//    }
 }
