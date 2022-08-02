@@ -27,6 +27,12 @@ public class Customer {
     @Column(name = "customer_name")
     private String customerName;
 
+    @Column(name = "contact_no")
+    private String contactNo;
+
+    @Column(name = "address")
+    private String address;
+
 //    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 //    Set<CustomerAllowableCharge> customerAllowableCharges = new HashSet<>();
 
