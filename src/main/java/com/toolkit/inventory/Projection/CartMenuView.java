@@ -3,6 +3,7 @@ package com.toolkit.inventory.Projection;
 import com.toolkit.inventory.Domain.CartMenu;
 import com.toolkit.inventory.Domain.CartMenuIngredient;
 import com.toolkit.inventory.Domain.Menu;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.math.BigDecimal;
@@ -17,6 +18,9 @@ public interface CartMenuView {
   BigDecimal getOrderQty();
   BigDecimal getPrice();
   BigDecimal getLineTotal();
+
+  //Sorts cart menu ingredients
+  @Value("#{@cartMenuIngredientRepository.findCartMenuIngredientsByCartMenu(target)}")
   Set<CartMenuIngredientView> getCartMenuIngredients();
 
 }

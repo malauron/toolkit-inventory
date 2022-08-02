@@ -6,10 +6,12 @@ import com.toolkit.inventory.Domain.Menu;
 import com.toolkit.inventory.Dto.CartMenuDto;
 import com.toolkit.inventory.Repository.CartMenuRepository;
 import com.toolkit.inventory.Repository.MenuRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -73,6 +75,11 @@ public class CartMenuServiceImp implements  CartMenuService {
 
 
         this.cartMenuRepository.save(cartMenu);
-//        System.out.println(menu.getMenuIngredient());
+    }
+
+    @Override
+    @Transactional
+    public void delete(CartMenu cartMenu) {
+        this.cartMenuRepository.delete(cartMenu);
     }
 }
