@@ -68,6 +68,7 @@ public class CartMenuServiceImp implements  CartMenuService {
             cartMenuIngredient.setRequiredUom(ing.getRequiredUom());
             cartMenuIngredient.setRequiredQty(ing.getRequiredQty());
             cartMenuIngredient.setOrderedQty(new BigDecimal(1));
+            cartMenuIngredient.setMenuIngredientId(ing.getMenuIngredientId());
 
             cartMenu.addIngredient(cartMenuIngredient);
 

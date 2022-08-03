@@ -28,8 +28,9 @@ public class OrderMenu {
   @JoinColumn(name = "order_id")
   private Order order;
 
-  @Column(name = "menu_id")
-  private Long menuId;
+  @ManyToOne
+  @JoinColumn(name = "menu_id")
+  private Menu menu;
 
   @Column(name = "order_qty")
   private BigDecimal orderQty;
@@ -43,4 +44,15 @@ public class OrderMenu {
   @OneToMany(mappedBy = "orderMenu", cascade = CascadeType.ALL)
   Set<OrderMenuIngredient> orderMenuIngredients = new HashSet<>();
 
+  public void addIngredient(OrderMenuIngredient ingredient) {
+
+    if (ingredient != null) {
+      if (orderMenuIngredients == null) {
+        orderMenuIngredients = new HashSet<>();
+      }
+
+      orderMenuIngredients.add(ingredient);
+      ingredient.setOrderMenu(this);
+    }
+  }
 }

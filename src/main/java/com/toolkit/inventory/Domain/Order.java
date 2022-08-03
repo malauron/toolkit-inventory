@@ -27,8 +27,9 @@ public class Order {
   @Column(name = "order_id")
   private Long orderId;
 
-  @Column(name = "customer_id")
-  private Long customerId;
+  @ManyToOne
+  @JoinColumn(name = "customer_id")
+  private Customer customer;
 
   @Column(name =  "total_price")
   private BigDecimal totalPrice;
@@ -43,5 +44,16 @@ public class Order {
   @UpdateTimestamp
   @Column(name = "date_updated")
   private Date dateUpdated;
+
+  public void addMenu(OrderMenu menu) {
+    if (menu != null) {
+      if (orderMenus == null) {
+        orderMenus = new HashSet<>();
+      }
+
+      orderMenus.add(menu);
+      menu.setOrder(this);
+    }
+  }
 
 }

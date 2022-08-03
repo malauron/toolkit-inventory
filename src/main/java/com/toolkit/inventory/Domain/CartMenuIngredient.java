@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Entity
 @Getter
@@ -46,4 +47,8 @@ public class CartMenuIngredient {
 
     @Column(name = "ordered_qty")
     private BigDecimal orderedQty;
+
+    @Column(name = "menu_ingredient_id")
+    private Long menuIngredientId;
+
 }

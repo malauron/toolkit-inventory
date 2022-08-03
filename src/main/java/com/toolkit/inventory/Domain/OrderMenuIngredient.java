@@ -26,18 +26,28 @@ public class OrderMenuIngredient {
   @JoinColumn(name = "order_menu_id")
   private OrderMenu orderMenu;
 
-  @Column(name = "base_uom_id")
-  private Long baseUomId;
+  @ManyToOne
+  @JoinColumn(name = "item_id")
+  private Item item;
+
+  @ManyToOne
+  @JoinColumn(name = "base_uom_id")
+  private Uom baseUom;
 
   @Column(name = "base_qty")
   private BigDecimal baseQty;
 
-  @Column(name = "required_uom_id")
-  private Long requiredUomId;
+  @ManyToOne
+  @JoinColumn(name = "required_uom_id")
+  private Uom requiredUom;
 
   @Column(name = "required_qty")
   private BigDecimal requiredQty;
 
   @Column(name = "ordered_qty")
   private BigDecimal orderedQty;
+
+  @Column(name = "menu_ingredient_id")
+  private Long menuIngredientId;
+
 }

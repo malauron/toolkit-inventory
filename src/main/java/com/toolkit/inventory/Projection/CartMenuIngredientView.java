@@ -7,6 +7,7 @@ import com.toolkit.inventory.Domain.Uom;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Projection(name = "cartMenuIngredientView", types = {CartMenuIngredient.class})
 public interface CartMenuIngredientView {
@@ -18,5 +19,6 @@ public interface CartMenuIngredientView {
   Uom getRequiredUom();
   BigDecimal getRequiredQty();
   BigDecimal getOrderedQty();
+  BigInteger getMenuIngredientId();
 
 }
