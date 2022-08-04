@@ -5,6 +5,7 @@ import com.toolkit.inventory.Domain.Order;
 import com.toolkit.inventory.Domain.OrderMenu;
 import com.toolkit.inventory.Domain.OrderMenuIngredient;
 import com.toolkit.inventory.Dto.OrderDto;
+import com.toolkit.inventory.Repository.CartMenuRepository;
 import com.toolkit.inventory.Repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,12 @@ import java.util.Set;
 public class OrderServiceImp  implements OrderService {
 
   private OrderRepository orderRepository;
+  private CartMenuRepository cartMenuRepository;
 
-  public OrderServiceImp(OrderRepository orderRepository)
+  public OrderServiceImp(OrderRepository orderRepository, CartMenuRepository cartMenuRepository)
   {
     this.orderRepository = orderRepository;
+    this.cartMenuRepository = cartMenuRepository;
   }
 
   @Override
@@ -52,6 +55,7 @@ public class OrderServiceImp  implements OrderService {
         orderMenuIngredient.setBaseQty(ingredient.getBaseQty());
         orderMenuIngredient.setRequiredUom(ingredient.getRequiredUom());
         orderMenuIngredient.setRequiredQty(ingredient.getRequiredQty());
+        orderMenuIngredient.setOrderedQty(ingredient.getOrderedQty());
         orderMenuIngredient.setMenuIngredientId(ingredient.getMenuIngredientId());
 
         orderMenu.addIngredient(orderMenuIngredient);
@@ -63,5 +67,9 @@ public class OrderServiceImp  implements OrderService {
     });
 
     this.orderRepository.save(order);
+
+    orderDto.getCartMenus().forEach(cartMenu -> {
+      cartMenuRepository.deleteById(cartMenu.getCartMenuId());
+    });
   }
 }

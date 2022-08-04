@@ -2,10 +2,9 @@ package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Dto.OrderDto;
 import com.toolkit.inventory.Service.OrderService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
@@ -17,7 +16,7 @@ public class OrderController {
   }
 
   @PostMapping("/orders")
-  public void save(OrderDto orderDto) {
+  public void save(@RequestBody OrderDto orderDto) {
     this.orderService.save(orderDto);
   }
 }
