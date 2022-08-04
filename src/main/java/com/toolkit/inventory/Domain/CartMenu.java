@@ -18,6 +18,7 @@ import java.util.Set;
 @Setter
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
+        scope = CartMenu.class,
         property = "cartMenuId")
 @Table(name = "cart_menus")
 public class CartMenu {

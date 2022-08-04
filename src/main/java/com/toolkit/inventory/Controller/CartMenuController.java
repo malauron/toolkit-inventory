@@ -6,8 +6,6 @@ import com.toolkit.inventory.Dto.CartMenuDto;
 import com.toolkit.inventory.Service.CartMenuService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1")
@@ -17,11 +15,6 @@ public class CartMenuController {
     public CartMenuController(CartMenuService cartMenuService) {
         this.cartMenuService = cartMenuService;
     }
-
-//    @GetMapping("/cartMenus")
-//    public List<CartMenu> getAllMenus() {
-//        return this.cartMenuService.findAllCartMenus();
-//    }
 
     @PostMapping("/cartMenus")
     public CartMenuDto save(@RequestBody CartMenuDto cartMenuDto) {
