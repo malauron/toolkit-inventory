@@ -21,4 +21,11 @@ public class CartMenuIngredientServiceImp implements CartMenuIngredientService {
   public void delete(CartMenuIngredient cartMenuIngredient) {
     this.cartMenuIngredientRepository.delete(cartMenuIngredient);
   }
+
+  @Override
+  @Transactional
+  public void deleteById(Long cartMenuIngredientId){
+    this.cartMenuIngredientRepository.deleteById(cartMenuIngredientId);
+  }
+
 }

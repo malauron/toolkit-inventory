@@ -41,6 +41,8 @@ public class CartMenuController {
 
     @DeleteMapping("/cartMenus")
     public void delete(@RequestBody CartMenu cartMenu) {
-        this.cartMenuService.delete(cartMenu);
+        this.cartMenuService.deleteById(cartMenu.getCartMenuId());
     }
+
+
 }

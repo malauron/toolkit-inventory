@@ -83,4 +83,10 @@ public class CartMenuServiceImp implements  CartMenuService {
     public void delete(CartMenu cartMenu) {
         this.cartMenuRepository.delete(cartMenu);
     }
+
+    @Override
+    @Transactional
+    public void deleteById(Long cartMenuId) {
+        this.cartMenuRepository.deleteById(cartMenuId);
+    }
 }

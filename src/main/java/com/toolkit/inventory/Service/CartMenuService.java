@@ -11,4 +11,5 @@ public interface CartMenuService {
     void update(CartMenu cartMenu);
     void saveSingleMenu(Long menuId);
     void delete(CartMenu cartMenu);
+    void deleteById(Long cartMenuId);
 }
