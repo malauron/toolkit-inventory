@@ -16,7 +16,5 @@ public interface CartMenuRepository extends JpaRepository<CartMenu, Long> {
     @Query(value = "SELECT * FROM cart_menus order by cart_menu_id", nativeQuery = true)
     List<CartMenu> findAllCartMenus();
 
-//  @Query(value = "select u from CartMenu u")
-//  List<CartMenu> findAllCartMenus();
 
 }

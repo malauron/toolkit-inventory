@@ -3,6 +3,7 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.CartMenu;
 import com.toolkit.inventory.Domain.CartMenuIngredient;
 import com.toolkit.inventory.Domain.Menu;
+import com.toolkit.inventory.Dto.CartMenuCountDto;
 import com.toolkit.inventory.Dto.CartMenuDto;
 import com.toolkit.inventory.Repository.CartMenuRepository;
 import com.toolkit.inventory.Repository.MenuRepository;
@@ -88,5 +89,12 @@ public class CartMenuServiceImp implements  CartMenuService {
     @Transactional
     public void deleteById(Long cartMenuId) {
         this.cartMenuRepository.deleteById(cartMenuId);
+    }
+
+    @Override()
+    public CartMenuCountDto getCartMenuCount() {
+        CartMenuCountDto cartMenuCountDto = new CartMenuCountDto();
+        cartMenuCountDto.setCartMenuCount(this.cartMenuRepository.count());
+        return cartMenuCountDto;
     }
 }

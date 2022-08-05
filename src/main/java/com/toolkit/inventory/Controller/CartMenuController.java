@@ -2,6 +2,7 @@ package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Domain.CartMenu;
 import com.toolkit.inventory.Domain.Menu;
+import com.toolkit.inventory.Dto.CartMenuCountDto;
 import com.toolkit.inventory.Dto.CartMenuDto;
 import com.toolkit.inventory.Service.CartMenuService;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,11 @@ public class CartMenuController {
 
     public CartMenuController(CartMenuService cartMenuService) {
         this.cartMenuService = cartMenuService;
+    }
+
+    @GetMapping("/cartMenus/count")
+    public CartMenuCountDto getCartMenuCount() {
+        return this.cartMenuService.getCartMenuCount();
     }
 
     @PostMapping("/cartMenus")
