@@ -21,13 +21,8 @@ public class OrderController {
   @Autowired
   private OrderMenuService orderMenuService;
 
-//  public OrderController(OrderService orderService) {
-//    this.orderService = orderService;
-//  }
-
-  @GetMapping("/orders/orderMenus")
+  @PostMapping("/orders/orderMenus")
   public List<OrderMenuDto> getOrderMenus(@RequestBody Order order) {
-
     return this.orderMenuService.getOrderMenus(order);
   }
 

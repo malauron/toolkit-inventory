@@ -13,9 +13,9 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "customerId")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "customerId")
 @Table(name = "customers")
 public class Customer {
 
@@ -32,9 +32,6 @@ public class Customer {
 
     @Column(name = "address")
     private String address;
-
-//    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-//    Set<CustomerAllowableCharge> customerAllowableCharges = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "date_created")

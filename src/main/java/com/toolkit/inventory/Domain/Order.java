@@ -34,6 +34,9 @@ public class Order {
   @Column(name =  "total_price")
   private BigDecimal totalPrice;
 
+  @Column(name = "order_status")
+  private String orderStatus;
+
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   Set<OrderMenu> orderMenus = new HashSet<>();
 
