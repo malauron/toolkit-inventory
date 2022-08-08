@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -25,6 +26,12 @@ public class OrderServiceImp  implements OrderService {
     this.cartMenuRepository = cartMenuRepository;
   }
 
+
+  @Override
+  public Optional<Order> findById(Long orderId) {
+    return this.orderRepository.findById(orderId);
+  }
+
   @Override
   @Transactional
   public void save(OrderDto orderDto) {
@@ -37,6 +44,7 @@ public class OrderServiceImp  implements OrderService {
 
     order.setCustomer(customer);
     order.setTotalPrice(new BigDecimal(0));
+    order.setOrderStatus("Preparing");
 
     tempOrderMenus.forEach(menu -> {
       OrderMenu orderMenu = new OrderMenu();
