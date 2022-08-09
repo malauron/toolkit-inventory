@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OrderMenuService {
     List<OrderMenuDto> getOrderMenus(Order order);
+    void deleteById(Long orderMenuId);
 }

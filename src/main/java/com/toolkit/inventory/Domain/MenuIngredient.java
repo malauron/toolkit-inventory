@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "menuIngredientId")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "menuIngredientId")
 @Table(name = "menu_ingredients")
 public class MenuIngredient {
 

@@ -24,7 +24,7 @@ public class MenuServiceImp implements MenuService {
     public void save(MenuDto menuDto) {
 
         Menu menu = menuDto.getMenu();
-        Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredient();
+        Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredients();
         menuIngredients.forEach( ing -> menu.addIngredient(ing));
         menuRepository.save(menu);
     }

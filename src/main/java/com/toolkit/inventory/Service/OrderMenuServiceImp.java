@@ -32,6 +32,11 @@ public class OrderMenuServiceImp implements OrderMenuService {
         return orderMenuDtos;
     }
 
+    @Override
+    public void deleteById(Long orderMenuId) {
+        this.orderMenuRepository.deleteById(orderMenuId);
+    }
+
     private List<OrderMenuDto> getOrderMenus(Set<OrderMenu> orderMenus) {
         List<OrderMenuDto> orderMenuDtos = new ArrayList<>();
         orderMenus.forEach(orderMenu -> {
@@ -45,6 +50,7 @@ public class OrderMenuServiceImp implements OrderMenuService {
 
             menu.setMenuId(orderMenu.getMenu().getMenuId());
             menu.setMenuName(orderMenu.getMenu().getMenuName());
+            menu.setRemarks(orderMenu.getMenu().getRemarks());
             orderMenuDto.setMenu(menu);
 
             Set<MenuIngredient> menuIngredients = this.menuIngredientRepository.findMenuIngredientsByMenu(orderMenu.getMenu());
@@ -97,4 +103,6 @@ public class OrderMenuServiceImp implements OrderMenuService {
          }
         return 0L;
     }
+
+
 }

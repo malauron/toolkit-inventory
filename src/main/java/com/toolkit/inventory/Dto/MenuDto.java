@@ -11,5 +11,5 @@ import java.util.Set;
 @Setter
 public class MenuDto {
     private Menu menu;
-    private Set<MenuIngredient> menuIngredient;
+    private Set<MenuIngredient> menuIngredients;
 }
