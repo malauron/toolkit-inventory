@@ -19,14 +19,26 @@ public class MenuServiceImp implements MenuService {
         this.menuRepository = menuRepository;
     }
 
+//    @Transactional
+//    @Override
+//    public void save(MenuDto menuDto) {
+//
+//        Menu menu = menuDto.getMenu();
+//        Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredients();
+//        menuIngredients.forEach( ing -> menu.addIngredient(ing));
+//        menuRepository.save(menu);
+//
+//    }
+
     @Transactional
     @Override
-    public void save(MenuDto menuDto) {
+    public void save(MenuDto menuDto){
 
         Menu menu = menuDto.getMenu();
         Set<MenuIngredient> menuIngredients = menuDto.getMenuIngredients();
         menuIngredients.forEach( ing -> menu.addIngredient(ing));
         menuRepository.save(menu);
+
     }
 
     @Transactional

@@ -17,10 +17,15 @@ public class MenuController {
         this.menuService = menuService;
     }
 
+//    @PostMapping("/menus")
+//    public MenuDto save(@RequestBody MenuDto menuDto) {
+//        menuService.save(menuDto);
+//        return menuDto;
+//    }
+
     @PostMapping("/menus")
-    public MenuDto save(@RequestBody MenuDto menuDto) {
+    public void saveMenu(@RequestBody MenuDto menuDto) {
         menuService.save(menuDto);
-        return menuDto;
     }
 
     @PutMapping("/menus")
