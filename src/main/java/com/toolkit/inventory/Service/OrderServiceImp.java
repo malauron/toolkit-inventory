@@ -7,6 +7,7 @@ import com.toolkit.inventory.Domain.OrderMenuIngredient;
 import com.toolkit.inventory.Dto.OrderDto;
 import com.toolkit.inventory.Repository.CartMenuRepository;
 import com.toolkit.inventory.Repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,15 +18,16 @@ import java.util.Set;
 @Service
 public class OrderServiceImp  implements OrderService {
 
+  @Autowired
   private OrderRepository orderRepository;
+  @Autowired
   private CartMenuRepository cartMenuRepository;
 
-  public OrderServiceImp(OrderRepository orderRepository, CartMenuRepository cartMenuRepository)
-  {
-    this.orderRepository = orderRepository;
-    this.cartMenuRepository = cartMenuRepository;
-  }
-
+//  public OrderServiceImp(OrderRepository orderRepository, CartMenuRepository cartMenuRepository)
+//  {
+//    this.orderRepository = orderRepository;
+//    this.cartMenuRepository = cartMenuRepository;
+//  }
 
   @Override
   public Optional<Order> findById(Long orderId) {
@@ -78,6 +80,12 @@ public class OrderServiceImp  implements OrderService {
     orderDto.getCartMenus().forEach(cartMenu -> {
       cartMenuRepository.deleteById(cartMenu.getCartMenuId());
     });
+  }
+
+  @Override
+  @Transactional
+  public void patch(Order order) {
+    orderRepository.setOrderStatus(order.getOrderId(), order.getOrderStatus());
   }
 
 

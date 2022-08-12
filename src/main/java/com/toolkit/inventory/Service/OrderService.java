@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface OrderService {
   Optional<Order> findById(Long orderId);
   void save(OrderDto orderDto);
+  void patch(Order order);
 }

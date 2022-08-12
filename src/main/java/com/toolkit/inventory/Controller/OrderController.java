@@ -45,6 +45,11 @@ public class OrderController {
     this.orderService.save(orderDto);
   }
 
+  @PatchMapping("/orders")
+  public void patch(@RequestBody Order order) {
+    this.orderService.patch(order);
+  }
+
   @DeleteMapping("/orders/orderMenus")
   public void deleteByOrderMenuId(@RequestParam Long orderMenuId) {
     this.orderMenuService.deleteById(orderMenuId);
