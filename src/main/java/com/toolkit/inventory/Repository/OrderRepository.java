@@ -11,20 +11,30 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Set;
+
 @RepositoryRestResource(excerptProjection = OrderView.class)
 public interface OrderRepository extends JpaRepository<Order, Long> {
-
-//  Page<Order> findByCustomer_CustomerNameContaining(@RequestParam("customerName") String customerName, Pageable pageable);
 
   @Modifying
   @Query("UPDATE Order o set o.orderStatus = :orderStatus WHERE o.orderId = :orderId")
   void setOrderStatus(@Param("orderId") Long orderId, @Param("orderStatus") String orderStatus);
 
-  Page<Order> findByOrderIdOrCustomer_CustomerNameContainingOrCustomer_AddressContainingOrCustomer_ContactNoContaining(
+  Page<Order> findByOrderIdOrCustomer_CustomerNameContainingOrCustomer_AddressContainingOrCustomer_ContactNoContainingAndOrderStatusIn(
           @RequestParam("orderId") Long orderId,
           @RequestParam("customerName") String customerName,
           @RequestParam("address") String address,
           @RequestParam("contactNo") String contactNo,
+          @RequestParam("orderStatus") Set<String> orderStatus,
           Pageable pageable);
+
+  @Query(value = "SELECT o FROM Order o WHERE (o.orderId LIKE :orderId OR o.customer.customerName LIKE %:customerName% OR " +
+          "o.customer.address LIKE %:address% OR o.customer.contactNo LIKE %:contactNo%)  AND o.orderStatus IN :orderStatus")
+  Page<Order> findUndeliveredOrders(
+          @RequestParam("orderId") Long orderId,
+          @RequestParam("customerName") String customerName,
+          @RequestParam("address") String address,
+          @RequestParam("contactNo") String contactNo,
+          @RequestParam("orderStatus") Set<String> orderStatus, Pageable pageable);
 
 }
