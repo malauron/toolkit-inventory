@@ -3,14 +3,15 @@ package com.toolkit.inventory.Controller;
 import com.toolkit.inventory.Domain.Order;
 import com.toolkit.inventory.Dto.OrderDto;
 import com.toolkit.inventory.Dto.OrderMenuDto;
+import com.toolkit.inventory.Dto.OrderMenuIngredientSummaryDto;
+import com.toolkit.inventory.Projection.OrderMenuIngredientSummaryView;
 import com.toolkit.inventory.Service.OrderMenuIngredientService;
 import com.toolkit.inventory.Service.OrderMenuService;
 import com.toolkit.inventory.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -58,6 +59,16 @@ public class OrderController {
   @DeleteMapping("/orders/orderMenus/orderMenuIngredients")
   public void deleteByOrderMenuIngredientId(@RequestParam Long orderMenuIngredientId) {
     this.orderMenuIngredientService.deleteById(orderMenuIngredientId);
+  }
+
+  @GetMapping("/viewSummary")
+  public Set<OrderMenuIngredientSummaryView> viewSummary(@RequestParam("orderIds") Set<Long> orderIds) {
+    return this.orderMenuIngredientService.viewSummary(orderIds);
+  }
+
+  @GetMapping("/dtoSummary")
+  public Set<OrderMenuIngredientSummaryDto> dtoSummary(@RequestParam("orderIds") Set<Long> orderIds) {
+    return this.orderMenuIngredientService.dtoSummary(orderIds);
   }
 
 }

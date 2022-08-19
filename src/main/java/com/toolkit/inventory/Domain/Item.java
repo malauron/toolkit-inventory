@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,6 +26,7 @@ public class Item {
   @JoinColumn(name = "uom_id")
   private Uom uom;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
   private Set<ItemUom> itemUom;
 

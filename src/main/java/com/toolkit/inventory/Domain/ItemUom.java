@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,7 @@ public class ItemUom {
   @EmbeddedId
   private ItemUomId itemUomId;
 
+  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "item_id", insertable = false, updatable = false)
   private Item item;
