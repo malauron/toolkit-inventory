@@ -61,7 +61,7 @@ public class OrderController {
     this.orderMenuIngredientService.deleteById(orderMenuIngredientId);
   }
 
-  @GetMapping("/viewSummary")
+  @GetMapping("/orders/orderMenuIngredientSummary")
   public Set<OrderMenuIngredientSummaryView> viewSummary(@RequestParam("orderIds") Set<Long> orderIds) {
     return this.orderMenuIngredientService.viewSummary(orderIds);
   }
