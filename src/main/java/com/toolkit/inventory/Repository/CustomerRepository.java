@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RepositoryRestResource(excerptProjection = CustomerView.class)
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    Page<Customer> findByCustomerNameContainingOrderByCustomerName(@RequestParam("customerName")  String customerName, Pageable pageable);
+    Page<Customer> findByCustomerNameContainingOrderByCustomerName(
+            @RequestParam("customerName")  String customerName,
+            Pageable pageable
+    );
 
 }

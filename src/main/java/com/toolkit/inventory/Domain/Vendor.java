@@ -22,6 +22,12 @@ public class Vendor {
     @Column(name = "vendor_name")
     private String vendorName;
 
+    @Column(name = "contact_no")
+    private String contactNo;
+
+    @Column(name = "address")
+    private String address;
+
     @CreationTimestamp
     @Column(name = "date_created")
     private Date dateCreated;

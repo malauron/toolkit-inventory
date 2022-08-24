@@ -5,7 +5,6 @@ import com.toolkit.inventory.Domain.Order;
 import com.toolkit.inventory.Domain.OrderMenu;
 import com.toolkit.inventory.Domain.OrderMenuIngredient;
 import com.toolkit.inventory.Dto.OrderDto;
-import com.toolkit.inventory.Dto.OrderMenuIngredientSummaryDto;
 import com.toolkit.inventory.Repository.CartMenuRepository;
 import com.toolkit.inventory.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +22,6 @@ public class OrderServiceImp  implements OrderService {
   private OrderRepository orderRepository;
   @Autowired
   private CartMenuRepository cartMenuRepository;
-
-//  public OrderServiceImp(OrderRepository orderRepository, CartMenuRepository cartMenuRepository)
-//  {
-//    this.orderRepository = orderRepository;
-//    this.cartMenuRepository = cartMenuRepository;
-//  }
 
   @Override
   public Optional<Order> findById(Long orderId) {
