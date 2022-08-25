@@ -39,7 +39,7 @@ public class Purchase {
 
     @CreationTimestamp
     @Column(name = "date_created")
-    private Date dateCraeted;
+    private Date dateCreated;
 
     @UpdateTimestamp
     @Column(name = "date_updated")

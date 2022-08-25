@@ -16,7 +16,6 @@ public class PurchaseController {
 
   @PostMapping("/purchases")
   public Purchase save(@RequestBody PurchaseDto purchaseDto) {
-    System.out.println(purchaseDto.getTotalAmt());
     return this.purchaseService.save(purchaseDto);
   }
 }

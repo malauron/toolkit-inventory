@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -24,6 +25,7 @@ public class PurchaseServiceImp implements PurchaseService {
 
     Purchase purchase = new Purchase();
     purchase.setVendor(purchaseDto.getVendor());
+    purchase.setPurchaseStatus("Unposted");
     purchase.setTotalAmt(purchaseDto.getTotalAmt());
 
     purchaseDto.getPurchaseItems().forEach(item -> {
@@ -35,12 +37,17 @@ public class PurchaseServiceImp implements PurchaseService {
 
       Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
 
+      if (itemUom.isPresent()) {
+        purchaseItem.setBaseQty(itemUom.get().getQuantity());
+      } else {
+        purchaseItem.setBaseQty(new BigDecimal(1));
+      }
+
       purchaseItem.setItem(item.getItem());
       purchaseItem.setBaseUom(item.getItem().getUom());
-      purchaseItem.setBaseQty(itemUom.get().getQuantity());
       purchaseItem.setRequiredUom(item.getRequiredUom());
-      purchaseItem.setRequiredQty(item.getRequiredQty());
       purchaseItem.setPurchasedQty(item.getPurchasedQty());
+      purchaseItem.setCost(item.getCost());
 
       purchase.addPurchaseItem(purchaseItem);
 
