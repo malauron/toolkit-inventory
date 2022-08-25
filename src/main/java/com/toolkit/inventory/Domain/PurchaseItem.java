@@ -15,7 +15,7 @@ public class PurchaseItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "purchase_item-id")
+    @Column(name = "purchase_item_id")
     private Long purchaseItemId;
 
     @JsonBackReference

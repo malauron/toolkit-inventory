@@ -16,6 +16,7 @@ public class PurchaseServiceImp implements PurchaseService {
 
   @Autowired
   private PurchaseRepository purchaseRepository;
+
   @Autowired
   private ItemUomRepository itemUomRepository;
 
@@ -57,4 +58,15 @@ public class PurchaseServiceImp implements PurchaseService {
 
     return purchase;
   }
+
+  @Override
+  @Transactional
+  public void setVendor(PurchaseDto purchaseDto) {
+    this.purchaseRepository.setVendor(
+            purchaseDto.getVendor(),
+            purchaseDto.getPurchaseId()
+    );
+  }
+
+
 }

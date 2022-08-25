@@ -11,6 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class PurchaseDto {
+  private Long purchaseId;
   private BigDecimal totalAmt;
   private Vendor vendor;
   private Set<PurchaseItem> purchaseItems;
