@@ -33,4 +33,9 @@ public class PurchaseController {
   public PurchaseItem putPurchaseItem(@RequestBody PurchaseItem purchaseItem) {
     return this.purchaseItemService.putPurchaseItem(purchaseItem);
   }
+
+  @DeleteMapping("/purchaseItems")
+  public void deletePurchaseItemById(@RequestBody PurchaseItem purchaseItem) {
+    this.purchaseItemService.deleteById(purchaseItem.getPurchaseItemId());
+  }
 }

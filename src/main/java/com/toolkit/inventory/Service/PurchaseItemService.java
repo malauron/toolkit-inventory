@@ -4,4 +4,5 @@ import com.toolkit.inventory.Domain.PurchaseItem;
 
 public interface PurchaseItemService {
   PurchaseItem putPurchaseItem(PurchaseItem purchaseItem);
+  void deleteById(Long purchaseItemId);
 }

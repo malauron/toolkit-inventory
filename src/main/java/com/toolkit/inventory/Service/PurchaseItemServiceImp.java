@@ -37,6 +37,10 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
     itemUomId.setItemId(item.getItem().getItemId());
     itemUomId.setUomId(item.getRequiredUom().getUomId());
 
+    if (item.getPurchaseItemId() != null) {
+      newItem.setPurchaseItemId(item.getPurchaseItemId());
+    }
+
     Optional<ItemUom> itemUom = this.itemUomRepository.findById(itemUomId);
     if (itemUom.isPresent()) {
       newItem.setBaseQty(itemUom.get().getQuantity());
@@ -54,4 +58,11 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
     this.purchaseItemRepository.save(newItem);
     return newItem;
   }
+
+  @Override
+  public void deleteById(Long purchaseItemId) {
+    this.purchaseItemRepository.deleteById(purchaseItemId);
+  }
+
+
 }
