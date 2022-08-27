@@ -24,7 +24,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
   @Query(value = "SELECT p FROM Purchase p " +
           "WHERE (p.purchaseId LIKE :purchaseId OR p.vendor.vendorName LIKE %:vendorName% OR " +
           "p.vendor.address LIKE %:address% OR p.vendor.contactNo LIKE %:contactNo%) " +
-          "AND p.purchaseStatus IN :purchaseStatus")
+          "AND p.purchaseStatus IN :purchaseStatus ORDER BY p.purchaseId")
   Page<Purchase> findUnpostedPurchases(
           @RequestParam("purchaseId") Long purchaseId,
           @RequestParam("vendorName") String vendorName,

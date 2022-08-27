@@ -29,7 +29,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
           Pageable pageable);
 
   @Query(value = "SELECT o FROM Order o WHERE (o.orderId LIKE :orderId OR o.customer.customerName LIKE %:customerName% OR " +
-          "o.customer.address LIKE %:address% OR o.customer.contactNo LIKE %:contactNo%)  AND o.orderStatus IN :orderStatus")
+          "o.customer.address LIKE %:address% OR o.customer.contactNo LIKE %:contactNo%)  AND o.orderStatus IN :orderStatus ORDER BY o.orderId")
   Page<Order> findUndeliveredOrders(
           @RequestParam("orderId") Long orderId,
           @RequestParam("customerName") String customerName,

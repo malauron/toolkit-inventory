@@ -54,7 +54,6 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
     newItem.setPurchasedQty(item.getPurchasedQty());
     newItem.setCost(item.getCost());
 
-
     this.purchaseItemRepository.save(newItem);
     return newItem;
   }
