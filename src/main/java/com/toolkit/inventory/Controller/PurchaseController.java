@@ -19,6 +19,11 @@ public class PurchaseController {
   @Autowired
   private PurchaseItemService purchaseItemService;
 
+  @GetMapping("/purchases")
+  public PurchaseDto getPurchase(@RequestParam Long purchaseId){
+    return this.purchaseService.getPurchase(purchaseId);
+  }
+
   @PostMapping("/purchases")
   public Purchase save(@RequestBody PurchaseDto purchaseDto) {
     return this.purchaseService.save(purchaseDto);

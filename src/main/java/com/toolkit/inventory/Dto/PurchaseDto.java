@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -16,5 +17,6 @@ public class PurchaseDto {
   private BigDecimal totalAmt;
   private String purchaseStatus;
   private Set<PurchaseItem> purchaseItems;
+  private Date dateCreated;
 
 }

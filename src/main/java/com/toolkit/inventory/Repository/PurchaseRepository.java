@@ -21,6 +21,11 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
   @Query("UPDATE Purchase SET vendor = :vendor WHERE purchaseId =:purchaseId")
   void setVendor(@Param("vendor") Vendor vendor, @Param("purchaseId") Long purchaseId);
 
+  @Modifying
+  @Query("UPDATE Purchase p SET p.totalAmt = (SELECT SUM(i.purchasedQty * i.cost) FROM PurchaseItem i WHERE i.purchase = p) " +
+          "WHERE p.purchaseId =:purchaseId")
+  void setTotalAmt(Long purchaseId);
+
   @Query(value = "SELECT p FROM Purchase p " +
           "WHERE (p.purchaseId LIKE :purchaseId OR p.vendor.vendorName LIKE %:vendorName% OR " +
           "p.vendor.address LIKE %:address% OR p.vendor.contactNo LIKE %:contactNo%) " +

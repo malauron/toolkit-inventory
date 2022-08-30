@@ -10,6 +10,7 @@ import com.toolkit.inventory.Repository.PurchaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
   @Autowired
   private ItemUomRepository itemUomRepository;
 
+  @Transactional
   @Override
   public PurchaseItem putPurchaseItem(PurchaseItem item) {
 
@@ -55,6 +57,7 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
     newItem.setCost(item.getCost());
 
     this.purchaseItemRepository.save(newItem);
+    this.purchaseRepository.setTotalAmt(item.getPurchase().getPurchaseId());
     return newItem;
   }
 
