@@ -18,5 +18,4 @@ public class PurchaseDto {
   private String purchaseStatus;
   private Set<PurchaseItem> purchaseItems;
   private Date dateCreated;
-
 }

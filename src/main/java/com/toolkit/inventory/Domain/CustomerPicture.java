@@ -24,7 +24,7 @@ public class CustomerPicture {
 
   @Lob
   @Column(name = "file")
-  private byte file;
+  private byte[] file;
 
   @Column(name = "type")
   private String type;
