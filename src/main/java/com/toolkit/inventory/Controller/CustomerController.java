@@ -1,6 +1,5 @@
 package com.toolkit.inventory.Controller;
 
-import com.toolkit.inventory.Domain.Customer;
 import com.toolkit.inventory.Dto.CustomerDto;
 import com.toolkit.inventory.Service.CustomerService;
 import org.springframework.web.bind.annotation.*;
@@ -20,24 +19,12 @@ public class CustomerController {
     }
 
     @PutMapping("/customers")
-    public Long save(@RequestBody CustomerDto customerDto) {
-        return this.customerService.save(customerDto);
+    public Long save(
+            @RequestPart CustomerDto customerDto,
+            @RequestPart(required = false) MultipartFile pictureFile,
+            @RequestPart(required = false) MultipartFile signatureFile) throws IOException, Exception {
+
+        return this.customerService.save(customerDto, pictureFile, signatureFile);
+
     }
-
-    @PutMapping("/customers/pictures")
-    public Long save(@RequestPart MultipartFile pictureFile, @RequestPart CustomerDto customerDto) {
-
-        try {
-
-            return this.customerService.save(pictureFile, customerDto);
-
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return null;
-    }
-
 }

@@ -2,9 +2,11 @@ package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.Customer;
 import com.toolkit.inventory.Domain.CustomerPicture;
+import com.toolkit.inventory.Domain.CustomerSignature;
 import com.toolkit.inventory.Dto.CustomerDto;
 import com.toolkit.inventory.Repository.CustomerPictureRepository;
 import com.toolkit.inventory.Repository.CustomerRepository;
+import com.toolkit.inventory.Repository.CustomerSignatureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,29 +24,12 @@ public class CustomerServiceImp implements  CustomerService {
     @Autowired
     private CustomerPictureRepository customerPictureRepository;
 
-    @Override
-    @Transactional
-    public Long save(CustomerDto customerDto) {
-
-        Customer customer = null;
-
-        if (customerDto.getCustomer().getCustomerId() == null) {
-            customer = new Customer();
-        } else {
-            Optional<Customer> tmp = this.customerRepository.findById(customerDto.getCustomer().getCustomerId());
-            if (tmp.isPresent()) {
-                customer = tmp.get();
-            }
-        }
-
-        this.customerRepository.save(getCustomer(customer, customerDto));
-
-        return customer.getCustomerId();
-    }
+    @Autowired
+    private CustomerSignatureRepository customerSignatureRepository;
 
     @Override
     @Transactional
-    public Long save(MultipartFile pictureFile, CustomerDto customerDto) throws IOException, Exception {
+    public Long save(CustomerDto customerDto, MultipartFile pictureFile, MultipartFile signatureFile) throws IOException, Exception {
 
         Customer customer = null;
 
@@ -63,6 +48,7 @@ public class CustomerServiceImp implements  CustomerService {
             CustomerPicture customerPicture;
             if (customerDto.getCustomer().getCustomerId() != null) {
                 customerPicture = this.customerPictureRepository.findByCustomer(customerDto.getCustomer());
+
                 if (customerPicture == null) {
                     customerPicture = new CustomerPicture();
                 }
@@ -72,7 +58,24 @@ public class CustomerServiceImp implements  CustomerService {
             customerPicture.setFile(pictureFile.getBytes());
             customerPicture.setType(pictureFile.getContentType());
             customerPicture.setCustomer(customer);
-            customerPictureRepository.save(customerPicture);
+            this.customerPictureRepository.save(customerPicture);
+        }
+
+        if (signatureFile != null) {
+            CustomerSignature customerSignature;
+            if (customerDto.getCustomer().getCustomerId() != null) {
+                customerSignature = this.customerSignatureRepository.findByCustomer(customerDto.getCustomer());
+
+                if (customerSignature == null) {
+                    customerSignature = new CustomerSignature();
+                }
+            } else {
+                customerSignature = new CustomerSignature();
+            }
+            customerSignature.setFile(signatureFile.getBytes());
+            customerSignature.setType(signatureFile.getContentType());
+            customerSignature.setCustomer(customer);
+            this.customerSignatureRepository.save(customerSignature);
         }
 
         return customer.getCustomerId();

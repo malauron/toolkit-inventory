@@ -7,7 +7,8 @@ import java.io.IOException;
 
 public interface CustomerService {
 
-    Long save(MultipartFile pictureFile, CustomerDto customerDto) throws IOException, Exception;
-    Long save(CustomerDto customerDto);
+    Long save(CustomerDto customerDto,
+              MultipartFile pictureFile,
+              MultipartFile signatureFile) throws IOException, Exception;
 
 }

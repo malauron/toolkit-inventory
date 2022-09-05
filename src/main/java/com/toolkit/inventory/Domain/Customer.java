@@ -36,6 +36,10 @@ public class Customer {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private CustomerPicture customerPicture;
 
+    @JsonManagedReference
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private CustomerSignature customerSignature;
+
     @Column(name = "blood_type")
     private String bloodType;
 
