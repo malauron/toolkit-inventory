@@ -33,7 +33,7 @@ public class Customer {
     private String address;
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "customer")
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private CustomerPicture customerPicture;
 
     @Column(name = "blood_type")
