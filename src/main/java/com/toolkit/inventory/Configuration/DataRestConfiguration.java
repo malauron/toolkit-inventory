@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Configuration;
 
+import com.toolkit.inventory.Projection.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,7 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +36,13 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
 //    config.getProjectionConfiguration().addProjection(ItemView.class);
 //    config.getProjectionConfiguration().addProjection(UomView.class);
 //    config.getProjectionConfiguration().addProjection(ItemUomView.class);
+    config.getProjectionConfiguration().addProjection(CustomerPageView.class);
+    config.getProjectionConfiguration().addProjection(CustomerSingleView.class);
 
        // call an internal helper method
     exposeIds(config);
+
+//    cors.addMapping(config.getBasePath() + "/v1/**").allowedOrigins("http://localhost:8100");
 
     cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);
 //    cors.addMapping(config.getBasePath() + "/v1/**").allowedOrigins(theAllowedOrigins);
