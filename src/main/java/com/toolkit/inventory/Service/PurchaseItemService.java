@@ -1,8 +1,9 @@
 package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.PurchaseItem;
+import com.toolkit.inventory.Dto.PurchaseDto;
 
 public interface PurchaseItemService {
-  PurchaseItem putPurchaseItem(PurchaseItem purchaseItem);
-  void deleteById(Long purchaseItemId);
+  PurchaseDto putPurchaseItem(PurchaseItem purchaseItem);
+  PurchaseDto delete(PurchaseItem purchaseItem);
 }

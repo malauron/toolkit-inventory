@@ -29,46 +29,66 @@ public class OrderController {
 
   @GetMapping("/orders/orderMenus")
   public List<OrderMenuDto> getOrderMenusById(@RequestParam Long orderId) {
-    Optional<Order> order = this.orderService.findById(orderId);
-    if (order.isPresent()) {
-      return this.orderMenuService.getOrderMenus(order.get());
-    }
-    return null;
-  }
 
-//  @PostMapping("/orders/orderMenus")
-//  public List<OrderMenuDto> getOrderMenus(@RequestBody Order order) {
-//    return this.orderMenuService.getOrderMenus(order);
-//  }
+    Optional<Order> order = this.orderService.findById(orderId);
+
+    if (order.isPresent()) {
+
+      return this.orderMenuService.getOrderMenus(order.get());
+
+    }
+
+    return null;
+
+  }
 
   @PostMapping("/orders")
   public void save(@RequestBody OrderDto orderDto) {
+
     this.orderService.save(orderDto);
+
   }
 
   @PatchMapping("/orders")
   public void patch(@RequestBody Order order) {
+
     this.orderService.patch(order);
+
+  }
+
+  @PutMapping("/orders/orderStatus")
+  public OrderDto setOrderStatus(@RequestBody OrderDto orderDto) {
+
+    return this.orderService.setOrderStatus(orderDto);
+
   }
 
   @DeleteMapping("/orders/orderMenus")
   public void deleteByOrderMenuId(@RequestParam Long orderMenuId) {
+
     this.orderMenuService.deleteById(orderMenuId);
+
   }
 
   @DeleteMapping("/orders/orderMenus/orderMenuIngredients")
   public void deleteByOrderMenuIngredientId(@RequestParam Long orderMenuIngredientId) {
+
     this.orderMenuIngredientService.deleteById(orderMenuIngredientId);
+
   }
 
   @GetMapping("/orders/orderMenuIngredientSummary")
   public Set<OrderMenuIngredientSummaryView> viewSummary(@RequestParam("orderIds") Set<Long> orderIds) {
+
     return this.orderMenuIngredientService.viewSummary(orderIds);
+
   }
 
   @GetMapping("/dtoSummary")
   public Set<OrderMenuIngredientSummaryDto> dtoSummary(@RequestParam("orderIds") Set<Long> orderIds) {
+
     return this.orderMenuIngredientService.dtoSummary(orderIds);
+
   }
 
 }

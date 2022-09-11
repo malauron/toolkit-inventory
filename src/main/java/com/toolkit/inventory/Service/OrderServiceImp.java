@@ -1,12 +1,8 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.Customer;
-import com.toolkit.inventory.Domain.Order;
-import com.toolkit.inventory.Domain.OrderMenu;
-import com.toolkit.inventory.Domain.OrderMenuIngredient;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.OrderDto;
-import com.toolkit.inventory.Repository.CartMenuRepository;
-import com.toolkit.inventory.Repository.OrderRepository;
+import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +16,24 @@ public class OrderServiceImp  implements OrderService {
 
   @Autowired
   private OrderRepository orderRepository;
+
+  @Autowired
+  private OrderMenuIngredientRepository orderMenuIngredientRepository;
+
   @Autowired
   private CartMenuRepository cartMenuRepository;
 
+  @Autowired
+  private WarehouseRepository warehouseRepository;
+
+  @Autowired
+  private ItemCostRepository itemCostRepository;
+
   @Override
   public Optional<Order> findById(Long orderId) {
+
     return this.orderRepository.findById(orderId);
+
   }
 
   @Override
@@ -43,6 +51,7 @@ public class OrderServiceImp  implements OrderService {
     order.setOrderStatus("Preparing");
 
     tempOrderMenus.forEach(menu -> {
+
       OrderMenu orderMenu = new OrderMenu();
 
       orderMenu.setMenu(menu.getMenu());
@@ -51,9 +60,11 @@ public class OrderServiceImp  implements OrderService {
       orderMenu.setLineTotal(menu.getLineTotal());
 
       menu.getOrderMenuIngredients().forEach(ingredient -> {
+
         OrderMenuIngredient orderMenuIngredient = new OrderMenuIngredient();
 
         orderMenuIngredient.setItem(ingredient.getItem());
+        orderMenuIngredient.setCost(new BigDecimal(1L));
         orderMenuIngredient.setBaseUom(ingredient.getBaseUom());
         orderMenuIngredient.setBaseQty(ingredient.getBaseQty());
         orderMenuIngredient.setRequiredUom(ingredient.getRequiredUom());
@@ -72,14 +83,85 @@ public class OrderServiceImp  implements OrderService {
     this.orderRepository.save(order);
 
     orderDto.getCartMenus().forEach(cartMenu -> {
+
       cartMenuRepository.deleteById(cartMenu.getCartMenuId());
+
     });
+
   }
 
   @Override
   @Transactional
   public void patch(Order order) {
+
     orderRepository.setOrderStatus(order.getOrderId(), order.getOrderStatus());
+
+  }
+
+  @Override
+  @Transactional
+  public OrderDto setOrderStatus(OrderDto dto) {
+
+    OrderDto orderDto = new OrderDto();
+
+    orderDto.setOrderId(dto.getOrderId());
+
+    Optional<Order> optOrder = this.orderRepository.findByOrderId(dto.getOrderId());
+
+    if (optOrder.isPresent()) {
+
+      Optional<Warehouse> optWhse = this.warehouseRepository.findById(1L);
+
+      Order order = optOrder.get();
+
+      String oldStatus = order.getOrderStatus();
+      String newStatus = dto.getOrderStatus();
+
+      orderDto.setOrderStatus(oldStatus);
+
+      if (oldStatus.equals("Preparing")) {
+
+        order.setOrderStatus(newStatus);
+
+        if (newStatus.equals("Packed")) {
+
+          Set<OrderMenuIngredient> orderMenuIngredients = this.orderMenuIngredientRepository.findByOrderOrderByItemId(order);
+
+          orderMenuIngredients.forEach(orderMenuIngredient -> {
+
+            Optional<ItemCost> optItemCost = this.itemCostRepository.findByItemAndWarehouse(orderMenuIngredient.getItem(), optWhse.get());
+
+            if (optItemCost.isPresent()) {
+
+              ItemCost itemCost = optItemCost.get();
+
+              orderMenuIngredient.setCost(itemCost.getCost());
+
+              BigDecimal baseQty = orderMenuIngredient.getBaseQty();
+              BigDecimal requiredQty = orderMenuIngredient.getRequiredQty();
+              BigDecimal orderedQty = orderMenuIngredient.getOrderedQty();
+
+              BigDecimal qty = baseQty.multiply(requiredQty)
+                                      .multiply(orderedQty)
+                                      .multiply(new BigDecimal(-1));
+
+              this.orderMenuIngredientRepository.save(orderMenuIngredient);
+              this.itemCostRepository.setQty(qty, itemCost.getItemCostId());
+
+            }
+
+          });
+
+        }
+
+      }
+
+      this.orderRepository.save(order);
+
+    }
+
+    return orderDto;
+
   }
 
 }

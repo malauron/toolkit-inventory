@@ -33,21 +33,21 @@ public class ItemServiceImp implements ItemService {
     @Override
     public void save(Item item) {
 
-        itemRepository.save(item);
-
         List<Warehouse> warehouses = this.warehouseRepository.findAll();
 
         warehouses.forEach(warehouse -> {
 
             ItemCost itemCost = new ItemCost();
 
-            itemCost.setItem(item);
             itemCost.setWarehouse(warehouse);
+            itemCost.setQty(new BigDecimal(0L));
             itemCost.setCost(new BigDecimal(0));
 
-            this.itemCostRepository.save(itemCost);
+            item.addItemCost(itemCost);
 
         });
+
+        itemRepository.save(item);
 
     }
 

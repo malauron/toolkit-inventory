@@ -21,26 +21,44 @@ public class PurchaseController {
 
   @GetMapping("/purchases")
   public PurchaseDto getPurchase(@RequestParam Long purchaseId){
+
     return this.purchaseService.getPurchase(purchaseId);
+
   }
 
   @PostMapping("/purchases")
   public Purchase save(@RequestBody PurchaseDto purchaseDto) {
+
     return this.purchaseService.save(purchaseDto);
+
   }
 
   @PutMapping("/purchases/vendor")
-  public void setVendor(@RequestBody PurchaseDto purchaseDto) {
-    this.purchaseService.setVendor(purchaseDto);
+  public PurchaseDto setVendor(@RequestBody PurchaseDto purchaseDto) {
+
+    return this.purchaseService.setVendor(purchaseDto);
+
+  }
+
+  @PutMapping("/purchases/purchaseStatus")
+  public PurchaseDto setPurchaseStatus(@RequestBody PurchaseDto purchaseDto) {
+
+    return this.purchaseService.setPurchaseStatus(purchaseDto);
+
   }
 
   @PutMapping("/purchaseItems")
-  public PurchaseItem putPurchaseItem(@RequestBody PurchaseItem purchaseItem) {
-    return this.purchaseItemService.putPurchaseItem(purchaseItem);
+  public PurchaseDto putPurchaseItem(@RequestBody PurchaseItem item) {
+
+    return this.purchaseItemService.putPurchaseItem(item);
+
   }
 
   @DeleteMapping("/purchaseItems")
-  public void deletePurchaseItemById(@RequestBody PurchaseItem purchaseItem) {
-    this.purchaseItemService.deleteById(purchaseItem.getPurchaseItemId());
+  public PurchaseDto deletePurchaseItemById(@RequestBody PurchaseItem purchaseItem) {
+
+    return this.purchaseItemService.delete(purchaseItem);
+
   }
+
 }

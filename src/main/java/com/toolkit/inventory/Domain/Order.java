@@ -48,6 +48,10 @@ public class Order {
   @Column(name = "date_updated")
   private Date dateUpdated;
 
+  @Version
+  @Column(name = "version")
+  private Long version;
+
   public void addMenu(OrderMenu menu) {
     if (menu != null) {
       if (orderMenus == null) {

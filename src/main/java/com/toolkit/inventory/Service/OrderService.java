@@ -9,4 +9,5 @@ public interface OrderService {
   Optional<Order> findById(Long orderId);
   void save(OrderDto orderDto);
   void patch(Order order);
+  OrderDto setOrderStatus(OrderDto orderDto);
 }

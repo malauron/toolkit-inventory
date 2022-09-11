@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,6 +31,10 @@ public class Item {
   @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
   private Set<ItemUom> itemUom;
 
+  @JsonManagedReference
+  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+  private Set<ItemCost> itemCosts;
+
   @CreationTimestamp
   @Column(name = "date_created")
   private Date dateCreated;
@@ -37,5 +42,16 @@ public class Item {
   @UpdateTimestamp
   @Column(name = "date_updated")
   private Date dateUpdated;
+
+  public void addItemCost(ItemCost itemCost) {
+    if (itemCost != null) {
+      if (itemCosts == null) {
+        itemCosts = new HashSet<>();
+      }
+
+      itemCosts.add(itemCost);
+      itemCost.setItem(this);
+    }
+  }
 
 }

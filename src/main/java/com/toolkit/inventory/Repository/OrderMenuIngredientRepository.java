@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Repository;
 
+import com.toolkit.inventory.Domain.Order;
 import com.toolkit.inventory.Domain.OrderMenu;
 import com.toolkit.inventory.Domain.OrderMenuIngredient;
 import com.toolkit.inventory.Dto.OrderMenuIngredientSummaryDto;
@@ -15,6 +16,10 @@ import java.util.Set;
 
 @RepositoryRestResource(excerptProjection = OrderMenuIngredientView.class)
 public interface OrderMenuIngredientRepository extends JpaRepository<OrderMenuIngredient, Long> {
+
+    @Query(value = "SELECT o FROM OrderMenuIngredient o WHERE o.orderMenu.order = :order ORDER BY o.item.itemId")
+    Set<OrderMenuIngredient> findByOrderOrderByItemId(Order order);
+
     @Query(value = "SELECT o FROM OrderMenuIngredient o WHERE o.orderMenu = :orderMenu ORDER BY o.item.itemName")
     List<OrderMenuIngredient> findOrderMenuIngredientsByOrderMenu(OrderMenu orderMenu);
 

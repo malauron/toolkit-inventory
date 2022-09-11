@@ -1,13 +1,8 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.ItemUom;
-import com.toolkit.inventory.Domain.ItemUomId;
-import com.toolkit.inventory.Domain.Purchase;
-import com.toolkit.inventory.Domain.PurchaseItem;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.PurchaseDto;
-import com.toolkit.inventory.Repository.ItemUomRepository;
-import com.toolkit.inventory.Repository.PurchaseItemRepository;
-import com.toolkit.inventory.Repository.PurchaseRepository;
+import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,24 +23,35 @@ public class PurchaseServiceImp implements PurchaseService {
   @Autowired
   private ItemUomRepository itemUomRepository;
 
+  @Autowired
+  private ItemCostRepository itemCostRepository;
+
+  @Autowired
+  private WarehouseRepository warehouseRepository;
+
   @Override
   public PurchaseDto getPurchase(Long purchaseId) {
 
     PurchaseDto purchaseDto = new PurchaseDto();
 
     Optional<Purchase> purchase = this.purchaseRepository.findById(purchaseId);
+
     if (purchase.isPresent()) {
+
       purchaseDto.setPurchaseId(purchase.get().getPurchaseId());
       purchaseDto.setPurchaseStatus(purchase.get().getPurchaseStatus());
       purchaseDto.setTotalAmt(purchase.get().getTotalAmt());
       purchaseDto.setVendor(purchase.get().getVendor());
       purchaseDto.setDateCreated(purchase.get().getDateCreated());
+
       Set<PurchaseItem> purchaseItems = this.purchaseItemRepository
-              .findByPurchaseOrderByPurchaseItemId(purchase.get());
+              .findByPurchaseOrderByItemName(purchase.get());
+
       purchaseDto.setPurchaseItems(purchaseItems);
-      return purchaseDto;
+
     }
-    return null;
+
+    return purchaseDto;
 
   }
 
@@ -54,12 +60,16 @@ public class PurchaseServiceImp implements PurchaseService {
   public Purchase save(PurchaseDto purchaseDto) {
 
     Purchase purchase = new Purchase();
+
     purchase.setVendor(purchaseDto.getVendor());
+
     purchase.setPurchaseStatus("Unposted");
     purchase.setTotalAmt(purchaseDto.getTotalAmt());
 
     purchaseDto.getPurchaseItems().forEach(item -> {
+
       PurchaseItem purchaseItem = new PurchaseItem();
+
       ItemUomId itemUomId = new ItemUomId();
 
       itemUomId.setItemId(item.getItem().getItemId());
@@ -68,9 +78,13 @@ public class PurchaseServiceImp implements PurchaseService {
       Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
 
       if (itemUom.isPresent()) {
+
         purchaseItem.setBaseQty(itemUom.get().getQuantity());
+
       } else {
+
         purchaseItem.setBaseQty(new BigDecimal(1));
+
       }
 
       purchaseItem.setItem(item.getItem());
@@ -90,12 +104,85 @@ public class PurchaseServiceImp implements PurchaseService {
 
   @Override
   @Transactional
-  public void setVendor(PurchaseDto purchaseDto) {
-    this.purchaseRepository.setVendor(
-            purchaseDto.getVendor(),
-            purchaseDto.getPurchaseId()
-    );
+  public PurchaseDto setVendor(PurchaseDto dto) {
+
+    PurchaseDto purchaseDto = new PurchaseDto();
+
+    Long purchaseId = dto.getPurchaseId();
+
+    purchaseDto.setPurchaseId(purchaseId);
+
+    Optional<Purchase> optPurchase = this.purchaseRepository.findByPurchaseId(purchaseId);
+
+    if (optPurchase.isPresent()) {
+
+      Purchase purchase = optPurchase.get();
+
+      purchaseDto.setPurchaseStatus(purchase.getPurchaseStatus());
+
+      if (purchase.getPurchaseStatus().equals("Unposted")) {
+
+        purchase.setVendor(dto.getVendor());
+
+        this.purchaseRepository.save(purchase);
+
+      }
+
+    }
+
+    return purchaseDto;
+
   }
 
+  @Override
+  @Transactional
+  public PurchaseDto setPurchaseStatus(PurchaseDto dto) {
 
+    Long purchaseId = dto.getPurchaseId();
+
+    PurchaseDto purchaseDto = new PurchaseDto();
+
+    purchaseDto.setPurchaseId(purchaseId);
+
+    Optional<Purchase> opt = this.purchaseRepository.findByPurchaseId(purchaseId);
+
+    if (opt.isPresent()) {
+
+      Purchase purchase = opt.get();
+
+      String oldStatus = purchase.getPurchaseStatus();
+      String newStatus = dto.getPurchaseStatus();
+
+      purchaseDto.setPurchaseStatus(oldStatus);
+
+      if (oldStatus.equals("Unposted")) {
+
+        purchase.setPurchaseStatus(newStatus);
+
+        if (newStatus.equals("Posted")) {
+
+          Optional<Warehouse> tmpWhse = this.warehouseRepository.findById(1L);
+
+          Set<PurchaseItem> purchaseItems = this.purchaseItemRepository.findByPurchaseOrderByItemId(purchase);
+
+          purchaseItems.forEach(purchaseItem -> {
+
+            BigDecimal qty = purchaseItem.getPurchasedQty().multiply(purchaseItem.getBaseQty());
+            BigDecimal cost = purchaseItem.getCost().divide( purchaseItem.getBaseQty());
+
+            this.itemCostRepository.setQtyCost(qty, cost, purchaseItem.getItem(), tmpWhse.get());
+
+          });
+
+        }
+
+        this.purchaseRepository.save(purchase);
+
+      }
+
+    }
+
+    return purchaseDto;
+
+  }
 }

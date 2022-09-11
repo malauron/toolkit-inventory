@@ -4,6 +4,7 @@ import com.toolkit.inventory.Domain.ItemUom;
 import com.toolkit.inventory.Domain.ItemUomId;
 import com.toolkit.inventory.Domain.Purchase;
 import com.toolkit.inventory.Domain.PurchaseItem;
+import com.toolkit.inventory.Dto.PurchaseDto;
 import com.toolkit.inventory.Repository.ItemUomRepository;
 import com.toolkit.inventory.Repository.PurchaseItemRepository;
 import com.toolkit.inventory.Repository.PurchaseRepository;
@@ -28,42 +29,104 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
 
   @Transactional
   @Override
-  public PurchaseItem putPurchaseItem(PurchaseItem item) {
+  public PurchaseDto putPurchaseItem(PurchaseItem item) {
 
-    PurchaseItem newItem = new PurchaseItem();
+    PurchaseDto purchaseDto = new PurchaseDto();
 
-    Optional<Purchase> purchase = this.purchaseRepository.findById(item.getPurchase().getPurchaseId());
-    newItem.setPurchase(purchase.get());
+    Long purchaseId = item.getPurchase().getPurchaseId();
 
-    ItemUomId itemUomId = new ItemUomId();
-    itemUomId.setItemId(item.getItem().getItemId());
-    itemUomId.setUomId(item.getRequiredUom().getUomId());
+    purchaseDto.setPurchaseId(purchaseId);
 
-    if (item.getPurchaseItemId() != null) {
-      newItem.setPurchaseItemId(item.getPurchaseItemId());
+    Optional<Purchase> optPurchase = this.purchaseRepository.findByPurchaseId(purchaseId);
+
+    if (optPurchase.isPresent()) {
+
+      Purchase purchase = optPurchase.get();
+
+      purchaseDto.setPurchaseStatus(purchase.getPurchaseStatus());
+
+      PurchaseItem newItem = new PurchaseItem();
+
+      newItem.setPurchase(purchase);
+
+      if (purchase.getPurchaseStatus().equals("Unposted")) {
+
+        ItemUomId itemUomId = new ItemUomId();
+        itemUomId.setItemId(item.getItem().getItemId());
+        itemUomId.setUomId(item.getRequiredUom().getUomId());
+
+        if (item.getPurchaseItemId() != null) {
+
+          newItem.setPurchaseItemId(item.getPurchaseItemId());
+
+        }
+
+        Optional<ItemUom> itemUom = this.itemUomRepository.findById(itemUomId);
+
+        if (itemUom.isPresent()) {
+
+          newItem.setBaseQty(itemUom.get().getQuantity());
+
+        } else {
+
+          newItem.setBaseQty(new BigDecimal(1));
+
+        }
+
+        newItem.setItem(item.getItem());
+        newItem.setBaseUom(item.getItem().getUom());
+        newItem.setRequiredUom(item.getRequiredUom());
+        newItem.setPurchasedQty(item.getPurchasedQty());
+        newItem.setCost(item.getCost());
+
+        this.purchaseItemRepository.save(newItem);
+
+        purchase.setTotalAmt(this.purchaseRepository.getTotalAmt(purchase));
+
+        this.purchaseRepository.save(purchase);
+
+        purchaseDto.setPurchaseItem(newItem);
+
+      }
+
     }
 
-    Optional<ItemUom> itemUom = this.itemUomRepository.findById(itemUomId);
-    if (itemUom.isPresent()) {
-      newItem.setBaseQty(itemUom.get().getQuantity());
-    } else {
-      newItem.setBaseQty(new BigDecimal(1));
-    }
+    return purchaseDto;
 
-    newItem.setItem(item.getItem());
-    newItem.setBaseUom(item.getItem().getUom());
-    newItem.setRequiredUom(item.getRequiredUom());
-    newItem.setPurchasedQty(item.getPurchasedQty());
-    newItem.setCost(item.getCost());
-
-    this.purchaseItemRepository.save(newItem);
-    this.purchaseRepository.setTotalAmt(item.getPurchase().getPurchaseId());
-    return newItem;
   }
 
+  @Transactional
   @Override
-  public void deleteById(Long purchaseItemId) {
-    this.purchaseItemRepository.deleteById(purchaseItemId);
+  public PurchaseDto delete(PurchaseItem purchaseItem) {
+
+    PurchaseDto purchaseDto = new PurchaseDto();
+
+    Long purchaseItemId = purchaseItem.getPurchaseItemId();
+
+    Long purchaseId = purchaseItem.getPurchase().getPurchaseId();
+
+    purchaseDto.setPurchaseId(purchaseId);
+
+    Optional<Purchase> optPurchase = this.purchaseRepository.findByPurchaseId(purchaseId);
+
+    if (optPurchase.isPresent()) {
+
+      Purchase purchase = optPurchase.get();
+
+      purchaseDto.setPurchaseStatus(purchase.getPurchaseStatus());
+
+      if (purchase.getPurchaseStatus().equals("Unposted")) {
+
+        this.purchaseItemRepository.deleteById(purchaseItemId);
+
+        purchase.setTotalAmt(this.purchaseRepository.getTotalAmt(purchase));
+
+      }
+
+    }
+
+    return purchaseDto;
+
   }
 
 

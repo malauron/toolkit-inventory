@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class ItemCost {
   @Column(name = "item_cost_id")
   private Long itemCostId;
 
+  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "item_id")
   private Item item;
@@ -24,6 +26,9 @@ public class ItemCost {
   @ManyToOne
   @JoinColumn(name = "warehouse_id")
   private Warehouse warehouse;
+
+  @Column(name = "qty")
+  private BigDecimal qty;
 
   @Column(name = "cost")
   private BigDecimal cost;

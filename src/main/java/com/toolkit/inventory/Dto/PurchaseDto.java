@@ -17,5 +17,6 @@ public class PurchaseDto {
   private BigDecimal totalAmt;
   private String purchaseStatus;
   private Set<PurchaseItem> purchaseItems;
+  private PurchaseItem purchaseItem;
   private Date dateCreated;
 }

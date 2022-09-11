@@ -6,5 +6,6 @@ import com.toolkit.inventory.Dto.PurchaseDto;
 public interface PurchaseService {
   PurchaseDto getPurchase(Long purchaseId);
   Purchase save(PurchaseDto purchaseDto);
-  void setVendor(PurchaseDto purchaseDto);
+  PurchaseDto setVendor(PurchaseDto purchaseDto);
+  PurchaseDto setPurchaseStatus(PurchaseDto purchaseDto);
 }

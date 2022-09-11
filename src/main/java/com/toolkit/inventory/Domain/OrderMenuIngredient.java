@@ -30,6 +30,9 @@ public class OrderMenuIngredient {
   @JoinColumn(name = "item_id")
   private Item item;
 
+  @Column(name = "cost")
+  private BigDecimal cost;
+
   @ManyToOne
   @JoinColumn(name = "base_uom_id")
   private Uom baseUom;
