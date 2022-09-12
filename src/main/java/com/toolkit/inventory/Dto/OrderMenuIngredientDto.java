@@ -12,8 +12,11 @@ import java.math.BigDecimal;
 public class OrderMenuIngredientDto {
     private Long orderMenuIngredientId;
     private Item item;
+    private Uom baseUom;
     private Uom requiredUom;
+    private BigDecimal baseQty;
     private BigDecimal requiredQty;
     private BigDecimal orderedQty;
+    private BigDecimal cost;
     private Long menuIngredientId;
 }

@@ -154,6 +154,18 @@ public class OrderServiceImp  implements OrderService {
 
         }
 
+      } else if (oldStatus.equals("Packed")) {
+
+        if (newStatus.equals("In Transit") || newStatus.equals("Delivered") || newStatus.equals("Cancelled")) {
+          order.setOrderStatus(newStatus);
+        }
+
+      } else if (oldStatus.equals("In Transit")) {
+
+        if (newStatus.equals("Delivered") || newStatus.equals("Cancelled")) {
+          order.setOrderStatus(newStatus);
+        }
+
       }
 
       this.orderRepository.save(order);

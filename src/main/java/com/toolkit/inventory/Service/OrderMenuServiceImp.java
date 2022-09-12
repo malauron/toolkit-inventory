@@ -10,6 +10,7 @@ import com.toolkit.inventory.Repository.OrderMenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -83,9 +84,11 @@ public class OrderMenuServiceImp implements OrderMenuService {
             item.setItemName(menuIngredient.getItem().getItemName());
             orderMenuIngredientDto.setItem(item);
 
-            orderMenuIngredientDto.setOrderMenuIngredientId(
-                    this.getOrderMenuIngredientId(menuIngredient.getMenuIngredientId(),orderMenuIngredients)
-            );
+//            orderMenuIngredientDto.setOrderMenuIngredientId(
+//                    this.getOrderMenuIngredientId(menuIngredient.getMenuIngredientId(),orderMenuIngredients)
+//            );
+
+            this.getOrderMenuIngredient(menuIngredient.getMenuIngredientId(),orderMenuIngredients, orderMenuIngredientDto);
 
             orderMenuIngredientDtos.add(orderMenuIngredientDto);
         });
@@ -93,16 +96,38 @@ public class OrderMenuServiceImp implements OrderMenuService {
         return orderMenuIngredientDtos;
     }
 
-    private Long getOrderMenuIngredientId(Long menuIngredientId, Set<OrderMenuIngredient> orderMenuIngredients) {
+    private void getOrderMenuIngredient(Long menuIngredientId, Set<OrderMenuIngredient> orderMenuIngredients, OrderMenuIngredientDto omiDto) {
         Stream<OrderMenuIngredient> ing = orderMenuIngredients.stream();
         Optional<OrderMenuIngredient> tmpIng = ing.filter(ingredients ->
-            ingredients.getMenuIngredientId() == menuIngredientId
+                ingredients.getMenuIngredientId().equals(menuIngredientId)
         ).findFirst();
 
-         if (tmpIng.isPresent()) {
-             return tmpIng.get().getOrderMenuIngredientId();
-         }
-        return 0L;
+        if (tmpIng.isPresent()) {
+            omiDto.setOrderMenuIngredientId(tmpIng.get().getOrderMenuIngredientId());
+            omiDto.setOrderedQty(tmpIng.get().getOrderedQty());
+            omiDto.setCost(tmpIng.get().getCost());
+            omiDto.setBaseUom(tmpIng.get().getBaseUom());
+            omiDto.setBaseQty(tmpIng.get().getBaseQty());
+        } else {
+            omiDto.setOrderMenuIngredientId(0L);
+            omiDto.setOrderedQty(new BigDecimal(0));
+            omiDto.setCost(new BigDecimal(0));
+            omiDto.setBaseUom(null);
+            omiDto.setBaseQty(new BigDecimal(0));
+        }
+
     }
+
+//    private Long getOrderMenuIngredientId(Long menuIngredientId, Set<OrderMenuIngredient> orderMenuIngredients) {
+//        Stream<OrderMenuIngredient> ing = orderMenuIngredients.stream();
+//        Optional<OrderMenuIngredient> tmpIng = ing.filter(ingredients ->
+//            ingredients.getMenuIngredientId().equals(menuIngredientId)
+//        ).findFirst();
+//
+//         if (tmpIng.isPresent()) {
+//             return tmpIng.get().getOrderMenuIngredientId();
+//         }
+//        return 0L;
+//    }
 
 }

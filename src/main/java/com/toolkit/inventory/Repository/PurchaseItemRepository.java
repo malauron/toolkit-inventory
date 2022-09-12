@@ -14,7 +14,7 @@ public interface PurchaseItemRepository extends JpaRepository<PurchaseItem, Long
 
     Set<PurchaseItem> findByPurchaseOrderByPurchaseItemId(Purchase purchase);
 
-    @Query(value = "SELECT p FROM PurchaseItem p ORDER BY p.item.itemName")
+    @Query(value = "SELECT p FROM PurchaseItem p WHERE p.purchase = :purchase ORDER BY p.item.itemName")
     Set<PurchaseItem> findByPurchaseOrderByItemName(Purchase purchase);
 
     @Query(value = "SELECT p FROM PurchaseItem p WHERE p.purchase = :purchase ORDER BY p.item.itemId")
