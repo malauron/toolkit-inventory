@@ -64,7 +64,7 @@ public class OrderServiceImp  implements OrderService {
         OrderMenuIngredient orderMenuIngredient = new OrderMenuIngredient();
 
         orderMenuIngredient.setItem(ingredient.getItem());
-        orderMenuIngredient.setCost(new BigDecimal(1L));
+        orderMenuIngredient.setCost(new BigDecimal(0L));
         orderMenuIngredient.setBaseUom(ingredient.getBaseUom());
         orderMenuIngredient.setBaseQty(ingredient.getBaseQty());
         orderMenuIngredient.setRequiredUom(ingredient.getRequiredUom());
