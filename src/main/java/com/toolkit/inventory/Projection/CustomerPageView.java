@@ -10,6 +10,7 @@ import java.util.Date;
 @Projection(name = "customerPageView", types = { Customer.class })
 public interface CustomerPageView {
   Long getCustomerId();
+  String getCustomerCode();
   String getCustomerName();
   CustomerPicture getCustomerPicture();
   CustomerSignature getCustomerSignature();

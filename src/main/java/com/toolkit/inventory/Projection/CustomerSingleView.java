@@ -8,6 +8,7 @@ import org.springframework.data.rest.core.config.Projection;
 @Projection(name = "customerSingleView", types = { Customer.class })
 public interface CustomerSingleView {
   Long getCustomerId();
+  String getCustomerCode();
   String getCustomerName();
   String getContactNo();
   String getAddress();
