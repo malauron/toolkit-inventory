@@ -6,6 +6,7 @@ import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -42,6 +43,7 @@ public class PurchaseServiceImp implements PurchaseService {
       purchaseDto.setPurchaseStatus(purchase.get().getPurchaseStatus());
       purchaseDto.setTotalAmt(purchase.get().getTotalAmt());
       purchaseDto.setVendor(purchase.get().getVendor());
+      purchaseDto.setWarehouse(purchase.get().getWarehouse());
       purchaseDto.setDateCreated(purchase.get().getDateCreated());
 
       Set<PurchaseItem> purchaseItems = this.purchaseItemRepository
@@ -62,9 +64,13 @@ public class PurchaseServiceImp implements PurchaseService {
     Purchase purchase = new Purchase();
 
     purchase.setVendor(purchaseDto.getVendor());
-
     purchase.setPurchaseStatus("Unposted");
     purchase.setTotalAmt(purchaseDto.getTotalAmt());
+
+    Optional<Warehouse> optWhse = this.warehouseRepository.findById(purchaseDto.getWarehouse().getWarehouseId());
+    if (optWhse.isPresent()) {
+      purchase.setWarehouse(optWhse.get());
+    }
 
     purchaseDto.getPurchaseItems().forEach(item -> {
 
@@ -122,7 +128,17 @@ public class PurchaseServiceImp implements PurchaseService {
 
       if (purchase.getPurchaseStatus().equals("Unposted")) {
 
-        purchase.setVendor(dto.getVendor());
+        if (dto.getVendor() != null) {
+
+          purchase.setVendor(dto.getVendor());
+
+        }
+
+        if (dto.getWarehouse() != null) {
+
+          purchase.setWarehouse(dto.getWarehouse());
+
+        }
 
         this.purchaseRepository.save(purchase);
 
@@ -161,7 +177,7 @@ public class PurchaseServiceImp implements PurchaseService {
 
         if (newStatus.equals("Posted")) {
 
-          Optional<Warehouse> tmpWhse = this.warehouseRepository.findById(1L);
+          Optional<Warehouse> tmpWhse = this.warehouseRepository.findById(purchase.getWarehouse().getWarehouseId());
 
           Set<PurchaseItem> purchaseItems = this.purchaseItemRepository.findByPurchaseOrderByItemId(purchase);
 

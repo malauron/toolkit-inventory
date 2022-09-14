@@ -2,6 +2,7 @@ package com.toolkit.inventory.Dto;
 
 import com.toolkit.inventory.Domain.PurchaseItem;
 import com.toolkit.inventory.Domain.Vendor;
+import com.toolkit.inventory.Domain.Warehouse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,7 @@ public class PurchaseDto {
   private Vendor vendor;
   private BigDecimal totalAmt;
   private String purchaseStatus;
+  private Warehouse warehouse;
   private Set<PurchaseItem> purchaseItems;
   private PurchaseItem purchaseItem;
   private Date dateCreated;

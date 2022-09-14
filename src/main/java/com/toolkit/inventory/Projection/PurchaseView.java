@@ -2,6 +2,7 @@ package com.toolkit.inventory.Projection;
 
 import com.toolkit.inventory.Domain.Purchase;
 import com.toolkit.inventory.Domain.Vendor;
+import com.toolkit.inventory.Domain.Warehouse;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ public interface PurchaseView {
   Vendor getVendor();
   BigDecimal getTotalAmt();
   String getPurchaseStatus();
+  Warehouse getWarehouse();
   Date getDateCreated();
   Date getDateUpdated();
 }

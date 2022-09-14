@@ -30,6 +30,10 @@ public class Purchase {
     @Column(name = "total_amt")
     private BigDecimal totalAmt;
 
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+
     @Column(name = "purchase_status")
     private String purchaseStatus;
 

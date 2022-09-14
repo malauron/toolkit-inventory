@@ -47,6 +47,7 @@ public class OrderServiceImp  implements OrderService {
     Set<OrderMenu> tempOrderMenus = orderDto.getOrderMenus();
 
     order.setCustomer(customer);
+    order.setWarehouse(orderDto.getWarehouse());
     order.setTotalPrice(new BigDecimal(0));
     order.setOrderStatus("Preparing");
 
@@ -110,9 +111,9 @@ public class OrderServiceImp  implements OrderService {
 
     if (optOrder.isPresent()) {
 
-      Optional<Warehouse> optWhse = this.warehouseRepository.findById(1L);
-
       Order order = optOrder.get();
+
+      Optional<Warehouse> optWhse = this.warehouseRepository.findById(order.getWarehouse().getWarehouseId());
 
       String oldStatus = order.getOrderStatus();
       String newStatus = dto.getOrderStatus();
