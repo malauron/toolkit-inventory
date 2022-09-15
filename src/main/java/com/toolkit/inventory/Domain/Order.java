@@ -1,7 +1,6 @@
 package com.toolkit.inventory.Domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,9 +15,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "orderId")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "orderId")
 @Table(name = "orders")
 public class Order {
 
@@ -41,6 +40,7 @@ public class Order {
   @Column(name = "order_status")
   private String orderStatus;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   Set<OrderMenu> orderMenus = new HashSet<>();
 

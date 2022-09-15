@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class OrderMenuIngredient {
   @Column(name = "order_menu_ingredient_id")
   private Long orderMenuIngredientId;
 
+  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "order_menu_id")
   private OrderMenu orderMenu;

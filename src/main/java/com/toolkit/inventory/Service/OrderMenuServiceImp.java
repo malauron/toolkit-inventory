@@ -3,7 +3,6 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.OrderMenuDto;
 import com.toolkit.inventory.Dto.OrderMenuIngredientDto;
-import com.toolkit.inventory.Dto.OrderMenuIngredientSummaryDto;
 import com.toolkit.inventory.Repository.MenuIngredientRepository;
 import com.toolkit.inventory.Repository.OrderMenuIngredientRepository;
 import com.toolkit.inventory.Repository.OrderMenuRepository;
@@ -64,7 +63,6 @@ public class OrderMenuServiceImp implements OrderMenuService {
 
             orderMenuDtos.add(orderMenuDto);
         });
-//        System.out.println(orderMenuDtos);
         return orderMenuDtos;
     }
 

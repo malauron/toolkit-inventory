@@ -33,10 +33,10 @@ public class PurchaseController {
 
   }
 
-  @PutMapping("/purchases/vendor")
-  public PurchaseDto setVendor(@RequestBody PurchaseDto purchaseDto) {
+  @PutMapping("/purchases")
+  public PurchaseDto setPurchase(@RequestBody PurchaseDto purchaseDto) {
 
-    return this.purchaseService.setVendor(purchaseDto);
+    return this.purchaseService.setPurchase(purchaseDto);
 
   }
 

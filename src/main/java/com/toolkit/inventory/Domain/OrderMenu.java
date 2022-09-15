@@ -1,6 +1,8 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +26,7 @@ public class OrderMenu {
   @Column(name = "order_menu_id")
   private Long orderMenuId;
 
+  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "order_id")
   private Order order;
@@ -41,6 +44,7 @@ public class OrderMenu {
   @Column(name = "line_total")
   private BigDecimal lineTotal;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "orderMenu", cascade = CascadeType.ALL)
   Set<OrderMenuIngredient> orderMenuIngredients = new HashSet<>();
 

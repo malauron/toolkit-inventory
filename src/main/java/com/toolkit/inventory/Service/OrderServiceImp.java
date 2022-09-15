@@ -122,9 +122,9 @@ public class OrderServiceImp  implements OrderService {
 
       if (oldStatus.equals("Preparing")) {
 
-        order.setOrderStatus(newStatus);
-
         if (newStatus.equals("Packed")) {
+
+          order.setOrderStatus(newStatus);
 
           Set<OrderMenuIngredient> orderMenuIngredients = this.orderMenuIngredientRepository.findByOrderOrderByItemId(order);
 
@@ -153,18 +153,26 @@ public class OrderServiceImp  implements OrderService {
 
           });
 
+        } else if (newStatus.equals("Cancelled")) {
+
+          order.setOrderStatus(newStatus);
+
         }
 
       } else if (oldStatus.equals("Packed")) {
 
         if (newStatus.equals("In Transit") || newStatus.equals("Delivered") || newStatus.equals("Cancelled")) {
+
           order.setOrderStatus(newStatus);
+
         }
 
       } else if (oldStatus.equals("In Transit")) {
 
         if (newStatus.equals("Delivered") || newStatus.equals("Cancelled")) {
+
           order.setOrderStatus(newStatus);
+
         }
 
       }

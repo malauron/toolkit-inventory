@@ -10,5 +10,7 @@ import java.util.Set;
 
 @RepositoryRestResource(excerptProjection = OrderMenuView.class)
 public interface OrderMenuRepository extends JpaRepository<OrderMenu, Long> {
+
     Set<OrderMenu> findAllByOrderOrderByOrderMenuId(Order order);
+
 }

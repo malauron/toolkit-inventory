@@ -6,7 +6,6 @@ import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -110,7 +109,7 @@ public class PurchaseServiceImp implements PurchaseService {
 
   @Override
   @Transactional
-  public PurchaseDto setVendor(PurchaseDto dto) {
+  public PurchaseDto setPurchase(PurchaseDto dto) {
 
     PurchaseDto purchaseDto = new PurchaseDto();
 
