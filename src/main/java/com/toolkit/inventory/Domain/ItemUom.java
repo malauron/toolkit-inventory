@@ -16,14 +16,14 @@ public class ItemUom {
   @EmbeddedId
   private ItemUomId itemUomId;
 
-  @JsonBackReference
-  @ManyToOne
-  @JoinColumn(name = "item_id", insertable = false, updatable = false)
-  private Item item;
-
-  @ManyToOne
-  @JoinColumn(name = "uom_id", insertable = false, updatable = false)
-  private Uom uom;
+//  @JsonBackReference
+//  @ManyToOne
+//  @JoinColumn(name = "item_id", insertable = false, updatable = false)
+//  private Item item;
+//
+//  @ManyToOne
+//  @JoinColumn(name = "uom_id", insertable = false, updatable = false)
+//  private Uom uom;
 
   @Column(name = "quantity")
   private BigDecimal quantity;

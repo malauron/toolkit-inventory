@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 public interface ItemUomView {
 
   ItemUomId getItemUomId();
-  Uom getUom();
   BigDecimal getQuantity();
 
 }

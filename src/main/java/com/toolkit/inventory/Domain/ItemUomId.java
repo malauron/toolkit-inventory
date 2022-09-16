@@ -1,22 +1,24 @@
 package com.toolkit.inventory.Domain;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Data
-//
-//@Getter
-//@Setter
+@Getter
+@Setter
 @Embeddable
 public class ItemUomId implements Serializable {
 
-  @Column(name = "item_id")
-  private Long itemId;
+  @JsonBackReference
+  @ManyToOne
+  @JoinColumn(name = "item_id")
+  private Item item;
 
-
-  @Column(name = "uom_id")
-  private Long uomId;
+  @ManyToOne
+  @JoinColumn(name = "uom_id")
+  private Uom uom;
 
 }

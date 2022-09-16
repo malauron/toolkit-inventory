@@ -28,7 +28,7 @@ public class Item {
   private Uom uom;
 
   @JsonManagedReference
-  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "itemUomId.item", cascade = CascadeType.ALL)
   private Set<ItemUom> itemUom;
 
   @JsonManagedReference

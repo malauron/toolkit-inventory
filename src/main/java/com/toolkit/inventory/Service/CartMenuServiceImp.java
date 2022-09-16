@@ -71,8 +71,8 @@ public class CartMenuServiceImp implements  CartMenuService {
             CartMenuIngredient cartMenuIngredient = new CartMenuIngredient();
             ItemUomId itemUomId = new ItemUomId();
 
-            itemUomId.setItemId(ing.getItem().getItemId());
-            itemUomId.setUomId(ing.getRequiredUom().getUomId());
+            itemUomId.setItem(ing.getItem());
+            itemUomId.setUom(ing.getRequiredUom());
 
             //Getting the base quantity of the required UOM.
             Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
