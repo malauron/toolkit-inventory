@@ -1,7 +1,7 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.Item;
+import com.toolkit.inventory.Dto.ItemDto;
 
 public interface ItemService {
-    void save(Item item);
+    ItemDto save(ItemDto itemDto);
 }

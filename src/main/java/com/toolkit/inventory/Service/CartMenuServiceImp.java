@@ -1,18 +1,18 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.*;
+import com.toolkit.inventory.Domain.CartMenu;
+import com.toolkit.inventory.Domain.CartMenuIngredient;
+import com.toolkit.inventory.Domain.ItemUom;
+import com.toolkit.inventory.Domain.Menu;
 import com.toolkit.inventory.Dto.CartMenuCountDto;
 import com.toolkit.inventory.Dto.CartMenuDto;
 import com.toolkit.inventory.Repository.CartMenuRepository;
-import com.toolkit.inventory.Repository.ItemUomRepository;
 import com.toolkit.inventory.Repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,8 +25,8 @@ public class CartMenuServiceImp implements  CartMenuService {
     @Autowired
     private MenuRepository menuRepository;
 
-    @Autowired
-    private ItemUomRepository itemUomRepository;
+//    @Autowired
+//    private ItemUomRepository itemUomRepository;
 
 //    public CartMenuServiceImp(CartMenuRepository cartMenuRepository, MenuRepository menuRepository) {
 //        this.cartMenuRepository = cartMenuRepository;
@@ -69,13 +69,14 @@ public class CartMenuServiceImp implements  CartMenuService {
 
         menu.getMenuIngredient().forEach(ing -> {
             CartMenuIngredient cartMenuIngredient = new CartMenuIngredient();
-            ItemUomId itemUomId = new ItemUomId();
-
-            itemUomId.setItem(ing.getItem());
-            itemUomId.setUom(ing.getRequiredUom());
+//            ItemUomId itemUomId = new ItemUomId();
+//
+//            itemUomId.setItem(ing.getItem());
+//            itemUomId.setUom(ing.getRequiredUom());
 
             //Getting the base quantity of the required UOM.
-            Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
+//            Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
+            Optional<ItemUom> itemUom = null;
 
             cartMenuIngredient.setItem(ing.getItem());
             cartMenuIngredient.setBaseUom(ing.getItem().getUom());

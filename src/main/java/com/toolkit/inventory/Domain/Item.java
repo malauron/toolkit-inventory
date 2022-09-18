@@ -1,39 +1,44 @@
 package com.toolkit.inventory.Domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "items")
 public class Item {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name="item_id")
+  @Column(name = "item_id")
   private Long itemId;
 
-  @Column(name="item_name")
+  @Column(name = "item_name", unique = true)
   private String itemName;
 
   @ManyToOne
   @JoinColumn(name = "uom_id")
   private Uom uom;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "itemUomId.item", cascade = CascadeType.ALL)
-  private Set<ItemUom> itemUom;
+  @Column(name = "item_class")
+  private String itemClass;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-  private Set<ItemCost> itemCosts;
+  @Column(name = "is_active")
+  private Boolean isActive;
+
+//  @JsonManagedReference
+//  @OneToMany(mappedBy = "itemUomId.item", cascade = CascadeType.ALL)
+//  private Set<ItemUom> itemUom;
+
+//  @JsonManagedReference
+//  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+//  private Set<ItemCost> itemCosts;
 
   @CreationTimestamp
   @Column(name = "date_created")
@@ -43,15 +48,15 @@ public class Item {
   @Column(name = "date_updated")
   private Date dateUpdated;
 
-  public void addItemCost(ItemCost itemCost) {
-    if (itemCost != null) {
-      if (itemCosts == null) {
-        itemCosts = new HashSet<>();
-      }
-
-      itemCosts.add(itemCost);
-      itemCost.setItem(this);
-    }
-  }
+//  public void addItemCost(ItemCost itemCost) {
+//    if (itemCost != null) {
+//      if (itemCosts == null) {
+//        itemCosts = new HashSet<>();
+//      }
+//
+//      itemCosts.add(itemCost);
+//      itemCost.setItem(this);
+//    }
+//  }
 
 }

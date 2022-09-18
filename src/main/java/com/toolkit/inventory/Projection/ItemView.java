@@ -13,5 +13,7 @@ public interface ItemView {
   String getItemName();
   Uom getUom();
   Date getDateCreated();
+  String getItemClass();
+  Boolean getIsActive();
 
 }

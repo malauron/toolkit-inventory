@@ -52,8 +52,8 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
       if (purchase.getPurchaseStatus().equals("Unposted")) {
 
         ItemUomId itemUomId = new ItemUomId();
-        itemUomId.setItem(item.getItem());
-        itemUomId.setUom(item.getRequiredUom());
+//        itemUomId.setItem(item.getItem());
+//        itemUomId.setUom(item.getRequiredUom());
 
         if (item.getPurchaseItemId() != null) {
 

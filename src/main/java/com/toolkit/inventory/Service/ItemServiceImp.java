@@ -1,53 +1,106 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.Item;
-import com.toolkit.inventory.Domain.ItemCost;
-import com.toolkit.inventory.Domain.Warehouse;
-import com.toolkit.inventory.Repository.ItemCostRepository;
-import com.toolkit.inventory.Repository.ItemRepository;
-import com.toolkit.inventory.Repository.WarehouseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.toolkit.inventory.Domain.*;
+import com.toolkit.inventory.Dto.ItemDto;
+import com.toolkit.inventory.Repository.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ItemServiceImp implements ItemService {
 
-    @Autowired
     private ItemRepository itemRepository;
 
-    @Autowired
-    private WarehouseRepository warehouseRepository;
+    private ItemUomRepository itemUomRepository;
 
-    @Autowired
     private ItemCostRepository itemCostRepository;
 
-    public ItemServiceImp(ItemRepository itemRepository) {
+    private UomRepository uomRepository;
+
+    private WarehouseRepository warehouseRepository;
+
+    public ItemServiceImp(ItemRepository itemRepository,
+                          ItemUomRepository itemUomRepository,
+                          ItemCostRepository itemCostRepository,
+                          UomRepository uomRepository,
+                          WarehouseRepository warehouseRepository) {
         this.itemRepository = itemRepository;
+        this.itemUomRepository = itemUomRepository;
+        this.itemCostRepository = itemCostRepository;
+        this.uomRepository = uomRepository;
+        this.warehouseRepository = warehouseRepository;
     }
 
     @Transactional
     @Override
-    public void save(Item item) {
+    public ItemDto save(ItemDto itemDto) {
 
-        List<Warehouse> warehouses = this.warehouseRepository.findAll();
+        ItemDto newItemDto = new ItemDto();
 
-        warehouses.forEach(warehouse -> {
+        if (itemDto.getItem().getItemId() > 0) {
 
-            ItemCost itemCost = new ItemCost();
+            Optional<Item> optItem    = this.itemRepository.findById(itemDto.getItem().getItemId());
 
-            itemCost.setWarehouse(warehouse);
-            itemCost.setQty(new BigDecimal(0L));
-            itemCost.setCost(new BigDecimal(0));
+            if (optItem.isPresent()) {
+                Item item = optItem.get();
 
-            item.addItemCost(itemCost);
+                item.setItemName(itemDto.getItem().getItemName());
+                item.setIsActive(itemDto.getItem().getIsActive());
 
-        });
+                this.itemRepository.save(item);
+            }
 
-        itemRepository.save(item);
+        } else {
+
+            Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
+
+            Set<ItemUom> itemUoms = new HashSet<>();
+
+            itemDto.getItemUoms().forEach(itemUom -> {
+
+                Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
+
+                ItemUom newItemUom = new ItemUom();
+
+                newItemUom.setItemId(newItem.getItemId());
+                newItemUom.setItem(newItem);
+                newItemUom.setUom(optUom.get());
+                newItemUom.setUomId(optUom.get().getUomId());
+                newItemUom.setQuantity(itemUom.getQuantity());
+
+                itemUoms.add(this.itemUomRepository.save(newItemUom));
+
+            });
+
+            System.out.println(newItem.getItemId());
+
+            newItemDto.setItem(newItem);
+            newItemDto.setItemUoms(itemUoms);
+
+            List<Warehouse> warehouses = this.warehouseRepository.findAll();
+
+            warehouses.forEach(warehouse -> {
+
+                ItemCost itemCost = new ItemCost();
+
+                itemCost.setItem(newItem);
+                itemCost.setWarehouse(warehouse);
+                itemCost.setQty(BigDecimal.ZERO);
+                itemCost.setCost(BigDecimal.ZERO);
+
+                this.itemCostRepository.save(itemCost);
+
+            });
+
+        }
+
+        return newItemDto;
 
     }
 

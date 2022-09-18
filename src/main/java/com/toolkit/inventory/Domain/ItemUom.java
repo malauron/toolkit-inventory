@@ -1,6 +1,5 @@
 package com.toolkit.inventory.Domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,17 +9,36 @@ import java.math.BigDecimal;
 @Entity
 @Getter
 @Setter
+@IdClass(ItemUomId.class)
 @Table(name = "item_uoms")
 public class ItemUom {
 
-  @EmbeddedId
-  private ItemUomId itemUomId;
+  @Id
+  @Column(name = "item_id")
+  private Long itemId;
+
+  @Id
+  @Column(name = "uom_id")
+  private Long uomId;
+
+  @ManyToOne
+  @JoinColumn(name = "item_id", insertable = false, updatable = false)
+  private Item item;
+
+  @Id
+  @ManyToOne
+  @JoinColumn(name = "uom_id", insertable = false, updatable = false)
+  private Uom uom;
+
+
+//  @EmbeddedId
+//  private ItemUomId itemUomId;
 
 //  @JsonBackReference
 //  @ManyToOne
 //  @JoinColumn(name = "item_id", insertable = false, updatable = false)
 //  private Item item;
-//
+
 //  @ManyToOne
 //  @JoinColumn(name = "uom_id", insertable = false, updatable = false)
 //  private Uom uom;

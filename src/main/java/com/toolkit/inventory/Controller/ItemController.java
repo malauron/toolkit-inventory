@@ -1,8 +1,8 @@
 package com.toolkit.inventory.Controller;
 
-import com.toolkit.inventory.Domain.Item;
+import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Service.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.toolkit.inventory.Service.ItemUomService;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -10,23 +10,34 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class ItemController {
 
-    @Autowired
     private ItemService itemService;
 
-    public ItemController(ItemService itemService) {
+    private ItemUomService itemUomService;
+
+    public ItemController(ItemService itemService,
+                          ItemUomService itemUomService) {
         this.itemService = itemService;
+        this.itemUomService = itemUomService;
     }
 
     @PostMapping("/items")
-    public Item save(@RequestBody Item itemParam) {
-        itemService.save(itemParam);
-        return itemParam;
+    public ItemDto save(@RequestBody ItemDto itemDto) {
+
+        return itemService.save(itemDto);
+
     }
 
     @PutMapping("/items")
-    public Item update(@RequestBody Item itemParam) {
-        itemService.save(itemParam);
-        return itemParam;
+    public ItemDto update(@RequestBody ItemDto itemDto) {
+        itemService.save(itemDto);
+        return itemDto;
+    }
+
+    @GetMapping("/itemUoms")
+    public ItemDto getItemUoms(@RequestParam Long itemId) {
+
+        return itemUomService.getItemUoms(itemId);
+
     }
 
 }
