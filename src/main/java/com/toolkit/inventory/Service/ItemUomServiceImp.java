@@ -37,7 +37,9 @@ public class ItemUomServiceImp implements ItemUomService {
 
   @Override
   public void save(ItemUom itemUom) {
+
     itemUomRepository.save(itemUom);
+
   }
 
   @Override
