@@ -5,6 +5,7 @@ import com.toolkit.inventory.Domain.ItemUom;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Repository.ItemRepository;
 import com.toolkit.inventory.Repository.ItemUomRepository;
+import com.toolkit.inventory.Repository.UomRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,11 +16,14 @@ import java.util.Set;
 public class ItemUomServiceImp implements ItemUomService {
 
   private ItemRepository itemRepository;
+  private UomRepository uomRepository;
   private ItemUomRepository itemUomRepository;
 
   public ItemUomServiceImp(ItemRepository itemRepository,
+                           UomRepository uomRepository,
                            ItemUomRepository itemUomRepository) {
     this.itemRepository = itemRepository;
+    this.uomRepository = uomRepository;
     this.itemUomRepository = itemUomRepository;
   }
 
@@ -38,7 +42,16 @@ public class ItemUomServiceImp implements ItemUomService {
   @Override
   public void save(ItemUom itemUom) {
 
-    itemUomRepository.save(itemUom);
+//    Optional<Item> optItem = this.itemRepository.findById(itemUom.getItem().getItemId());
+//    Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
+
+    ItemUom newItemUom = new ItemUom();
+
+    newItemUom.setItemId(itemUom.getItem().getItemId());
+    newItemUom.setUomId(itemUom.getUomId());
+    newItemUom.setQuantity(itemUom.getQuantity());
+
+    itemUomRepository.save(newItemUom);
 
   }
 
@@ -55,7 +68,9 @@ public class ItemUomServiceImp implements ItemUomService {
 
   @Override
   public void delete(ItemUom itemUom) {
+
     itemUomRepository.delete(itemUom);
+
   }
 
 }

@@ -77,8 +77,8 @@ public class PurchaseServiceImp implements PurchaseService {
 
       ItemUomId itemUomId = new ItemUomId();
 
-//      itemUomId.setItem(item.getItem());
-//      itemUomId.setUom(item.getRequiredUom());
+      itemUomId.setItemId(item.getItem().getItemId());
+      itemUomId.setUomId(item.getRequiredUom().getUomId());
 
       Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
 
