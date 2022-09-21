@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Controller;
 
+import com.toolkit.inventory.Domain.ItemBom;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Service.ItemService;
 import com.toolkit.inventory.Service.ItemUomService;
@@ -37,6 +38,27 @@ public class ItemController {
     public ItemDto getItemUoms(@RequestParam Long itemId) {
 
         return itemUomService.getItemUoms(itemId);
+
+    }
+
+    @GetMapping("/itemBoms")
+    public ItemDto getItemBoms(@RequestParam Long itemId) {
+
+        return this.itemService.getItemBom(itemId);
+
+    }
+
+    @PostMapping("/itemBoms")
+    public ItemBom addItemBoms(@RequestBody ItemBom itemBom){
+
+        return this.itemService.addItemBom(itemBom);
+
+    }
+
+    @DeleteMapping("/itemBoms")
+    public void deleteItemBoms(@RequestParam Long itemBomId) {
+
+        this.itemService.deleteItemBom(itemBomId);
 
     }
 

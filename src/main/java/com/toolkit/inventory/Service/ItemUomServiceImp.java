@@ -42,9 +42,6 @@ public class ItemUomServiceImp implements ItemUomService {
   @Override
   public void save(ItemUom itemUom) {
 
-//    Optional<Item> optItem = this.itemRepository.findById(itemUom.getItem().getItemId());
-//    Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
-
     ItemUom newItemUom = new ItemUom();
 
     newItemUom.setItemId(itemUom.getItem().getItemId());
@@ -57,7 +54,9 @@ public class ItemUomServiceImp implements ItemUomService {
 
   @Override
   public void update(ItemUom itemUom) {
+
     itemUomRepository.save(itemUom);
+
   }
 
   @Override

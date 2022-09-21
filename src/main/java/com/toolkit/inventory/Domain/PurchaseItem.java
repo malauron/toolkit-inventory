@@ -1,11 +1,14 @@
 package com.toolkit.inventory.Domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -27,6 +30,9 @@ public class PurchaseItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @Column(name = "item_class")
+    private String itemClass;
+
     @ManyToOne
     @JoinColumn(name = "base_uom_id")
     private Uom baseUom;
@@ -43,5 +49,20 @@ public class PurchaseItem {
 
     @Column(name = "cost")
     private BigDecimal cost;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "purchaseItem", cascade = CascadeType.ALL)
+    Set<PurchaseItemBom> purchaseItemBoms = new HashSet<>();
+
+    public void addPurchaseItemBom(PurchaseItemBom purchaseItemBom) {
+        if (purchaseItemBom != null) {
+            if (purchaseItemBoms == null) {
+                purchaseItemBoms = new HashSet<>();
+            }
+
+            purchaseItemBoms.add(purchaseItemBom);
+            purchaseItemBom.setPurchaseItem(this);
+        }
+    }
 
 }

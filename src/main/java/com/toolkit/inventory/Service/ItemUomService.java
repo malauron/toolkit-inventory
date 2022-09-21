@@ -10,4 +10,5 @@ public interface ItemUomService {
   void updateQuery(ItemUom itemUom);
   void delete(ItemUom itemUom);
   void update(ItemUom itemUom);
+
 }

@@ -23,17 +23,21 @@ public class ItemServiceImp implements ItemService {
 
     private UomRepository uomRepository;
 
+    private ItemBomRepository itemBomRepository;
+
     private WarehouseRepository warehouseRepository;
 
     public ItemServiceImp(ItemRepository itemRepository,
                           ItemUomRepository itemUomRepository,
                           ItemCostRepository itemCostRepository,
                           UomRepository uomRepository,
+                          ItemBomRepository itemBomRepository,
                           WarehouseRepository warehouseRepository) {
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
         this.uomRepository = uomRepository;
+        this.itemBomRepository = itemBomRepository;
         this.warehouseRepository = warehouseRepository;
     }
 
@@ -78,10 +82,28 @@ public class ItemServiceImp implements ItemService {
 
             });
 
-            System.out.println(newItem.getItemId());
+            Set<ItemBom> itemBoms = new HashSet<>();
+
+            itemDto.getItemBoms().forEach(itemBom -> {
+
+                Optional<Item> optSubItem = this.itemRepository.findById(itemBom.getSubItem().getItemId());
+
+                Optional<Uom> optReqUom = this.uomRepository.findById(itemBom.getRequiredUom().getUomId());
+
+                ItemBom newItemBom = new ItemBom();
+
+                newItemBom.setMainItem(newItem);
+                newItemBom.setSubItem(optSubItem.get());
+                newItemBom.setRequiredUom(optReqUom.get());
+                newItemBom.setRequiredQty(itemBom.getRequiredQty());
+
+                itemBoms.add(this.itemBomRepository.save(newItemBom));
+
+            });
 
             newItemDto.setItem(newItem);
             newItemDto.setItemUoms(itemUoms);
+            newItemDto.setItemBoms(itemBoms);
 
             List<Warehouse> warehouses = this.warehouseRepository.findAll();
 
@@ -103,5 +125,35 @@ public class ItemServiceImp implements ItemService {
         return newItemDto;
 
     }
+
+    @Override
+    public ItemDto getItemBom(Long itemId) {
+        Optional<Item> optItem = this.itemRepository.findById(itemId);
+
+        Set<ItemBom> itemBoms = this.itemBomRepository.findByMainItemOrderBySubItemName(optItem.get());
+
+        ItemDto itemDto = new ItemDto();
+
+        itemDto.setItemBoms(itemBoms);
+
+        return itemDto;
+    }
+
+    @Transactional
+    @Override
+    public ItemBom addItemBom(ItemBom itemBom) {
+
+        return this.itemBomRepository.save(itemBom);
+
+    }
+
+    @Transactional
+    @Override
+    public void deleteItemBom(Long itemBomId){
+
+        this.itemBomRepository.deleteById(itemBomId);
+
+    }
+
 
 }

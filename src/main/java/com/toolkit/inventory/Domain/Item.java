@@ -32,14 +32,6 @@ public class Item {
   @Column(name = "is_active")
   private Boolean isActive;
 
-//  @JsonManagedReference
-//  @OneToMany(mappedBy = "itemUomId.item", cascade = CascadeType.ALL)
-//  private Set<ItemUom> itemUom;
-
-//  @JsonManagedReference
-//  @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-//  private Set<ItemCost> itemCosts;
-
   @CreationTimestamp
   @Column(name = "date_created")
   private Date dateCreated;
@@ -47,16 +39,5 @@ public class Item {
   @UpdateTimestamp
   @Column(name = "date_updated")
   private Date dateUpdated;
-
-//  public void addItemCost(ItemCost itemCost) {
-//    if (itemCost != null) {
-//      if (itemCosts == null) {
-//        itemCosts = new HashSet<>();
-//      }
-//
-//      itemCosts.add(itemCost);
-//      itemCost.setItem(this);
-//    }
-//  }
 
 }

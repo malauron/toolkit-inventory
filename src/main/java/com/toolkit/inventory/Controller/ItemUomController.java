@@ -14,42 +14,9 @@ public class ItemUomController {
 
   private ItemUomService itemUomService;
 
-  @Autowired
-  private ItemRepository itemRepository;
-
-  @Autowired
-  private UomRepository uomRepository;
-
   public ItemUomController(ItemUomService itemUomService) {
     this.itemUomService = itemUomService;
   }
-
-//  @GetMapping("/itemUoms")
-//  public ItemUomIdDto getItemUoms(@RequestBody ItemUomIdDto itemUomIddto) {
-//
-//    ItemUomId itemUomId = new ItemUomId();
-//
-//    Optional<Item> tmpItem = this.itemRepository.findById(itemUomIddto.getItemId());
-//    if (tmpItem.isPresent()) {
-//      itemUomId.setItem(tmpItem.get());
-//    }
-//
-//    Optional<Uom> tmpUom = this.uomRepository.findById(itemUomIddto.getUomId());
-//    if (tmpUom.isPresent()) {
-//      itemUomId.setUom(tmpUom.get());
-//    }
-//
-//    System.out.println(itemUomId.getItem());
-//    System.out.println(itemUomId.getUom());
-//
-//    ItemUomIdDto itemUomIdDto = new ItemUomIdDto();
-//
-////    itemUomIdDto.setItemUoms(this.itemUomService.getItemUoms(itemUomId));
-////    this.itemUomService.getItemUoms(itemUomId);
-//
-//    return itemUomIdDto;
-////    return null;
-//  }
 
   @PostMapping("/itemUoms")
   public ItemUom save(@RequestBody ItemUom itemUomParam) {

@@ -67,8 +67,11 @@ public class PurchaseServiceImp implements PurchaseService {
     purchase.setTotalAmt(purchaseDto.getTotalAmt());
 
     Optional<Warehouse> optWhse = this.warehouseRepository.findById(purchaseDto.getWarehouse().getWarehouseId());
+
     if (optWhse.isPresent()) {
+
       purchase.setWarehouse(optWhse.get());
+
     }
 
     purchaseDto.getPurchaseItems().forEach(item -> {
@@ -105,6 +108,7 @@ public class PurchaseServiceImp implements PurchaseService {
     this.purchaseRepository.save(purchase);
 
     return purchase;
+
   }
 
   @Override
@@ -200,4 +204,7 @@ public class PurchaseServiceImp implements PurchaseService {
     return purchaseDto;
 
   }
+
+
+
 }
