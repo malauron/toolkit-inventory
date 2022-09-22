@@ -29,6 +29,10 @@ public class Customer {
     @Column(name = "customer_name")
     private String customerName;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_group_id")
+    private CustomerGroup customerGroup;
+
     @Column(name = "contact_no")
     private String contactNo;
 

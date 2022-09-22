@@ -88,6 +88,7 @@ public class CustomerServiceImp implements  CustomerService {
 
         customer.setCustomerCode(tempCustomer.getCustomerCode());
         customer.setCustomerName(tempCustomer.getCustomerName());
+        customer.setCustomerGroup(tempCustomer.getCustomerGroup());
         customer.setContactNo(tempCustomer.getContactNo());
         customer.setAddress(tempCustomer.getAddress());
         customer.setSssNo(tempCustomer.getSssNo());

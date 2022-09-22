@@ -96,6 +96,7 @@ public class PurchaseServiceImp implements PurchaseService {
       }
 
       purchaseItem.setItem(item.getItem());
+      purchaseItem.setItemClass("Stock");
       purchaseItem.setBaseUom(item.getItem().getUom());
       purchaseItem.setRequiredUom(item.getRequiredUom());
       purchaseItem.setPurchasedQty(item.getPurchasedQty());
