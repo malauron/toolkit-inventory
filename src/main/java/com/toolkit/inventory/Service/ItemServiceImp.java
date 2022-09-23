@@ -25,6 +25,8 @@ public class ItemServiceImp implements ItemService {
 
     private ItemBomRepository itemBomRepository;
 
+    private ItemGenericRepository itemGenericRepository;
+
     private WarehouseRepository warehouseRepository;
 
     public ItemServiceImp(ItemRepository itemRepository,
@@ -32,12 +34,14 @@ public class ItemServiceImp implements ItemService {
                           ItemCostRepository itemCostRepository,
                           UomRepository uomRepository,
                           ItemBomRepository itemBomRepository,
+                          ItemGenericRepository itemGenericRepository,
                           WarehouseRepository warehouseRepository) {
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
         this.uomRepository = uomRepository;
         this.itemBomRepository = itemBomRepository;
+        this.itemGenericRepository = itemGenericRepository;
         this.warehouseRepository = warehouseRepository;
     }
 
@@ -153,6 +157,19 @@ public class ItemServiceImp implements ItemService {
 
         this.itemBomRepository.deleteById(itemBomId);
 
+    }
+
+    @Override
+    public ItemDto getItemGeneric(Long itemId) {
+        Optional<Item> optItem = this.itemRepository.findById(itemId);
+
+        ItemGeneric itemGeneric = this.itemGenericRepository.findByMainItemOrderBySubItemName(optItem.get());
+
+        ItemDto itemDto = new ItemDto();
+
+        itemDto.setItemGeneric(itemGeneric);
+
+        return itemDto;
     }
 
 

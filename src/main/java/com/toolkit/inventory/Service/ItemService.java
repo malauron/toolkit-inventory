@@ -13,4 +13,6 @@ public interface ItemService {
 
     void deleteItemBom(Long itemBomId);
 
+    ItemDto getItemGeneric(Long itemId);
+
 }
