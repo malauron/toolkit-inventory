@@ -68,6 +68,7 @@ public class ItemServiceImp implements ItemService {
 
             Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
 
+            //Alternative Unit of Measure
             Set<ItemUom> itemUoms = new HashSet<>();
 
             itemDto.getItemUoms().forEach(itemUom -> {
@@ -86,6 +87,7 @@ public class ItemServiceImp implements ItemService {
 
             });
 
+            //Bill of Materials
             Set<ItemBom> itemBoms = new HashSet<>();
 
             itemDto.getItemBoms().forEach(itemBom -> {
@@ -105,9 +107,20 @@ public class ItemServiceImp implements ItemService {
 
             });
 
+            //Generic Item
+            ItemGeneric itemGeneric = new ItemGeneric();
+
+            itemGeneric.setMainItem(newItem);
+            itemGeneric.setSubItem(itemDto.getItemGeneric().getSubItem());
+            itemGeneric.setRequiredUom(itemDto.getItemGeneric().getRequiredUom());
+            itemGeneric.setRequiredQty(itemDto.getItemGeneric().getRequiredQty());
+
+            itemGeneric = this.itemGenericRepository.save(itemGeneric);
+
             newItemDto.setItem(newItem);
             newItemDto.setItemUoms(itemUoms);
             newItemDto.setItemBoms(itemBoms);
+            newItemDto.setItemGeneric(itemGeneric);
 
             List<Warehouse> warehouses = this.warehouseRepository.findAll();
 

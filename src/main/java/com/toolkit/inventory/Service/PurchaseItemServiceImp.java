@@ -1,14 +1,11 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.ItemUom;
-import com.toolkit.inventory.Domain.ItemUomId;
-import com.toolkit.inventory.Domain.Purchase;
-import com.toolkit.inventory.Domain.PurchaseItem;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.PurchaseDto;
+import com.toolkit.inventory.Repository.ItemRepository;
 import com.toolkit.inventory.Repository.ItemUomRepository;
 import com.toolkit.inventory.Repository.PurchaseItemRepository;
 import com.toolkit.inventory.Repository.PurchaseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,22 +15,33 @@ import java.util.Optional;
 @Service
 public class PurchaseItemServiceImp implements PurchaseItemService {
 
-  @Autowired
   private PurchaseRepository purchaseRepository;
 
-  @Autowired
-  PurchaseItemRepository purchaseItemRepository;
+  private PurchaseItemRepository purchaseItemRepository;
 
-  @Autowired
+  private ItemRepository itemRepository;
+
   private ItemUomRepository itemUomRepository;
+
+  public PurchaseItemServiceImp(
+          PurchaseRepository purchaseRepository,
+          PurchaseItemRepository purchaseItemRepository,
+          ItemRepository itemRepository,
+          ItemUomRepository itemUomRepository
+  ) {
+    this.purchaseRepository = purchaseRepository;
+    this.purchaseItemRepository = purchaseItemRepository;
+    this.itemRepository = itemRepository;
+    this.itemUomRepository = itemUomRepository;
+  }
 
   @Transactional
   @Override
-  public PurchaseDto putPurchaseItem(PurchaseItem item) {
+  public PurchaseDto putPurchaseItem(PurchaseItem purchaseItem) {
 
     PurchaseDto purchaseDto = new PurchaseDto();
 
-    Long purchaseId = item.getPurchase().getPurchaseId();
+    Long purchaseId = purchaseItem.getPurchase().getPurchaseId();
 
     purchaseDto.setPurchaseId(purchaseId);
 
@@ -45,48 +53,57 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
 
       purchaseDto.setPurchaseStatus(purchase.getPurchaseStatus());
 
-      PurchaseItem newItem = new PurchaseItem();
+      PurchaseItem newPurchaseItem = new PurchaseItem();
 
-      newItem.setPurchase(purchase);
+      newPurchaseItem.setPurchase(purchase);
 
       if (purchase.getPurchaseStatus().equals("Unposted")) {
 
-        if (item.getPurchaseItemId() != null) {
+        if (purchaseItem.getPurchaseItemId() != null) {
 
-          newItem.setPurchaseItemId(item.getPurchaseItemId());
+          newPurchaseItem.setPurchaseItemId(purchaseItem.getPurchaseItemId());
 
+        }
+
+        Item item = null;
+
+        Optional<Item> tmpItem = this.itemRepository.findById(purchaseItem.getItem().getItemId());
+
+        if (tmpItem.isPresent()) {
+          item = tmpItem.get();
         }
 
         ItemUomId itemUomId = new ItemUomId();
 
-        itemUomId.setItemId(item.getItem().getItemId());
-        itemUomId.setUomId(item.getRequiredUom().getUomId());
+        itemUomId.setItemId(item.getItemId());
+        itemUomId.setUomId(purchaseItem.getRequiredUom().getUomId());
 
         Optional<ItemUom> itemUom = this.itemUomRepository.findById(itemUomId);
 
         if (itemUom.isPresent()) {
 
-          newItem.setBaseQty(itemUom.get().getQuantity());
+          newPurchaseItem.setBaseQty(itemUom.get().getQuantity());
 
         } else {
 
-          newItem.setBaseQty(new BigDecimal(1));
+          newPurchaseItem.setBaseQty(new BigDecimal(1));
 
         }
 
-        newItem.setItem(item.getItem());
-        newItem.setBaseUom(item.getItem().getUom());
-        newItem.setRequiredUom(item.getRequiredUom());
-        newItem.setPurchasedQty(item.getPurchasedQty());
-        newItem.setCost(item.getCost());
+        newPurchaseItem.setItem(item);
+        newPurchaseItem.setBaseUom(item.getUom());
+        newPurchaseItem.setItemClass(item.getItemClass());
+        newPurchaseItem.setRequiredUom(purchaseItem.getRequiredUom());
+        newPurchaseItem.setPurchasedQty(purchaseItem.getPurchasedQty());
+        newPurchaseItem.setCost(purchaseItem.getCost());
 
-        this.purchaseItemRepository.save(newItem);
+        this.purchaseItemRepository.save(newPurchaseItem);
 
         purchase.setTotalAmt(this.purchaseRepository.getTotalAmt(purchase));
 
         this.purchaseRepository.save(purchase);
 
-        purchaseDto.setPurchaseItem(newItem);
+        purchaseDto.setPurchaseItem(newPurchaseItem);
 
       }
 

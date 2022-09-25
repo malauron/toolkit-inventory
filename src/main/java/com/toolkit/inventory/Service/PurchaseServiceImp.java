@@ -3,7 +3,6 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.PurchaseDto;
 import com.toolkit.inventory.Repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,20 +13,31 @@ import java.util.Set;
 @Service
 public class PurchaseServiceImp implements PurchaseService {
 
-  @Autowired
   private PurchaseRepository purchaseRepository;
 
-  @Autowired
   private PurchaseItemRepository purchaseItemRepository;
 
-  @Autowired
+  private ItemRepository itemRepository;
+
   private ItemUomRepository itemUomRepository;
 
-  @Autowired
   private ItemCostRepository itemCostRepository;
 
-  @Autowired
   private WarehouseRepository warehouseRepository;
+
+  public PurchaseServiceImp(PurchaseRepository purchaseRepository,
+                            PurchaseItemRepository purchaseItemRepository,
+                            ItemRepository itemRepository,
+                            ItemUomRepository itemUomRepository,
+                            ItemCostRepository itemCostRepository,
+                            WarehouseRepository warehouseRepository) {
+    this.purchaseRepository = purchaseRepository;
+    this.purchaseItemRepository = purchaseItemRepository;
+    this.itemRepository = itemRepository;
+    this.itemUomRepository = itemUomRepository;
+    this.itemCostRepository = itemCostRepository;
+    this.warehouseRepository = warehouseRepository;
+  }
 
   @Override
   public PurchaseDto getPurchase(Long purchaseId) {
@@ -74,35 +84,43 @@ public class PurchaseServiceImp implements PurchaseService {
 
     }
 
-    purchaseDto.getPurchaseItems().forEach(item -> {
+    purchaseDto.getPurchaseItems().forEach(purchaseItem -> {
 
-      PurchaseItem purchaseItem = new PurchaseItem();
+      Item item = null;
+
+      Optional<Item> tmpItem = this.itemRepository.findById(purchaseItem.getItem().getItemId());
+
+      if (tmpItem.isPresent()) {
+        item = tmpItem.get();
+      }
+
+      PurchaseItem newPurchaseItem = new PurchaseItem();
 
       ItemUomId itemUomId = new ItemUomId();
 
-      itemUomId.setItemId(item.getItem().getItemId());
-      itemUomId.setUomId(item.getRequiredUom().getUomId());
+      itemUomId.setItemId(item.getItemId());
+      itemUomId.setUomId(purchaseItem.getRequiredUom().getUomId());
 
       Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
 
       if (itemUom.isPresent()) {
 
-        purchaseItem.setBaseQty(itemUom.get().getQuantity());
+        newPurchaseItem.setBaseQty(itemUom.get().getQuantity());
 
       } else {
 
-        purchaseItem.setBaseQty(new BigDecimal(1));
+        newPurchaseItem.setBaseQty(new BigDecimal(1));
 
       }
 
-      purchaseItem.setItem(item.getItem());
-      purchaseItem.setItemClass("Stock");
-      purchaseItem.setBaseUom(item.getItem().getUom());
-      purchaseItem.setRequiredUom(item.getRequiredUom());
-      purchaseItem.setPurchasedQty(item.getPurchasedQty());
-      purchaseItem.setCost(item.getCost());
+      newPurchaseItem.setItem(item);
+      newPurchaseItem.setItemClass(item.getItemClass());
+      newPurchaseItem.setBaseUom(item.getUom());
+      newPurchaseItem.setRequiredUom(purchaseItem.getRequiredUom());
+      newPurchaseItem.setPurchasedQty(purchaseItem.getPurchasedQty());
+      newPurchaseItem.setCost(purchaseItem.getCost());
 
-      purchase.addPurchaseItem(purchaseItem);
+      purchase.addPurchaseItem(newPurchaseItem);
 
     });
 

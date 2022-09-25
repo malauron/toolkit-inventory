@@ -48,6 +48,13 @@ public class ItemController {
 
     }
 
+    @GetMapping("/itemGenerics")
+    public ItemDto getItemGenerics(@RequestParam Long itemId) {
+
+        return this.itemService.getItemGeneric(itemId);
+
+    }
+
     @PostMapping("/itemBoms")
     public ItemBom addItemBoms(@RequestBody ItemBom itemBom){
 
