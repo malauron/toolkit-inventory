@@ -245,6 +245,17 @@ public class PurchaseServiceImp implements PurchaseService {
               purchaseItemGeneric.setRequiredQty(requiredQty);
               purchaseItemGeneric.setPurchasedQty(purchasedQty);
 
+              ItemUomId itemUomId = new ItemUomId();
+
+              itemUomId.setItemId(item.getItemId());
+              itemUomId.setUomId(requiredUom.getUomId());
+
+              Optional<ItemUom> optionalItemUom = this.itemUomRepository.findById(itemUomId);
+
+              if (optionalItemUom.isPresent()) {
+                baseQty = optionalItemUom.get().getQuantity();
+              }
+
 
             }
 
