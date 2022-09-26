@@ -23,6 +23,8 @@ public class PurchaseServiceImp implements PurchaseService {
 
   private ItemCostRepository itemCostRepository;
 
+  private ItemGenericRepository itemGenericRepository;
+
   private WarehouseRepository warehouseRepository;
 
   public PurchaseServiceImp(PurchaseRepository purchaseRepository,
@@ -30,12 +32,14 @@ public class PurchaseServiceImp implements PurchaseService {
                             ItemRepository itemRepository,
                             ItemUomRepository itemUomRepository,
                             ItemCostRepository itemCostRepository,
+                            ItemGenericRepository itemGenericRepository,
                             WarehouseRepository warehouseRepository) {
     this.purchaseRepository = purchaseRepository;
     this.purchaseItemRepository = purchaseItemRepository;
     this.itemRepository = itemRepository;
     this.itemUomRepository = itemUomRepository;
     this.itemCostRepository = itemCostRepository;
+    this.itemGenericRepository = itemGenericRepository;
     this.warehouseRepository = warehouseRepository;
   }
 
@@ -94,14 +98,14 @@ public class PurchaseServiceImp implements PurchaseService {
         item = tmpItem.get();
       }
 
-      PurchaseItem newPurchaseItem = new PurchaseItem();
-
       ItemUomId itemUomId = new ItemUomId();
 
       itemUomId.setItemId(item.getItemId());
       itemUomId.setUomId(purchaseItem.getRequiredUom().getUomId());
 
       Optional<ItemUom> itemUom = itemUomRepository.findById(itemUomId);
+
+      PurchaseItem newPurchaseItem = new PurchaseItem();
 
       if (itemUom.isPresent()) {
 
@@ -199,16 +203,52 @@ public class PurchaseServiceImp implements PurchaseService {
 
         if (newStatus.equals("Posted")) {
 
-          Optional<Warehouse> tmpWhse = this.warehouseRepository.findById(purchase.getWarehouse().getWarehouseId());
+          Optional<Warehouse> tmpWhse = this.warehouseRepository
+                                            .findById(purchase.getWarehouse().getWarehouseId());
 
-          Set<PurchaseItem> purchaseItems = this.purchaseItemRepository.findByPurchaseOrderByItemId(purchase);
+          Set<PurchaseItem> purchaseItems = this.purchaseItemRepository
+                                                .findByPurchaseOrderByItemId(purchase);
 
           purchaseItems.forEach(purchaseItem -> {
 
-            BigDecimal qty = purchaseItem.getPurchasedQty().multiply(purchaseItem.getBaseQty());
-            BigDecimal cost = purchaseItem.getCost().divide( purchaseItem.getBaseQty());
+            BigDecimal baseQty;
+            BigDecimal requiredQty;
+            BigDecimal purchasedQty;
+            BigDecimal ttlQty = BigDecimal.ZERO;
+            BigDecimal cost = BigDecimal.ZERO;
 
-            this.itemCostRepository.setQtyCost(qty, cost, purchaseItem.getItem(), tmpWhse.get());
+            if (!purchaseItem.getItemClass().contains("Branded")) {
+
+              baseQty = purchaseItem.getBaseQty();
+              purchasedQty = purchaseItem.getPurchasedQty();
+              ttlQty = purchasedQty.multiply(baseQty);
+//              ttlQty = purchaseItem.getPurchasedQty().multiply(purchaseItem.getBaseQty());
+              cost = purchaseItem.getCost().divide( purchaseItem.getBaseQty());
+
+            } else {
+
+              ItemGeneric itemGeneric = this.itemGenericRepository
+                                            .findByMainItemOrderBySubItemName(purchaseItem.getItem());
+
+              PurchaseItemGeneric purchaseItemGeneric = new PurchaseItemGeneric();
+
+              Item item = itemGeneric.getSubItem();
+              Uom baseUom = itemGeneric.getSubItem().getUom();
+              Uom requiredUom = itemGeneric.getRequiredUom();
+              requiredQty = itemGeneric.getRequiredQty();
+              purchasedQty = purchaseItem.getPurchasedQty();
+
+              purchaseItemGeneric.setPurchaseItem(purchaseItem);
+              purchaseItemGeneric.setItem(item);
+              purchaseItemGeneric.setBaseUom(baseUom);
+              purchaseItemGeneric.setRequiredUom(requiredUom);
+              purchaseItemGeneric.setRequiredQty(requiredQty);
+              purchaseItemGeneric.setPurchasedQty(purchasedQty);
+
+
+            }
+
+            this.itemCostRepository.setQtyCost(ttlQty, cost, purchaseItem.getItem(), tmpWhse.get());
 
           });
 
