@@ -47,8 +47,11 @@ public class PurchaseItem {
     @Column(name = "purchased_qty")
     private BigDecimal purchasedQty;
 
-    @Column(name = "cost")
-    private BigDecimal cost;
+    @Column(name = "purchase_price")
+    private BigDecimal purchasePrice;
+
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "purchaseItem", cascade = CascadeType.ALL)

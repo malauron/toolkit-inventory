@@ -17,6 +17,8 @@ public class PurchaseServiceImp implements PurchaseService {
 
   private PurchaseItemRepository purchaseItemRepository;
 
+  private PurchaseItemGenericRepository purchaseItemGenericRepository;
+
   private ItemRepository itemRepository;
 
   private ItemUomRepository itemUomRepository;
@@ -29,6 +31,7 @@ public class PurchaseServiceImp implements PurchaseService {
 
   public PurchaseServiceImp(PurchaseRepository purchaseRepository,
                             PurchaseItemRepository purchaseItemRepository,
+                            PurchaseItemGenericRepository purchaseItemGenericRepository,
                             ItemRepository itemRepository,
                             ItemUomRepository itemUomRepository,
                             ItemCostRepository itemCostRepository,
@@ -36,6 +39,7 @@ public class PurchaseServiceImp implements PurchaseService {
                             WarehouseRepository warehouseRepository) {
     this.purchaseRepository = purchaseRepository;
     this.purchaseItemRepository = purchaseItemRepository;
+    this.purchaseItemGenericRepository = purchaseItemGenericRepository;
     this.itemRepository = itemRepository;
     this.itemUomRepository = itemUomRepository;
     this.itemCostRepository = itemCostRepository;
@@ -122,7 +126,8 @@ public class PurchaseServiceImp implements PurchaseService {
       newPurchaseItem.setBaseUom(item.getUom());
       newPurchaseItem.setRequiredUom(purchaseItem.getRequiredUom());
       newPurchaseItem.setPurchasedQty(purchaseItem.getPurchasedQty());
-      newPurchaseItem.setCost(purchaseItem.getCost());
+      newPurchaseItem.setPurchasePrice(purchaseItem.getPurchasePrice());
+      newPurchaseItem.setTotalAmount(purchaseItem.getTotalAmount());
 
       purchase.addPurchaseItem(newPurchaseItem);
 
@@ -211,19 +216,24 @@ public class PurchaseServiceImp implements PurchaseService {
 
           purchaseItems.forEach(purchaseItem -> {
 
+            Item item;
             BigDecimal baseQty;
             BigDecimal requiredQty;
             BigDecimal purchasedQty;
-            BigDecimal ttlQty = BigDecimal.ZERO;
-            BigDecimal cost = BigDecimal.ZERO;
+            BigDecimal purchasePrice;
+            BigDecimal totalAmount;
+            BigDecimal ttlQty;
+            BigDecimal cost;
 
             if (!purchaseItem.getItemClass().contains("Branded")) {
 
+              item = purchaseItem.getItem();
               baseQty = purchaseItem.getBaseQty();
               purchasedQty = purchaseItem.getPurchasedQty();
+              purchasePrice = purchaseItem.getPurchasePrice();
+              totalAmount = purchasePrice.multiply(purchasedQty);
               ttlQty = purchasedQty.multiply(baseQty);
-//              ttlQty = purchaseItem.getPurchasedQty().multiply(purchaseItem.getBaseQty());
-              cost = purchaseItem.getCost().divide( purchaseItem.getBaseQty());
+              cost = purchasePrice.divide(baseQty);
 
             } else {
 
@@ -232,11 +242,13 @@ public class PurchaseServiceImp implements PurchaseService {
 
               PurchaseItemGeneric purchaseItemGeneric = new PurchaseItemGeneric();
 
-              Item item = itemGeneric.getSubItem();
+              item = itemGeneric.getSubItem();
               Uom baseUom = itemGeneric.getSubItem().getUom();
               Uom requiredUom = itemGeneric.getRequiredUom();
               requiredQty = itemGeneric.getRequiredQty();
               purchasedQty = purchaseItem.getPurchasedQty();
+              purchasePrice = purchaseItem.getPurchasePrice();
+              totalAmount = purchasePrice.multiply(purchasedQty);
 
               purchaseItemGeneric.setPurchaseItem(purchaseItem);
               purchaseItemGeneric.setItem(item);
@@ -244,6 +256,8 @@ public class PurchaseServiceImp implements PurchaseService {
               purchaseItemGeneric.setRequiredUom(requiredUom);
               purchaseItemGeneric.setRequiredQty(requiredQty);
               purchaseItemGeneric.setPurchasedQty(purchasedQty);
+              purchaseItemGeneric.setPurchasePrice(purchasePrice);
+              purchaseItemGeneric.setTotalAmount(totalAmount);
 
               ItemUomId itemUomId = new ItemUomId();
 
@@ -254,12 +268,20 @@ public class PurchaseServiceImp implements PurchaseService {
 
               if (optionalItemUom.isPresent()) {
                 baseQty = optionalItemUom.get().getQuantity();
+              } else {
+                baseQty = BigDecimal.ZERO;
               }
 
+              purchaseItemGeneric.setBaseQty(baseQty);
+
+              this.purchaseItemGenericRepository.save(purchaseItemGeneric);
+
+              ttlQty = baseQty.multiply(requiredQty).multiply(purchasedQty);
+              cost = BigDecimal.ONE.divide(baseQty).divide(requiredQty).multiply(purchasePrice);
 
             }
 
-            this.itemCostRepository.setQtyCost(ttlQty, cost, purchaseItem.getItem(), tmpWhse.get());
+            this.itemCostRepository.setQtyCost(ttlQty, cost, item, tmpWhse.get());
 
           });
 

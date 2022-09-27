@@ -29,11 +29,11 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
   void setVendor(@Param("vendor") Vendor vendor, @Param("purchaseId") Long purchaseId);
 
   @Modifying
-  @Query("UPDATE Purchase p SET p.totalAmt = (SELECT SUM(i.purchasedQty * i.cost) FROM PurchaseItem i WHERE i.purchase = p) " +
+  @Query("UPDATE Purchase p SET p.totalAmt = (SELECT SUM(i.purchasedQty * i.purchasePrice) FROM PurchaseItem i WHERE i.purchase = p) " +
           "WHERE p.purchaseId = :purchaseId")
   void setTotalAmt(Long purchaseId);
 
-  @Query(value = "SELECT SUM(i.purchasedQty * i.cost) as totalAmt FROM PurchaseItem i WHERE i.purchase = :purchase")
+  @Query(value = "SELECT SUM(i.purchasedQty * i.purchasePrice) as totalAmt FROM PurchaseItem i WHERE i.purchase = :purchase")
   BigDecimal getTotalAmt(Purchase purchase);
 
   @Query(value = "SELECT p FROM Purchase p " +

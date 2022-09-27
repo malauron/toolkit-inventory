@@ -15,5 +15,5 @@ public interface PurchaseItemView {
     BigDecimal getBaseQty();
     Uom getRequiredUom();
     BigDecimal getPurchasedQty();
-    BigDecimal getCost();
+    BigDecimal getPurchasePrice();
 }
