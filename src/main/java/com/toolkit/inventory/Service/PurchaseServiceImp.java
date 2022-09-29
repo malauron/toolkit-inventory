@@ -225,7 +225,7 @@ public class PurchaseServiceImp implements PurchaseService {
             BigDecimal ttlQty;
             BigDecimal cost;
 
-            if (!purchaseItem.getItemClass().contains("Branded")) {
+            if (!purchaseItem.getItemClass().equals(ItemClass.Branded)) {
 
               item = purchaseItem.getItem();
               baseQty = purchaseItem.getBaseQty();

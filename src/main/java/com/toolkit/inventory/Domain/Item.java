@@ -27,7 +27,8 @@ public class Item {
   private Uom uom;
 
   @Column(name = "item_class")
-  private String itemClass;
+  @Enumerated(EnumType.STRING)
+  private ItemClass itemClass;
 
   @Column(name = "is_active")
   private Boolean isActive;

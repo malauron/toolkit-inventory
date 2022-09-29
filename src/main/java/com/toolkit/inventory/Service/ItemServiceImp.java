@@ -68,59 +68,70 @@ public class ItemServiceImp implements ItemService {
 
             Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
 
-            //Alternative Unit of Measure
-            Set<ItemUom> itemUoms = new HashSet<>();
-
-            itemDto.getItemUoms().forEach(itemUom -> {
-
-                Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
-
-                ItemUom newItemUom = new ItemUom();
-
-                newItemUom.setItemId(newItem.getItemId());
-                newItemUom.setItem(newItem);
-                newItemUom.setUom(optUom.get());
-                newItemUom.setUomId(optUom.get().getUomId());
-                newItemUom.setQuantity(itemUom.getQuantity());
-
-                itemUoms.add(this.itemUomRepository.save(newItemUom));
-
-            });
-
-            //Bill of Materials
-            Set<ItemBom> itemBoms = new HashSet<>();
-
-            itemDto.getItemBoms().forEach(itemBom -> {
-
-                Optional<Item> optSubItem = this.itemRepository.findById(itemBom.getSubItem().getItemId());
-
-                Optional<Uom> optReqUom = this.uomRepository.findById(itemBom.getRequiredUom().getUomId());
-
-                ItemBom newItemBom = new ItemBom();
-
-                newItemBom.setMainItem(newItem);
-                newItemBom.setSubItem(optSubItem.get());
-                newItemBom.setRequiredUom(optReqUom.get());
-                newItemBom.setRequiredQty(itemBom.getRequiredQty());
-
-                itemBoms.add(this.itemBomRepository.save(newItemBom));
-
-            });
-
-            //Generic Item
-            ItemGeneric itemGeneric = new ItemGeneric();
-
-            itemGeneric.setMainItem(newItem);
-            itemGeneric.setSubItem(itemDto.getItemGeneric().getSubItem());
-            itemGeneric.setRequiredUom(itemDto.getItemGeneric().getRequiredUom());
-            itemGeneric.setRequiredQty(itemDto.getItemGeneric().getRequiredQty());
-
-            itemGeneric = this.itemGenericRepository.save(itemGeneric);
-
             newItemDto.setItem(newItem);
-            newItemDto.setItemUoms(itemUoms);
-            newItemDto.setItemBoms(itemBoms);
-            newItemDto.setItemGeneric(itemGeneric);
+
+            if (newItem.getItemClass() == ItemClass.Stock) {
+
+                //Alternative Unit of Measure
+                Set<ItemUom> itemUoms = new HashSet<>();
+
+                itemDto.getItemUoms().forEach(itemUom -> {
+
+                    Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
+
+                    ItemUom newItemUom = new ItemUom();
+
+                    newItemUom.setItemId(newItem.getItemId());
+                    newItemUom.setItem(newItem);
+                    newItemUom.setUom(optUom.get());
+                    newItemUom.setUomId(optUom.get().getUomId());
+                    newItemUom.setQuantity(itemUom.getQuantity());
+
+                    itemUoms.add(this.itemUomRepository.save(newItemUom));
+
+                    newItemDto.setItemUoms(itemUoms);
+
+                });
+
+            } else if (newItem.getItemClass() == ItemClass.Assembly) {
+
+                //Bill of Materials
+                Set<ItemBom> itemBoms = new HashSet<>();
+
+                itemDto.getItemBoms().forEach(itemBom -> {
+
+                    Optional<Item> optSubItem = this.itemRepository.findById(itemBom.getSubItem().getItemId());
+
+                    Optional<Uom> optReqUom = this.uomRepository.findById(itemBom.getRequiredUom().getUomId());
+
+                    ItemBom newItemBom = new ItemBom();
+
+                    newItemBom.setMainItem(newItem);
+                    newItemBom.setSubItem(optSubItem.get());
+                    newItemBom.setRequiredUom(optReqUom.get());
+                    newItemBom.setRequiredQty(itemBom.getRequiredQty());
+
+                    itemBoms.add(this.itemBomRepository.save(newItemBom));
+
+                    newItemDto.setItemBoms(itemBoms);
+
+                });
+
+            } else if (newItem.getItemClass() == ItemClass.Branded) {
+
+                //Generic Item
+                ItemGeneric itemGeneric = new ItemGeneric();
+
+                itemGeneric.setMainItem(newItem);
+                itemGeneric.setSubItem(itemDto.getItemGeneric().getSubItem());
+                itemGeneric.setRequiredUom(itemDto.getItemGeneric().getRequiredUom());
+                itemGeneric.setRequiredQty(itemDto.getItemGeneric().getRequiredQty());
+
+                itemGeneric = this.itemGenericRepository.save(itemGeneric);
+
+                newItemDto.setItemGeneric(itemGeneric);
+
+            }
 
             List<Warehouse> warehouses = this.warehouseRepository.findAll();
 
@@ -183,6 +194,26 @@ public class ItemServiceImp implements ItemService {
         itemDto.setItemGeneric(itemGeneric);
 
         return itemDto;
+    }
+
+    @Override
+    public ItemGeneric updateItemGeneric(ItemGeneric tmpItmGen) {
+
+        Optional<ItemGeneric> optItmGen = this.itemGenericRepository.findById(tmpItmGen.getItemGenericId());
+
+        if (optItmGen.isPresent()) {
+
+            ItemGeneric itemGeneric = optItmGen.get();
+
+            itemGeneric.setSubItem(tmpItmGen.getSubItem());
+            itemGeneric.setRequiredUom(tmpItmGen.getRequiredUom());
+            itemGeneric.setRequiredQty(tmpItmGen.getRequiredQty());
+
+            return this.itemGenericRepository.save(itemGeneric);
+
+        }
+
+        return null;
     }
 
 

@@ -1,6 +1,7 @@
 package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Domain.ItemBom;
+import com.toolkit.inventory.Domain.ItemGeneric;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Service.ItemService;
 import com.toolkit.inventory.Service.ItemUomService;
@@ -52,6 +53,13 @@ public class ItemController {
     public ItemDto getItemGenerics(@RequestParam Long itemId) {
 
         return this.itemService.getItemGeneric(itemId);
+
+    }
+
+    @PutMapping("/itemGenerics")
+    public ItemGeneric putItemGeneric(@RequestBody ItemGeneric itemGeneric) {
+
+        return this.itemService.updateItemGeneric(itemGeneric);
 
     }
 

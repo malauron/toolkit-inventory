@@ -31,7 +31,8 @@ public class PurchaseItem {
     private Item item;
 
     @Column(name = "item_class")
-    private String itemClass;
+    @Enumerated(EnumType.STRING)
+    private ItemClass itemClass;
 
     @ManyToOne
     @JoinColumn(name = "base_uom_id")
