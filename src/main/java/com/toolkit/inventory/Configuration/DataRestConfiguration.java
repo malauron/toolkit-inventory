@@ -3,6 +3,9 @@ package com.toolkit.inventory.Configuration;
 import com.toolkit.inventory.Projection.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -15,44 +18,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Configuration
+@SpringBootApplication
 public class DataRestConfiguration implements RepositoryRestConfigurer {
 
   @Value("${allowed.origins}")
   private String[] theAllowedOrigins;
 
-//  @PersistenceContext
+  @PersistenceContext
   private EntityManager entityManager;
 
   @Autowired
-  public DataRestConfiguration(EntityManager theEntityManager) {
-    entityManager = theEntityManager;
+  public DataRestConfiguration(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 
 
   @Override
   public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
 
-//    config.getProjectionConfiguration().addProjection(ItemView.class);
-//    config.getProjectionConfiguration().addProjection(UomView.class);
-//    config.getProjectionConfiguration().addProjection(ItemUomView.class);
     config.getProjectionConfiguration().addProjection(CustomerPageView.class);
     config.getProjectionConfiguration().addProjection(CustomerSingleView.class);
 
-       // call an internal helper method
+    // call an internal helper method
     exposeIds(config);
 
-//    cors.addMapping(config.getBasePath() + "/v1/**").allowedOrigins("http://localhost:8100");
-
     cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);
-//    cors.addMapping(config.getBasePath() + "/v1/**").allowedOrigins(theAllowedOrigins);
 
   }
 
    private void exposeIds(RepositoryRestConfiguration config) {
 
     // expose entity ids
-    //
 
     // - get a list of all entity classes from the entity manager
     Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
@@ -69,6 +65,7 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
     Class[] domainTypes = entityClasses.toArray(new Class[0]);
     config.exposeIdsFor(domainTypes);
   }
+
 }
 
 
