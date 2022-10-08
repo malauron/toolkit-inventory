@@ -15,8 +15,11 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
 allowed:
-  origins: "*"
+  origins: '*'
 
 
 server:
   port: 8443
+
+jwt:
+  secret: 'eyJhbGciOiJIUzUxMiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY2NTExMTIxNywiaWF0IjoxNjY1MTExMjE3fQ.QaOzaad7qQS04PXMWdxEUKbDO8msIcf2uEWqVD4Xi_iV23qWmvOXmqtB4MaaYr6Fe4G23LsbA3GfKfOUUxfE1w'
