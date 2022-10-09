@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -19,6 +20,9 @@ public class Item {
   @Column(name = "item_id")
   private Long itemId;
 
+  @Column(name = "item_code")
+  private String itemCode;
+
   @Column(name = "item_name", unique = true)
   private String itemName;
 
@@ -29,6 +33,9 @@ public class Item {
   @Column(name = "item_class")
   @Enumerated(EnumType.STRING)
   private ItemClass itemClass;
+
+  @Column(name = "price")
+  private BigDecimal price;
 
   @Column(name = "is_active")
   private Boolean isActive;

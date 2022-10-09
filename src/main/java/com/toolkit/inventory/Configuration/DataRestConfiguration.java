@@ -1,18 +1,15 @@
 package com.toolkit.inventory.Configuration;
 
-import com.toolkit.inventory.Projection.*;
+import com.toolkit.inventory.Projection.CustomerPageView;
+import com.toolkit.inventory.Projection.CustomerSingleView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +21,6 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
   @Value("${allowed.origins}")
   private String[] theAllowedOrigins;
 
-  @PersistenceContext
   private EntityManager entityManager;
 
   @Autowired

@@ -58,8 +58,10 @@ public class ItemServiceImp implements ItemService {
             if (optItem.isPresent()) {
                 Item item = optItem.get();
 
+                item.setItemCode(itemDto.getItem().getItemCode());
                 item.setItemName(itemDto.getItem().getItemName());
                 item.setIsActive(itemDto.getItem().getIsActive());
+                item.setPrice(itemDto.getItem().getPrice());
 
                 this.itemRepository.save(item);
             }

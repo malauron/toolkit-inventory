@@ -7,7 +7,5 @@ public class JWTTokenProvider {
   @Value("jwt.secret")
   private String secret;
 
-  public String generateJwtToken(User);
-
 
 }
