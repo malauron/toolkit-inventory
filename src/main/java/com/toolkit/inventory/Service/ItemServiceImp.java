@@ -45,6 +45,19 @@ public class ItemServiceImp implements ItemService {
         this.warehouseRepository = warehouseRepository;
     }
 
+    @Override
+    public ItemDto findByItemCode(String itemCode) {
+
+        ItemDto itemDto = new ItemDto();
+
+        Optional<Item> optItem = this.itemRepository.findByItemCode(itemCode);
+
+        optItem.ifPresent(itemDto::setItem);
+
+        return itemDto;
+
+    }
+
     @Transactional
     @Override
     public ItemDto save(ItemDto itemDto) {

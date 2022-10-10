@@ -22,6 +22,13 @@ public class ItemController {
         this.itemUomService = itemUomService;
     }
 
+    @GetMapping("/items")
+    public ItemDto findByItemCode(@RequestParam String itemCode) {
+
+        return this.itemService.findByItemCode(itemCode);
+
+    }
+
     @PostMapping("/items")
     public ItemDto save(@RequestBody ItemDto itemDto) {
 

@@ -9,10 +9,13 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+
 @CrossOrigin
 @RepositoryRestResource(excerptProjection = ItemView.class)
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
+  Optional<Item> findByItemCode(@RequestParam String itemCode);
   Page<Item> findByItemNameContainingOrderByItemName(@RequestParam("itenName") String itemName, Pageable pageable);
 
 }
