@@ -6,6 +6,7 @@ import com.toolkit.inventory.Repository.ItemRepository;
 import com.toolkit.inventory.Repository.ItemUomRepository;
 import com.toolkit.inventory.Repository.PurchaseItemRepository;
 import com.toolkit.inventory.Repository.PurchaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,6 +24,7 @@ public class PurchaseItemServiceImp implements PurchaseItemService {
 
   private ItemUomRepository itemUomRepository;
 
+  @Autowired
   public PurchaseItemServiceImp(
           PurchaseRepository purchaseRepository,
           PurchaseItemRepository purchaseItemRepository,
