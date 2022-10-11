@@ -1,8 +1,8 @@
 package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Domain.ButcheryProduction;
+import com.toolkit.inventory.Domain.ButcheryProductionItem;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
-import com.toolkit.inventory.Dto.PurchaseDto;
 import com.toolkit.inventory.Service.ButcheryProductionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +45,21 @@ public class ButcheryProductionController {
   public ButcheryProductionDto setProductionStatus(@RequestBody ButcheryProductionDto butcheryProductionDto) {
 
     return this.butcheryProductionService.setProductionStatus(butcheryProductionDto);
+
+  }
+
+  @PutMapping("/butcheryProductionItems")
+  public ButcheryProductionDto putButcheryProductionItem(@RequestBody ButcheryProductionItem butcheryProductionItem) {
+
+    return this.butcheryProductionService.putButcheryProductionItem(butcheryProductionItem);
+
+  }
+
+  @DeleteMapping("/butcheryProductionItems")
+  public ButcheryProductionDto deleteButcheryProductionItem(
+          @RequestBody ButcheryProductionItem butcheryProductionItem) {
+
+    return this.butcheryProductionService.deleteButcheryProductionItem(butcheryProductionItem);
 
   }
 

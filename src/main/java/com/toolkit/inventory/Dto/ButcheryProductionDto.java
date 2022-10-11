@@ -15,6 +15,7 @@ public class ButcheryProductionDto {
     private Long butcheryProductionId;
     private Warehouse warehouse;
     private Set<ButcheryProductionItem> butcheryProductionItems;
+    private ButcheryProductionItem butcheryProductionItem;
     private BigDecimal totalAmount;
     private String productionStatus;
     private Date dateCreated;

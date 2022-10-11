@@ -223,4 +223,122 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         return newButcheryProductionDto;
     }
+
+    @Override
+    @Transactional
+    public ButcheryProductionDto putButcheryProductionItem(
+            ButcheryProductionItem butcheryProductionItem) {
+
+        ButcheryProductionDto productionDto = new ButcheryProductionDto();
+
+        Long productionId = butcheryProductionItem
+                .getButcheryProduction().getButcheryProductionId();
+
+        productionDto.setButcheryProductionId(productionId);
+
+        Optional<ButcheryProduction> optProd = this.butcheryProductionRepository
+                .findByButcheryProductionId(productionId);
+
+        if (optProd.isPresent()) {
+
+            ButcheryProduction butcheryProduction = optProd.get();
+
+            productionDto.setProductionStatus(butcheryProduction.getProductionStatus());
+
+            ButcheryProductionItem newProductionItem = new ButcheryProductionItem();
+
+            newProductionItem.setButcheryProduction(butcheryProduction);
+
+            if (butcheryProduction.getProductionStatus().equals("Unposted")) {
+
+                if (butcheryProductionItem.getButcheryProductionItemId() != null) {
+
+                    newProductionItem.setButcheryProductionItemId(
+                            butcheryProductionItem.getButcheryProductionItemId());
+
+                }
+
+                Item item = null;
+
+                Optional<Item> tmpItem = this.itemRepository.findById(
+                        butcheryProductionItem.getItem().getItemId());
+
+                if (tmpItem.isPresent()) {
+                    item = tmpItem.get();
+                }
+
+                ItemUomId itemUomId = new ItemUomId();
+
+                itemUomId.setItemId(item.getItemId());
+                itemUomId.setUomId(butcheryProductionItem.getRequiredUom().getUomId());
+
+                Optional<ItemUom> itemUom = this.itemUomRepository.findById(itemUomId);
+
+                if (itemUom.isPresent()) {
+
+                    newProductionItem.setBaseQty(itemUom.get().getQuantity());
+
+                } else {
+
+                    newProductionItem.setBaseQty(new BigDecimal(1));
+
+                }
+
+                newProductionItem.setItem(item);
+                newProductionItem.setBarcode(butcheryProductionItem.getBarcode());
+                newProductionItem.setBaseUom(item.getUom());
+                newProductionItem.setItemClass(item.getItemClass());
+                newProductionItem.setRequiredUom(butcheryProductionItem.getRequiredUom());
+                newProductionItem.setProducedQty(butcheryProductionItem.getProducedQty());
+                newProductionItem.setProductionCost(butcheryProductionItem.getProductionCost());
+                newProductionItem.setTotalAmount((butcheryProductionItem.getTotalAmount()));
+
+                this.butcheryProductionItemRepository.save(newProductionItem);
+
+                butcheryProduction.setTotalAmount(this.butcheryProductionRepository.getTotalAmount(butcheryProduction));
+
+                this.butcheryProductionRepository.save(butcheryProduction);
+
+                productionDto.setButcheryProductionItem(newProductionItem);
+
+            }
+
+        }
+
+        return productionDto;
+
+    }
+
+    @Override
+    @Transactional
+    public ButcheryProductionDto deleteButcheryProductionItem(
+            ButcheryProductionItem butcheryProductionItem) {
+
+        ButcheryProductionDto butcheryProductionDto =
+                new ButcheryProductionDto();
+
+        Long productionItemId = butcheryProductionItem.getButcheryProductionItemId();
+
+        Long productionId = butcheryProductionItem.getButcheryProduction().getButcheryProductionId();
+
+        butcheryProductionDto.setButcheryProductionId(productionId);
+
+        Optional<ButcheryProduction> optProd = this.butcheryProductionRepository.findByButcheryProductionId(productionId);
+
+        if (optProd.isPresent()) {
+            ButcheryProduction production = optProd.get();
+
+            butcheryProductionDto.setProductionStatus(production.getProductionStatus());
+
+            if (production.getProductionStatus().equals("Unposted")) {
+
+                this.butcheryProductionItemRepository.deleteById(productionItemId);
+
+                production.setTotalAmount(this.butcheryProductionRepository
+                        .getTotalAmount(production));
+            }
+        }
+
+        return butcheryProductionDto;
+    }
 }

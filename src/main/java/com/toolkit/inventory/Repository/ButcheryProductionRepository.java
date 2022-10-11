@@ -11,6 +11,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.LockModeType;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,9 +21,13 @@ public interface ButcheryProductionRepository extends JpaRepository<ButcheryProd
     @Lock(LockModeType.OPTIMISTIC)
     Optional<ButcheryProduction> findByButcheryProductionId(Long id);
 
+    @Query(value = "SELECT SUM(b.totalAmount) AS totalAmount FROM ButcheryProductionItem b " +
+                   "WHERE b.butcheryProduction = :butcheryProduction")
+    BigDecimal getTotalAmount(ButcheryProduction butcheryProduction);
+
     @Query(value = "SELECT b FROM ButcheryProduction b " +
                    "WHERE (b.butcheryProductionId LIKE :butcheryProductionId " +
-                   "OR b.warehouse.warehouseName like :warehouseName) " +
+                   "OR b.warehouse.warehouseName like %:warehouseName%) " +
                    "AND b.productionStatus IN :productionStatus " +
                    "ORDER BY b.butcheryProductionId DESC")
     Page<ButcheryProduction> findByCustomParam(
