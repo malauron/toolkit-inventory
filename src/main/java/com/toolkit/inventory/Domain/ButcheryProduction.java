@@ -3,6 +3,8 @@ package com.toolkit.inventory.Domain;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -30,15 +32,17 @@ public class ButcheryProduction {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    @Column(name = "total_weight")
-    private BigDecimal totalWeight;
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
 
     @Column(name = "production_status")
     private String productionStatus;
 
+    @CreationTimestamp
     @Column(name = "date_created")
     private Date dateCreated;
 
+    @UpdateTimestamp
     @Column(name = "date_updated")
     private Date dateUpdated;
 

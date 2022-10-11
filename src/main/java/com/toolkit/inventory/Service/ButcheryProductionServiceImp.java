@@ -56,7 +56,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         if (optProd.isPresent()) {
             butcheryProductionDto.setButcheryProductionId(butcheryProductionId);
             butcheryProductionDto.setWarehouse(optProd.get().getWarehouse());
-            butcheryProductionDto.setTotalWeight(optProd.get().getTotalWeight());
+            butcheryProductionDto.setTotalAmount(optProd.get().getTotalAmount());
             butcheryProductionDto.setProductionStatus(optProd.get().getProductionStatus());
             butcheryProductionDto.setDateCreated(optProd.get().getDateCreated());
 
@@ -77,7 +77,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         ButcheryProduction newButcheryProduction = new ButcheryProduction();
 
-        newButcheryProduction.setTotalWeight(butcheryProductionDto.getTotalWeight());
+        newButcheryProduction.setTotalAmount(butcheryProductionDto.getTotalAmount());
         newButcheryProduction.setProductionStatus("Unposted");
 
         Optional<Warehouse> optWhse = this.warehouseRepository.findById(butcheryProductionDto.getWarehouse().getWarehouseId());
@@ -117,6 +117,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
             }
 
             newButcheryProductionItem.setItem(item);
+            newButcheryProductionItem.setBarcode(butcheryProductionItem.getBarcode());
             newButcheryProductionItem.setItemClass(item.getItemClass());
             newButcheryProductionItem.setBaseUom(item.getUom());
             newButcheryProductionItem.setRequiredUom(butcheryProductionItem.getRequiredUom());

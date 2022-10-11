@@ -27,6 +27,9 @@ public class ButcheryProductionItem {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @Column(name = "barcode")
+    private String barcode;
+
     @Column(name = "item_class")
     @Enumerated(EnumType.STRING)
     private ItemClass itemClass;

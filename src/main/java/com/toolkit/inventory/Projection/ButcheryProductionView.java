@@ -11,7 +11,7 @@ import java.util.Date;
 public interface ButcheryProductionView {
     Long getButcheryProductionId();
     Warehouse getWarehouse();
-    BigDecimal getTotalWeight();
+    BigDecimal getTotalAmount();
     String getProductionStatus();
     Date getDateCreated();
 }
