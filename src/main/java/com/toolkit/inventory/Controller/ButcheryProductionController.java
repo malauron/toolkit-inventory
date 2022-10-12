@@ -19,7 +19,7 @@ public class ButcheryProductionController {
     this.butcheryProductionService = butcheryProductionService;
   }
 
-  @GetMapping("butcheryProductions")
+  @GetMapping("/butcheryProductions")
   public ButcheryProductionDto getButcheryProduction(
           @RequestParam Long butcheryProductionId) {
 

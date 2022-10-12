@@ -19,7 +19,7 @@ public class ButcheryReleasingController {
     this.butcheryReleasingService = butcheryReleasingService;
   }
 
-  @GetMapping("butcheryReleasings")
+  @GetMapping("/butcheryReleasings")
   public ButcheryReleasingDto getButcheryReleasing(
           @RequestParam Long butcheryReleasingId) {
 
