@@ -14,20 +14,29 @@ import java.util.Set;
 @Service
 public class OrderServiceImp  implements OrderService {
 
-  @Autowired
   private OrderRepository orderRepository;
 
-  @Autowired
   private OrderMenuIngredientRepository orderMenuIngredientRepository;
 
-  @Autowired
   private CartMenuRepository cartMenuRepository;
 
-  @Autowired
   private WarehouseRepository warehouseRepository;
 
-  @Autowired
   private ItemCostRepository itemCostRepository;
+
+  @Autowired
+  public OrderServiceImp(OrderRepository orderRepository,
+                         OrderMenuIngredientRepository orderMenuIngredientRepository,
+                         CartMenuRepository cartMenuRepository,
+                         WarehouseRepository warehouseRepository,
+                         ItemCostRepository itemCostRepository) {
+    this.orderRepository = orderRepository;
+    this.orderMenuIngredientRepository = orderMenuIngredientRepository;
+    this.cartMenuRepository = cartMenuRepository;
+    this.warehouseRepository = warehouseRepository;
+    this.itemCostRepository = itemCostRepository;
+
+  }
 
   @Override
   public Optional<Order> findById(Long orderId) {
