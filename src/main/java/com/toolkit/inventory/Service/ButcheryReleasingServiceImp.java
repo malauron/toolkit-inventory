@@ -312,6 +312,7 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                 }
 
                 newReleasingItem.setItem(item);
+                newReleasingItem.setCost(BigDecimal.ZERO);
                 newReleasingItem.setBarcode(butcheryReleasingItem.getBarcode());
                 newReleasingItem.setBaseUom(item.getUom());
                 newReleasingItem.setItemClass(item.getItemClass());
