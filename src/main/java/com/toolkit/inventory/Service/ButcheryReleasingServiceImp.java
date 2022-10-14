@@ -30,6 +30,8 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
 
     private CustomerRepository customerRepository;
 
+    private ButcheryProductionItemRepository butcheryProductionItemRepository;
+
     @Autowired
     public ButcheryReleasingServiceImp(ButcheryReleasingRepository butcheryReleasingRepository,
                                        ButcheryReleasingItemRepository butcheryReleasingItemRepository,
@@ -37,7 +39,8 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                                        ItemCostRepository itemCostRepository,
                                        ItemGenericRepository itemGenericRepository,
                                        WarehouseRepository warehouseRepository,
-                                       CustomerRepository customerRepository) {
+                                       CustomerRepository customerRepository,
+                                       ButcheryProductionItemRepository butcheryProductionItemRepository) {
         this.butcheryReleasingRepository = butcheryReleasingRepository;
         this.butcheryReleasingItemRepository = butcheryReleasingItemRepository;
         this.itemRepository = itemRepository;
@@ -46,6 +49,7 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
         this.itemGenericRepository = itemGenericRepository;
         this.warehouseRepository = warehouseRepository;
         this.customerRepository = customerRepository;
+        this.butcheryProductionItemRepository = butcheryProductionItemRepository;
 
     }
 
@@ -236,6 +240,27 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                             this.butcheryReleasingItemRepository.save(butcheryReleasingItem);
                             this.itemCostRepository.setQty(ttlQty, itemCost.getItemCostId());
 
+                        }
+
+                        Optional<ButcheryProductionItem> optProdItem = this.butcheryProductionItemRepository
+                                .findByCustomParams(
+                                        butcheryReleasingItem.getBarcode(),
+                                        butcheryReleasingItem.getItem(),
+                                        butcheryReleasingItem.getButcheryReleasing().getWarehouse()
+                                );
+
+                        if (optProdItem.isPresent()) {
+                            System.out.println(optProdItem.get().getButcheryProductionItemId());
+                            optProdItem.get().setItemStatus("Released");
+                            this.butcheryProductionItemRepository.save(optProdItem.get());
+
+//                            Optional<ButcheryProductionItem> optProdItemLock = this.butcheryProductionItemRepository
+//                                    .findByButcheryProductionItemId(optProdItem.get().getButcheryProductionItemId());
+//
+//                            if (optProdItemLock.isPresent()) {
+//                                System.out.println("Posted");
+//                                this.butcheryProductionItemRepository.save(optProdItemLock.get());
+//                            }
                         }
 
                     });

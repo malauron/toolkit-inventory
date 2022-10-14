@@ -34,6 +34,9 @@ public class ButcheryProductionItem {
     @Enumerated(EnumType.STRING)
     private ItemClass itemClass;
 
+    @Column(name = "item_status")
+    private String itemStatus;
+
     @ManyToOne
     @JoinColumn(name = "base_uom_id")
     private Uom baseUom;
@@ -54,4 +57,7 @@ public class ButcheryProductionItem {
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
 }

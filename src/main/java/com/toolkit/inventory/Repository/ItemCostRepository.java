@@ -16,6 +16,7 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface ItemCostRepository extends JpaRepository<ItemCost, Long> {
 
+
     @Modifying
     @Query(value = "UPDATE ItemCost i SET i.qty = i.qty + :qty, " +
                     "i.cost = CASE WHEN (i.cost > 0) THEN ((i.cost + :cost)/2) ELSE (:cost) END " +
