@@ -34,8 +34,9 @@ public class ButcheryProductionItem {
     @Enumerated(EnumType.STRING)
     private ItemClass itemClass;
 
-    @Column(name = "item_status")
-    private String itemStatus;
+    @ManyToOne
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
 
     @ManyToOne
     @JoinColumn(name = "base_uom_id")
@@ -56,6 +57,9 @@ public class ButcheryProductionItem {
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
+
+    @Column(name = "is_available")
+    private Boolean isAvailable;
 
     @Version
     @Column(name = "version")

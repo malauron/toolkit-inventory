@@ -243,7 +243,7 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                         }
 
                         Optional<ButcheryProductionItem> optProdItem = this.butcheryProductionItemRepository
-                                .findByCustomParams(
+                                .findFirstByBarcodeAndItemAndWarehouseAndIsAvailableIsTrue(
                                         butcheryReleasingItem.getBarcode(),
                                         butcheryReleasingItem.getItem(),
                                         butcheryReleasingItem.getButcheryReleasing().getWarehouse()
@@ -251,16 +251,10 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
 
                         if (optProdItem.isPresent()) {
                             System.out.println(optProdItem.get().getButcheryProductionItemId());
-                            optProdItem.get().setItemStatus("Released");
+                            optProdItem.get().setIsAvailable(false);
                             this.butcheryProductionItemRepository.save(optProdItem.get());
 
-//                            Optional<ButcheryProductionItem> optProdItemLock = this.butcheryProductionItemRepository
-//                                    .findByButcheryProductionItemId(optProdItem.get().getButcheryProductionItemId());
-//
-//                            if (optProdItemLock.isPresent()) {
-//                                System.out.println("Posted");
-//                                this.butcheryProductionItemRepository.save(optProdItemLock.get());
-//                            }
+                            butcheryReleasingItem.setButcheryProductionItem(optProdItem.get());
                         }
 
                     });

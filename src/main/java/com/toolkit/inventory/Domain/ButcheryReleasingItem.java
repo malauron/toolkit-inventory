@@ -57,4 +57,8 @@ public class ButcheryReleasingItem {
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
+    @OneToOne
+    @JoinColumn(name = "butchery_production_item_id")
+    private ButcheryProductionItem butcheryProductionItem;
+
 }
