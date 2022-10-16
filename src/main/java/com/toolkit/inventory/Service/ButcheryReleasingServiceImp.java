@@ -250,11 +250,13 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                                 );
 
                         if (optProdItem.isPresent()) {
-                            System.out.println(optProdItem.get().getButcheryProductionItemId());
+
                             optProdItem.get().setIsAvailable(false);
                             this.butcheryProductionItemRepository.save(optProdItem.get());
 
                             butcheryReleasingItem.setButcheryProductionItem(optProdItem.get());
+                            this.butcheryReleasingItemRepository.save(butcheryReleasingItem);
+
                         }
 
                     });

@@ -26,12 +26,12 @@ public interface ButcheryProductionRepository extends JpaRepository<ButcheryProd
     BigDecimal getTotalAmount(ButcheryProduction butcheryProduction);
 
     @Query(value = "SELECT b FROM ButcheryProduction b " +
-                   "WHERE (b.butcheryProductionId LIKE :butcheryProductionId " +
+                   "WHERE (CONCAT(b.butcheryProductionId,'') LIKE %:butcheryProductionId% " +
                    "OR b.warehouse.warehouseName like %:warehouseName%) " +
                    "AND b.productionStatus IN :productionStatus " +
                    "ORDER BY b.butcheryProductionId DESC")
     Page<ButcheryProduction> findByCustomParam(
-                   @RequestParam("butcheryProductionId") Long butcheryProductionId,
+                   @RequestParam("butcheryProductionId") String butcheryProductionId,
                    @RequestParam("warehouseName") String warehouseName,
                    @RequestParam("productionStatus") Set<String> productionStatus,
                    Pageable pageable);

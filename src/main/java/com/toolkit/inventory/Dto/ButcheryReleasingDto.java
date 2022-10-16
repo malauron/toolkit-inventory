@@ -21,4 +21,5 @@ public class ButcheryReleasingDto {
     private BigDecimal totalAmount;
     private String releasingStatus;
     private Date dateCreated;
+    private String errorDescription;
 }

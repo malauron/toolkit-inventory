@@ -4,8 +4,12 @@ import com.toolkit.inventory.Domain.ButcheryReleasing;
 import com.toolkit.inventory.Domain.ButcheryReleasingItem;
 import com.toolkit.inventory.Dto.ButcheryReleasingDto;
 import com.toolkit.inventory.Service.ButcheryReleasingService;
+import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.NoSuchElementException;
 
 @CrossOrigin
 @RestController
@@ -44,7 +48,23 @@ public class ButcheryReleasingController {
   @PutMapping("/butcheryReleasings/releasingStatus")
   public ButcheryReleasingDto setReleasingStatus(@RequestBody ButcheryReleasingDto butcheryReleasingDto) {
 
-    return this.butcheryReleasingService.setReleasingStatus(butcheryReleasingDto);
+    try {
+
+      return this.butcheryReleasingService.setReleasingStatus(butcheryReleasingDto);
+
+    } catch (NoSuchElementException ex) {
+      butcheryReleasingDto.setErrorDescription("No Such Element Exception");
+      return butcheryReleasingDto;
+    } catch (StaleStateException ex) {
+      butcheryReleasingDto.setErrorDescription("Stale State Exception");
+      return butcheryReleasingDto;
+    } catch (ObjectOptimisticLockingFailureException ex){
+      butcheryReleasingDto.setErrorDescription("Stale data detected. Please try again.");
+      return butcheryReleasingDto;
+    } catch (Exception ex) {
+      butcheryReleasingDto.setErrorDescription(ex.getMessage());
+      return butcheryReleasingDto;
+    }
 
   }
 

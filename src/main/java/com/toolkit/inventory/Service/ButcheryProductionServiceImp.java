@@ -124,6 +124,8 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
             newButcheryProductionItem.setProducedQty(butcheryProductionItem.getProducedQty());
             newButcheryProductionItem.setProductionCost(butcheryProductionItem.getProductionCost());
             newButcheryProductionItem.setTotalAmount(butcheryProductionItem.getTotalAmount());
+            newButcheryProductionItem.setWarehouse(newButcheryProduction.getWarehouse());
+            newButcheryProductionItem.setIsAvailable(false);
 
             newButcheryProduction.addButcheryProductionItem(newButcheryProductionItem);
 
@@ -201,6 +203,9 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                                     .findByButcheryProductionOrderByItemName(butcheryProduction);
 
                     butcheryProductionItems.forEach(butcheryProductionItem -> {
+
+                        butcheryProductionItem.setIsAvailable(true);
+                        this.butcheryProductionItemRepository.save(butcheryProductionItem);
 
                         Item item = butcheryProductionItem.getItem();
                         BigDecimal baseQty = butcheryProductionItem.getBaseQty();
@@ -292,6 +297,8 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                 newProductionItem.setProducedQty(butcheryProductionItem.getProducedQty());
                 newProductionItem.setProductionCost(butcheryProductionItem.getProductionCost());
                 newProductionItem.setTotalAmount((butcheryProductionItem.getTotalAmount()));
+                newProductionItem.setWarehouse(butcheryProduction.getWarehouse());
+                newProductionItem.setIsAvailable(false);
 
                 this.butcheryProductionItemRepository.save(newProductionItem);
 
