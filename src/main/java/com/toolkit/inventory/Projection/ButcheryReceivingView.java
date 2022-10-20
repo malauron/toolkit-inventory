@@ -14,6 +14,7 @@ public interface ButcheryReceivingView {
     Long getButcheryReceivingId();
     Warehouse getWarehouse();
     Vendor getVendor();
+    String getReferenceCode();
     BigDecimal getTotalAmount();
     String getReceivingStatus();
     Date getDateCreated();

@@ -36,6 +36,9 @@ public class ButcheryReceiving {
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
+    @Column(name = "reference_code")
+    private String referenceCode;
+
     @Column(name = "receiving_status")
     private String receivingStatus;
 

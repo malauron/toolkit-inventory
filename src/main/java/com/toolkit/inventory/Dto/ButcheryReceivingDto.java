@@ -17,6 +17,7 @@ public class ButcheryReceivingDto {
     private Long butcheryReceivingId;
     private Warehouse warehouse;
     private Vendor vendor;
+    private String referenceCode;
     private Set<ButcheryReceivingItem> butcheryReceivingItems;
     private ButcheryReceivingItem butcheryReceivingItem;
     private BigDecimal totalAmount;
