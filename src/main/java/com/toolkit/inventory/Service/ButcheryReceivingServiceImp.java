@@ -133,6 +133,8 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
             newButcheryReceivingItem.setRequiredUom(butcheryReceivingItem.getRequiredUom());
             newButcheryReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
             newButcheryReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
+            newButcheryReceivingItem.setDocumentedWeight(butcheryReceivingItem.getDocumentedWeight());
+            newButcheryReceivingItem.setActualWeight(butcheryReceivingItem.getActualWeight());
             newButcheryReceivingItem.setTotalAmount(butcheryReceivingItem.getTotalAmount());
 
             newButcheryReceiving.addButcheryReceivingItem(newButcheryReceivingItem);
@@ -309,6 +311,8 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                 newReceivingItem.setRequiredUom(butcheryReceivingItem.getRequiredUom());
                 newReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
                 newReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
+                newReceivingItem.setDocumentedWeight(butcheryReceivingItem.getDocumentedWeight());
+                newReceivingItem.setActualWeight(butcheryReceivingItem.getActualWeight());
                 newReceivingItem.setTotalAmount((butcheryReceivingItem.getTotalAmount()));
 
                 this.butcheryReceivingItemRepository.save(newReceivingItem);
