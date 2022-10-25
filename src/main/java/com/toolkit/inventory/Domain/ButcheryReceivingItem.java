@@ -51,11 +51,11 @@ public class ButcheryReceivingItem {
     @Column(name = "item_cost")
     private BigDecimal itemCost;
 
-    @Column(name = "documented_weight")
-    private BigDecimal documentedWeight;
+    @Column(name = "documented_qty")
+    private BigDecimal documentedQty;
 
-    @Column(name = "actual_weight")
-    private BigDecimal actualWeight;
+    @Column(name = "remarks")
+    private String remarks;
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
