@@ -1,18 +1,16 @@
 package com.toolkit.inventory.Repository;
 
-import com.toolkit.inventory.Domain.*;
+import com.toolkit.inventory.Domain.ButcheryProduction;
+import com.toolkit.inventory.Domain.ButcheryProductionSource;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import javax.persistence.LockModeType;
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.Set;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = ButcheryProductionSourceView.class)
 public interface ButcheryProductionSourceRepository extends JpaRepository<ButcheryProductionSource, Long> {
 
     @Query(value = "SELECT b FROM ButcheryProductionSource  b WHERE b.butcheryProduction = :butcheryProduction " +

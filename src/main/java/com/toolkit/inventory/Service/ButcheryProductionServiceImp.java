@@ -3,7 +3,6 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
-import com.toolkit.inventory.Projection.ButcheryReceivingItemView;
 import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -230,6 +229,36 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
                     Warehouse warehouse = butcheryProduction.getWarehouse();
 
+                    Set<ButcheryProductionSource> butcheryProductionSources =
+                            this.butcheryProductionSourceRepository
+                                    .findByButcheryProductionOrderByButcheryReceivingItemId(butcheryProduction);
+
+                    butcheryProductionSources.forEach(butcheryProductionSource -> {
+
+                        Long receivingItemId = butcheryProductionSource
+                                .getButcheryReceivingItem().getButcheryReceivingItemId();
+
+                        Item item = butcheryProductionSource.getButcheryReceivingItem().getItem();
+
+                        Optional<ItemCost> optItemCost = this.itemCostRepository
+                                .findByItemAndWarehouse(item, warehouse);
+
+                        if (optItemCost.isPresent()) {
+
+                            ItemCost itemCost = optItemCost.get();
+
+                            BigDecimal totalQty = butcheryProductionSource.getRequiredQty();
+
+                            this.itemCostRepository.setQty(totalQty, itemCost.getItemCostId());
+
+                            this.butcheryReceivingItemRepository
+                                    .setUsedQty(totalQty.multiply(new BigDecimal(-1)),
+                                            receivingItemId);
+
+                        }
+
+                    });
+
                     Set<ButcheryProductionItem> butcheryProductionItems =
                             this.butcheryProductionItemRepository
                                     .findByButcheryProductionOrderByItemName(butcheryProduction);
@@ -243,10 +272,10 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                         BigDecimal baseQty = butcheryProductionItem.getBaseQty();
                         BigDecimal producedQty = butcheryProductionItem.getProducedQty();
                         BigDecimal productionCost = butcheryProductionItem.getProductionCost();
-                        BigDecimal ttQty =  producedQty.multiply(baseQty);
+                        BigDecimal totalQty =  producedQty.multiply(baseQty);
                         BigDecimal cost = productionCost.divide(baseQty);
 
-                        this.itemCostRepository.setQtyCost(ttQty, cost, item, warehouse);
+                        this.itemCostRepository.setQtyCost(totalQty, cost, item, warehouse);
 
                     });
 
