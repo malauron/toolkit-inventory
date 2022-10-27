@@ -3,6 +3,7 @@ package com.toolkit.inventory.Controller;
 import com.toolkit.inventory.Domain.ButcheryReceiving;
 import com.toolkit.inventory.Domain.ButcheryReceivingItem;
 import com.toolkit.inventory.Dto.ButcheryReceivingDto;
+import com.toolkit.inventory.Projection.ButcheryReceivingItemView;
 import com.toolkit.inventory.Service.ButcheryReceivingService;
 import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -31,6 +33,11 @@ public class ButcheryReceivingController {
 
   }
 
+  @GetMapping("/butcheryReceivingItems")
+  public Optional<ButcheryReceivingItemView> getButcheryReceivingItem(
+          @RequestParam Long butcheryReceivingItemId) {
+    return this.butcheryReceivingService.getButcheryReceivingItem(butcheryReceivingItemId);
+  }
   @PostMapping("/butcheryReceivings")
   public ButcheryReceiving save(@RequestBody ButcheryReceivingDto butcheryReceivingDto) {
 

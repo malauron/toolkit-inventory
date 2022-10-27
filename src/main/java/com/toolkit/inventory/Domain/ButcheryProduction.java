@@ -23,9 +23,15 @@ public class ButcheryProduction {
     @Column(name = "butchery_production_id")
     private Long butcheryProductionId;
 
+
     @JsonManagedReference
     @OneToMany(mappedBy = "butcheryProduction", cascade = CascadeType.ALL)
     private Set<ButcheryProductionItem> butcheryProductionItems =
+            new HashSet<>();
+
+    @JsonManagedReference(value = "butcheryProductionSource")
+    @OneToMany(mappedBy = "butcheryProduction", cascade = CascadeType.ALL)
+    private Set<ButcheryProductionSource> butcheryProductionSources =
             new HashSet<>();
 
     @ManyToOne
@@ -58,6 +64,17 @@ public class ButcheryProduction {
 
             this.butcheryProductionItems.add(butcheryProductionItem);
             butcheryProductionItem.setButcheryProduction(this);
+        }
+    }
+
+    public void addButcheryProductionSource(ButcheryProductionSource butcheryProductionSource) {
+        if (butcheryProductionSource != null) {
+            if (this.butcheryProductionSources == null) {
+                this.butcheryProductionSources = new HashSet<>();
+            }
+
+            this.butcheryProductionSources.add(butcheryProductionSource);
+            butcheryProductionSource.setButcheryProduction(this);
         }
     }
 

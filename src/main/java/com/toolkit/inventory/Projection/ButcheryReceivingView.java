@@ -1,7 +1,6 @@
 package com.toolkit.inventory.Projection;
 
 import com.toolkit.inventory.Domain.ButcheryReceiving;
-import com.toolkit.inventory.Domain.Customer;
 import com.toolkit.inventory.Domain.Vendor;
 import com.toolkit.inventory.Domain.Warehouse;
 import org.springframework.data.rest.core.config.Projection;

@@ -2,6 +2,7 @@ package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryReceivingDto;
+import com.toolkit.inventory.Projection.ButcheryReceivingItemView;
 import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,6 +76,11 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
     }
 
     @Override
+    public Optional<ButcheryReceivingItemView> getButcheryReceivingItem(Long butcheryReceivingItemId) {
+        return this.butcheryReceivingItemRepository.findByIdAndIsAvailable(butcheryReceivingItemId);
+    }
+
+    @Override
     @Transactional
     public ButcheryReceiving save(ButcheryReceivingDto butcheryReceivingDto) {
 
@@ -134,7 +140,9 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
             newButcheryReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
             newButcheryReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
             newButcheryReceivingItem.setDocumentedQty(butcheryReceivingItem.getDocumentedQty());
+            newButcheryReceivingItem.setUsedQty(BigDecimal.ZERO);
             newButcheryReceivingItem.setRemarks(butcheryReceivingItem.getRemarks());
+            newButcheryReceivingItem.setIsAvailable(false);
             newButcheryReceivingItem.setTotalAmount(butcheryReceivingItem.getTotalAmount());
 
             newButcheryReceiving.addButcheryReceivingItem(newButcheryReceivingItem);
@@ -222,6 +230,8 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
                     butcheryReceivingItems.forEach(butcheryReceivingItem -> {
 
+                        butcheryReceivingItem.setIsAvailable(true);
+
                         Item item = butcheryReceivingItem.getItem();
                         BigDecimal baseQty = butcheryReceivingItem.getBaseQty();
                         BigDecimal receivedQty = butcheryReceivingItem.getReceivedQty();
@@ -230,6 +240,8 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                         BigDecimal cost = itemCost.divide(baseQty);
 
                         this.itemCostRepository.setQtyCost(ttQty, cost, item, warehouse);
+
+                        this.butcheryReceivingItemRepository.save(butcheryReceivingItem);
 
                     });
 
@@ -312,7 +324,9 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                 newReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
                 newReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
                 newReceivingItem.setDocumentedQty(butcheryReceivingItem.getDocumentedQty());
+                newReceivingItem.setUsedQty(butcheryReceivingItem.getUsedQty());
                 newReceivingItem.setRemarks(butcheryReceivingItem.getRemarks());
+                newReceivingItem.setIsAvailable(butcheryReceivingItem.getIsAvailable());
                 newReceivingItem.setTotalAmount((butcheryReceivingItem.getTotalAmount()));
 
                 this.butcheryReceivingItemRepository.save(newReceivingItem);

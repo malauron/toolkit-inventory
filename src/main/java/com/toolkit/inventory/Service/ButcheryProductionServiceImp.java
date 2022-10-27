@@ -2,6 +2,8 @@ package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
+import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
+import com.toolkit.inventory.Projection.ButcheryReceivingItemView;
 import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,10 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
     private ButcheryProductionItemRepository butcheryProductionItemRepository;
 
+    private ButcheryProductionSourceRepository butcheryProductionSourceRepository;
+
+    private ButcheryReceivingItemRepository butcheryReceivingItemRepository;
+
     private ItemRepository itemRepository;
 
     private ItemUomRepository itemUomRepository;
@@ -31,12 +37,16 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
     @Autowired
     public ButcheryProductionServiceImp(ButcheryProductionRepository butcheryProductionRepository,
                                         ButcheryProductionItemRepository butcheryProductionItemRepository,
+                                        ButcheryProductionSourceRepository butcheryProductionSourceRepository,
+                                        ButcheryReceivingItemRepository butcheryReceivingItemRepository,
                                         ItemRepository itemRepository, ItemUomRepository itemUomRepository,
                                         ItemCostRepository itemCostRepository,
                                         ItemGenericRepository itemGenericRepository,
                                         WarehouseRepository warehouseRepository) {
         this.butcheryProductionRepository = butcheryProductionRepository;
         this.butcheryProductionItemRepository = butcheryProductionItemRepository;
+        this.butcheryProductionSourceRepository = butcheryProductionSourceRepository;
+        this.butcheryReceivingItemRepository = butcheryReceivingItemRepository;
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
@@ -59,6 +69,12 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
             butcheryProductionDto.setTotalAmount(optProd.get().getTotalAmount());
             butcheryProductionDto.setProductionStatus(optProd.get().getProductionStatus());
             butcheryProductionDto.setDateCreated(optProd.get().getDateCreated());
+
+            Set<ButcheryProductionSourceView> butcheryProductionSources =
+                    this.butcheryProductionSourceRepository
+                            .findByButcheryProductionOrderByButcheryReceivingItemIdView(optProd.get());
+
+            butcheryProductionDto.setButcheryProductionSourceViews(butcheryProductionSources);
 
             Set<ButcheryProductionItem> butcheryProductionItems =
                     this.butcheryProductionItemRepository
@@ -85,6 +101,22 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         if (optWhse.isPresent()) {
             newButcheryProduction.setWarehouse(optWhse.get());
         }
+
+        butcheryProductionDto.getButcheryProductionSources().forEach(butcheryProductionSource -> {
+
+            ButcheryProductionSource newButcheryProductionSource =
+                    new ButcheryProductionSource();
+
+            Optional<ButcheryReceivingItem> optButRec = this.butcheryReceivingItemRepository
+                    .findById(butcheryProductionSource.getButcheryReceivingItem().getButcheryReceivingItemId());
+
+            if (optButRec.isPresent()) {
+                newButcheryProductionSource.setButcheryReceivingItem(optButRec.get());
+            }
+            newButcheryProductionSource.setRequiredQty(butcheryProductionSource.getRequiredQty());
+            newButcheryProduction.addButcheryProductionSource(newButcheryProductionSource);
+
+        });
 
         butcheryProductionDto.getButcheryProductionItems().forEach(butcheryProductionItem -> {
 
@@ -347,5 +379,92 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         }
 
         return butcheryProductionDto;
+    }
+
+    @Override
+    @Transactional
+    public ButcheryProductionDto deleteButcheryProductionSource(ButcheryProductionSource butcheryProductionSource) {
+
+        ButcheryProductionDto butcheryProductionDto =
+                new ButcheryProductionDto();
+
+        Long productionSourceId = butcheryProductionSource.getButcheryProductionSourceId();
+
+        Long productionId = butcheryProductionSource.getButcheryProduction().getButcheryProductionId();
+
+        butcheryProductionDto.setButcheryProductionId(productionId);
+
+        Optional<ButcheryProduction> optProd = this.butcheryProductionRepository.findByButcheryProductionId(productionId);
+
+        if (optProd.isPresent()) {
+            ButcheryProduction production = optProd.get();
+
+            butcheryProductionDto.setProductionStatus(production.getProductionStatus());
+
+            if (production.getProductionStatus().equals("Unposted")) {
+
+                this.butcheryProductionSourceRepository.deleteById(productionSourceId);
+
+            } else {
+
+            }
+        }
+
+        return butcheryProductionDto;
+    }
+
+    @Override
+    @Transactional
+    public ButcheryProductionDto putButcheryProductionSource(ButcheryProductionSource butcheryProductionSource) {
+        ButcheryProductionDto productionDto = new ButcheryProductionDto();
+
+        Long productionId = butcheryProductionSource
+                .getButcheryProduction().getButcheryProductionId();
+
+        productionDto.setButcheryProductionId(productionId);
+
+        Optional<ButcheryProduction> optProd = this.butcheryProductionRepository
+                .findByButcheryProductionId(productionId);
+
+        if (optProd.isPresent()) {
+
+            ButcheryProduction butcheryProduction = optProd.get();
+
+            productionDto.setProductionStatus(butcheryProduction.getProductionStatus());
+
+            ButcheryProductionSource newProductionSource = new ButcheryProductionSource();
+
+            newProductionSource.setButcheryProduction(butcheryProduction);
+
+            if (butcheryProduction.getProductionStatus().equals("Unposted")) {
+
+                if (butcheryProductionSource.getButcheryProductionSourceId() != null) {
+
+                    newProductionSource.setButcheryProductionSourceId(
+                            butcheryProductionSource.getButcheryProductionSourceId());
+
+                }
+
+                Optional<ButcheryReceivingItem> optButRec = this.butcheryReceivingItemRepository
+                        .findById(butcheryProductionSource.getButcheryReceivingItem().getButcheryReceivingItemId());
+
+                if (optButRec.isPresent()) {
+                    newProductionSource.setButcheryReceivingItem(optButRec.get());
+                }
+                newProductionSource.setRequiredQty(butcheryProductionSource.getRequiredQty());
+
+                this.butcheryProductionSourceRepository.save(newProductionSource);
+
+                productionDto.setButcheryProductionSourceView(
+                        this.butcheryProductionSourceRepository
+                                .findByIdView(newProductionSource
+                                        .getButcheryProductionSourceId()).get()
+                );
+
+            }
+
+        }
+
+        return productionDto;
     }
 }

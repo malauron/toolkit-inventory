@@ -2,6 +2,7 @@ package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Domain.ButcheryProduction;
 import com.toolkit.inventory.Domain.ButcheryProductionItem;
+import com.toolkit.inventory.Domain.ButcheryProductionSource;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
 import com.toolkit.inventory.Service.ButcheryProductionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,19 @@ public class ButcheryProductionController {
 
   }
 
+  @PutMapping("/butcheryProductionSources")
+  public ButcheryProductionDto putButcheryProductionSource(@RequestBody ButcheryProductionSource butcheryProductionSource) {
 
-  
+    return this.butcheryProductionService.putButcheryProductionSource(butcheryProductionSource);
+
+  }
+
+  @DeleteMapping("/butcheryProductionSources")
+  public ButcheryProductionDto deleteButcheryProductionSource(
+          @RequestBody ButcheryProductionSource butcheryProductionSource) {
+
+    return this.butcheryProductionService.deleteButcheryProductionSource(butcheryProductionSource);
+
+  }
+
 }

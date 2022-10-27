@@ -1,7 +1,9 @@
 package com.toolkit.inventory.Dto;
 
 import com.toolkit.inventory.Domain.ButcheryProductionItem;
+import com.toolkit.inventory.Domain.ButcheryProductionSource;
 import com.toolkit.inventory.Domain.Warehouse;
+import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +17,11 @@ public class ButcheryProductionDto {
     private Long butcheryProductionId;
     private Warehouse warehouse;
     private Set<ButcheryProductionItem> butcheryProductionItems;
+    private Set<ButcheryProductionSource> butcheryProductionSources;
+    private Set<ButcheryProductionSourceView> butcheryProductionSourceViews;
     private ButcheryProductionItem butcheryProductionItem;
+    private ButcheryProductionSource butcheryProductionSource;
+    private ButcheryProductionSourceView butcheryProductionSourceView;
     private BigDecimal totalAmount;
     private String productionStatus;
     private Date dateCreated;

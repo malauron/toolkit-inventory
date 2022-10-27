@@ -57,7 +57,17 @@ public class ButcheryReceivingItem {
     @Column(name = "documented_qty")
     private BigDecimal documentedQty;
 
+    @Column(name = "used_qty")
+    private BigDecimal usedQty;
+
     @Column(name = "remarks")
     private String remarks;
+
+    @Column(name = "is_available")
+    private Boolean isAvailable;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
 }

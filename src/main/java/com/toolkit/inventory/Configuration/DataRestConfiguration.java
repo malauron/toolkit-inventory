@@ -1,5 +1,7 @@
 package com.toolkit.inventory.Configuration;
 
+import com.toolkit.inventory.Domain.ButcheryReceivingItem;
+import com.toolkit.inventory.Projection.ButcheryReceivingItemView;
 import com.toolkit.inventory.Projection.CustomerPageView;
 import com.toolkit.inventory.Projection.CustomerSingleView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
 
     config.getProjectionConfiguration().addProjection(CustomerPageView.class);
     config.getProjectionConfiguration().addProjection(CustomerSingleView.class);
+    config.getProjectionConfiguration().addProjection(ButcheryReceivingItemView.class);
 
     // call an internal helper method
     exposeIds(config);
