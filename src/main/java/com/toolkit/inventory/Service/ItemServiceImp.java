@@ -231,5 +231,10 @@ public class ItemServiceImp implements ItemService {
         return null;
     }
 
+    @Override
+    public Set<ItemCost> getItemCosts(Long warehouseId) {
+        return this.itemCostRepository.findByWarehouseId(warehouseId);
+    }
+
 
 }

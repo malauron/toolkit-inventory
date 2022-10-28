@@ -1,11 +1,14 @@
 package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Domain.ItemBom;
+import com.toolkit.inventory.Domain.ItemCost;
 import com.toolkit.inventory.Domain.ItemGeneric;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Service.ItemService;
 import com.toolkit.inventory.Service.ItemUomService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -26,6 +29,13 @@ public class ItemController {
     public ItemDto findByItemCode(@RequestParam String itemCode) {
 
         return this.itemService.findByItemCode(itemCode);
+
+    }
+
+    @GetMapping("/itemCosts")
+    public Set<ItemCost> findItemCostsByWarehouse(@RequestParam Long warehouseId) {
+
+        return this.itemService.getItemCosts(warehouseId);
 
     }
 

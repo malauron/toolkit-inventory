@@ -29,7 +29,7 @@ public class ButcheryProductionController {
   }
 
   @PostMapping("/butcheryProductions")
-  public ButcheryProduction save(@RequestBody ButcheryProductionDto butcheryProductionDto) {
+  public ButcheryProductionDto save(@RequestBody ButcheryProductionDto butcheryProductionDto) {
 
     return this.butcheryProductionService.save(butcheryProductionDto);
 

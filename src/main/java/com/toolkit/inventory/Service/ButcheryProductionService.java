@@ -8,7 +8,7 @@ import com.toolkit.inventory.Dto.ButcheryProductionDto;
 public interface ButcheryProductionService {
 
     ButcheryProductionDto getButcheryProduction(Long butcheryProductionId);
-    ButcheryProduction save(ButcheryProductionDto butcheryProductionDto);
+    ButcheryProductionDto save(ButcheryProductionDto butcheryProductionDto);
     ButcheryProductionDto setButcheryProduction(ButcheryProductionDto butcheryProductionDto);
     ButcheryProductionDto setProductionStatus(ButcheryProductionDto butcheryProductionDto);
     ButcheryProductionDto deleteButcheryProductionItem(ButcheryProductionItem butcheryProductionItem);

@@ -75,6 +75,13 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
             butcheryProductionDto.setButcheryProductionSourceViews(butcheryProductionSources);
 
+
+//            Set<ButcheryProductionSource> butcheryProductionSources =
+//                    this.butcheryProductionSourceRepository
+//                            .findByButcheryProductionOrderByButcheryReceivingItemId(optProd.get());
+//
+//            butcheryProductionDto.setButcheryProductionSources(butcheryProductionSources);
+
             Set<ButcheryProductionItem> butcheryProductionItems =
                     this.butcheryProductionItemRepository
                             .findByButcheryProductionOrderByItemName(optProd.get());
@@ -88,7 +95,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
     @Override
     @Transactional
-    public ButcheryProduction save(ButcheryProductionDto butcheryProductionDto) {
+    public ButcheryProductionDto save(ButcheryProductionDto butcheryProductionDto) {
 
         ButcheryProduction newButcheryProduction = new ButcheryProduction();
 
@@ -164,7 +171,20 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         this.butcheryProductionRepository.save(newButcheryProduction);
 
-        return newButcheryProduction;
+        ButcheryProductionDto newButcheryProductionDto = new ButcheryProductionDto();
+
+        newButcheryProductionDto.setButcheryProductionId(newButcheryProduction.getButcheryProductionId());
+        newButcheryProductionDto.setProductionStatus(newButcheryProduction.getProductionStatus());
+        newButcheryProductionDto.setTotalAmount(newButcheryProduction.getTotalAmount());
+        newButcheryProductionDto.setDateCreated(newButcheryProduction.getDateCreated());
+        newButcheryProductionDto.setButcheryProductionItems(newButcheryProduction.getButcheryProductionItems());
+        newButcheryProductionDto.setButcheryProductionSourceViews(
+                this.butcheryProductionSourceRepository
+                        .findByButcheryProductionOrderByButcheryReceivingItemIdView(newButcheryProduction)
+        );
+
+
+        return newButcheryProductionDto;
     }
 
     @Override
@@ -249,11 +269,9 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
                             BigDecimal totalQty = butcheryProductionSource.getRequiredQty();
 
-                            this.itemCostRepository.setQty(totalQty, itemCost.getItemCostId());
+                            this.itemCostRepository.setQty(totalQty.multiply(new BigDecimal(-1)), itemCost.getItemCostId());
 
-                            this.butcheryReceivingItemRepository
-                                    .setUsedQty(totalQty.multiply(new BigDecimal(-1)),
-                                            receivingItemId);
+                            this.butcheryReceivingItemRepository.setUsedQty(totalQty, receivingItemId);
 
                         }
 

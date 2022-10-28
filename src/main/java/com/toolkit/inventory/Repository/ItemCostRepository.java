@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin
 @RepositoryRestResource
@@ -28,5 +29,8 @@ public interface ItemCostRepository extends JpaRepository<ItemCost, Long> {
     void setQty(BigDecimal qty, Long itemCostId);
 
     Optional<ItemCost> findByItemAndWarehouse(Item item, Warehouse warehouse);
+
+    @Query(value = "SELECT i FROM ItemCost i WHERE i.warehouse.warehouseId = :warehouseId ORDER BY i.item.itemName")
+    Set<ItemCost> findByWarehouseId(Long warehouseId);
 
 }

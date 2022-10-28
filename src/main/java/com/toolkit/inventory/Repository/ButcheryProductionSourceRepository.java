@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RepositoryRestResource(excerptProjection = ButcheryProductionSourceView.class)
+//@RepositoryRestResource
 public interface ButcheryProductionSourceRepository extends JpaRepository<ButcheryProductionSource, Long> {
 
     @Query(value = "SELECT b FROM ButcheryProductionSource  b WHERE b.butcheryProduction = :butcheryProduction " +

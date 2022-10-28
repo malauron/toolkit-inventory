@@ -37,7 +37,7 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
 
     config.getProjectionConfiguration().addProjection(CustomerPageView.class);
     config.getProjectionConfiguration().addProjection(CustomerSingleView.class);
-    config.getProjectionConfiguration().addProjection(ButcheryReceivingItemView.class);
+//    config.getProjectionConfiguration().addProjection(ButcheryReceivingItemView.class);
 
     // call an internal helper method
     exposeIds(config);
