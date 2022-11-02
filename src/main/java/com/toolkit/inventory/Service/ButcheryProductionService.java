@@ -1,6 +1,5 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.ButcheryProduction;
 import com.toolkit.inventory.Domain.ButcheryProductionItem;
 import com.toolkit.inventory.Domain.ButcheryProductionSource;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
@@ -15,6 +14,6 @@ public interface ButcheryProductionService {
     ButcheryProductionDto putButcheryProductionItem(ButcheryProductionItem butcheryProductionItem);
     ButcheryProductionDto deleteButcheryProductionSource(ButcheryProductionSource butcheryProductionSource);
     ButcheryProductionDto putButcheryProductionSource(ButcheryProductionSource butcheryProductionSource);
-    ButcheryProductionDto getButcheryProductionView();
+    ButcheryProductionDto getButcheryProductions();
 
 }

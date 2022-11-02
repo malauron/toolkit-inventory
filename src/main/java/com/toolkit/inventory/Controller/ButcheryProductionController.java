@@ -1,6 +1,5 @@
 package com.toolkit.inventory.Controller;
 
-import com.toolkit.inventory.Domain.ButcheryProduction;
 import com.toolkit.inventory.Domain.ButcheryProductionItem;
 import com.toolkit.inventory.Domain.ButcheryProductionSource;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
@@ -81,7 +80,7 @@ public class ButcheryProductionController {
 
   @GetMapping("/butcheryProductionViews")
   public ButcheryProductionDto getButcheryProductionViews() {
-    return this.butcheryProductionService.getButcheryProductionView();
+    return this.butcheryProductionService.getButcheryProductions();
   }
 
 }
