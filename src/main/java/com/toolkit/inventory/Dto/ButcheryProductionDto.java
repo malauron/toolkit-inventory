@@ -4,6 +4,7 @@ import com.toolkit.inventory.Domain.ButcheryProductionItem;
 import com.toolkit.inventory.Domain.ButcheryProductionSource;
 import com.toolkit.inventory.Domain.Warehouse;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
+import com.toolkit.inventory.Projection.ButcheryProductionView;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,4 +26,6 @@ public class ButcheryProductionDto {
     private BigDecimal totalAmount;
     private String productionStatus;
     private Date dateCreated;
+
+    private Set<ButcheryProductionView> butcheryProductionViews;
 }

@@ -79,4 +79,9 @@ public class ButcheryProductionController {
 
   }
 
+  @GetMapping("/butcheryProductionViews")
+  public ButcheryProductionDto getButcheryProductionViews() {
+    return this.butcheryProductionService.getButcheryProductionView();
+  }
+
 }

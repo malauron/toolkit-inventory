@@ -18,7 +18,6 @@ public class ItemCost {
   @Column(name = "item_cost_id")
   private Long itemCostId;
 
-//  @JsonBackReference
   @ManyToOne
   @JoinColumn(name = "item_id")
   private Item item;

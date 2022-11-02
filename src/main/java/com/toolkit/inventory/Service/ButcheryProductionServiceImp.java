@@ -514,4 +514,15 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         return productionDto;
     }
+
+    @Override
+    public ButcheryProductionDto getButcheryProductionView() {
+        ButcheryProductionDto tempDto = new ButcheryProductionDto();
+
+        tempDto.setButcheryProductionViews(this.butcheryProductionSourceRepository.findGroupedProduction());
+        tempDto.getButcheryProductionViews().forEach(butcheryProductionView -> {
+            System.out.println(butcheryProductionView.getWarehouse());
+        });
+        return tempDto;
+    }
 }
