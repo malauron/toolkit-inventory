@@ -2,10 +2,21 @@ package com.toolkit.inventory.Controller;
 
 import com.toolkit.inventory.Domain.ButcheryProductionItem;
 import com.toolkit.inventory.Domain.ButcheryProductionSource;
+import com.toolkit.inventory.Domain.ButcheryReceiving;
+import com.toolkit.inventory.Domain.ButcheryReceivingItem;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
+import com.toolkit.inventory.Dto.ButcheryReceivingDto;
+import com.toolkit.inventory.Projection.ButcheryProductionAggregatedView;
+import com.toolkit.inventory.Projection.ButcheryProductionItemAggregatedView;
+import com.toolkit.inventory.Projection.ButcheryProductionSourceAggregatedView;
+import com.toolkit.inventory.Projection.ButcheryProductionSourceShortView;
 import com.toolkit.inventory.Service.ButcheryProductionService;
+import com.toolkit.inventory.Service.ButcheryReceivingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -13,10 +24,13 @@ import org.springframework.web.bind.annotation.*;
 public class ButcheryProductionController {
 
   private ButcheryProductionService butcheryProductionService;
+  private ButcheryReceivingService butcheryReceivingService;
 
   @Autowired
-  public ButcheryProductionController(ButcheryProductionService butcheryProductionService) {
+  public ButcheryProductionController(ButcheryProductionService butcheryProductionService,
+                                      ButcheryReceivingService butcheryReceivingService) {
     this.butcheryProductionService = butcheryProductionService;
+    this.butcheryReceivingService = butcheryReceivingService;
   }
 
   @GetMapping("/butcheryProductions")
@@ -78,9 +92,27 @@ public class ButcheryProductionController {
 
   }
 
-  @GetMapping("/butcheryProductionViews")
-  public ButcheryProductionDto getButcheryProductionViews() {
-    return this.butcheryProductionService.getButcheryProductions();
+  @GetMapping("/unitTest")
+  public Set<ButcheryProductionSourceAggregatedView> unitTest(@RequestParam Long id) {
+
+    return this.butcheryProductionService.unitTest(id);
   }
 
+  @GetMapping("/unitTest2")
+  public Set<ButcheryProductionItemAggregatedView> unitTest2(@RequestParam Long id) {
+
+    return this.butcheryProductionService.unitTest2(id);
+  }
+
+  @GetMapping("/unitTest3")
+  public Set<ButcheryProductionAggregatedView> unitTest3() {
+
+    return this.butcheryProductionService.unitTest3();
+  }
+
+  @GetMapping("/butcheryProductionSources")
+  public ButcheryProductionDto findByButcheryReceivingId(@RequestParam Long butcheryReceivingId) {
+
+    return this.butcheryProductionService.findByButcheryReceivingId(butcheryReceivingId);
+  }
 }

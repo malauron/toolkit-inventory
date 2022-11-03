@@ -2,7 +2,7 @@ package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
-import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
+import com.toolkit.inventory.Projection.*;
 import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,8 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
     private ButcheryProductionSourceRepository butcheryProductionSourceRepository;
 
+    private ButcheryReceivingRepository butcheryReceivingRepository;
+
     private ButcheryReceivingItemRepository butcheryReceivingItemRepository;
 
     private ItemRepository itemRepository;
@@ -29,7 +31,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
     private ItemCostRepository itemCostRepository;
 
-    private ItemGenericRepository itemGenericRepository;
+//    private ItemGenericRepository itemGenericRepository;
 
     private WarehouseRepository warehouseRepository;
 
@@ -37,6 +39,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
     public ButcheryProductionServiceImp(ButcheryProductionRepository butcheryProductionRepository,
                                         ButcheryProductionItemRepository butcheryProductionItemRepository,
                                         ButcheryProductionSourceRepository butcheryProductionSourceRepository,
+                                        ButcheryReceivingRepository butcheryReceivingRepository,
                                         ButcheryReceivingItemRepository butcheryReceivingItemRepository,
                                         ItemRepository itemRepository, ItemUomRepository itemUomRepository,
                                         ItemCostRepository itemCostRepository,
@@ -45,11 +48,12 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         this.butcheryProductionRepository = butcheryProductionRepository;
         this.butcheryProductionItemRepository = butcheryProductionItemRepository;
         this.butcheryProductionSourceRepository = butcheryProductionSourceRepository;
+        this.butcheryReceivingRepository = butcheryReceivingRepository;
         this.butcheryReceivingItemRepository = butcheryReceivingItemRepository;
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
-        this.itemGenericRepository = itemGenericRepository;
+//        this.itemGenericRepository = itemGenericRepository;
         this.warehouseRepository = warehouseRepository;
     }
 
@@ -516,10 +520,32 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
     }
 
     @Override
-    public ButcheryProductionDto getButcheryProductions() {
-        ButcheryProductionDto tempDto = new ButcheryProductionDto();
+    public Set<ButcheryProductionSourceAggregatedView> unitTest(Long id) {
 
-        tempDto.setButcheryProductions(this.butcheryProductionSourceRepository.findGroupedProduction());
-        return tempDto;
+        Optional<ButcheryProduction> opt = this.butcheryProductionRepository.findById(id);
+
+        return this.butcheryProductionSourceRepository.searchByButcheryProduction(opt.get());
+    }
+
+    @Override
+    public Set<ButcheryProductionItemAggregatedView> unitTest2(Long id) {
+
+        Optional<ButcheryProduction> opt = this.butcheryProductionRepository.findById(id);
+
+        return this.butcheryProductionItemRepository.searchByButcheryProduction(opt.get());
+    }
+
+    @Override
+    public Set<ButcheryProductionAggregatedView> unitTest3() {
+        return this.butcheryProductionRepository.searchButcheryProduction();
+    }
+
+    @Override
+    public ButcheryProductionDto findByButcheryReceivingId(Long butcheryReceivingId) {
+
+        ButcheryProductionDto dto = new ButcheryProductionDto();
+        dto.setButcheryProductionSourceShortViews(this.butcheryProductionSourceRepository.findByButcheryReceivingId(butcheryReceivingId));
+
+        return dto;
     }
 }

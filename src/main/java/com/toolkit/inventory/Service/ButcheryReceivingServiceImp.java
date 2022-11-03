@@ -377,4 +377,10 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
         return butcheryReceivingDto;
     }
+
+    @Override
+    @Transactional
+    public Optional<ButcheryReceivingItem> findById(Long butcheryReceivingItemId) {
+        return this.butcheryReceivingItemRepository.findById(butcheryReceivingItemId);
+    }
 }

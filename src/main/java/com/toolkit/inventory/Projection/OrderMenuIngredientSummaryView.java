@@ -10,7 +10,4 @@ public interface OrderMenuIngredientSummaryView {
   ItemShortDescriptionView getItem();
   Uom getBaseUom();
   BigDecimal getTotalQty();
-//  BigDecimal getBaseQty();
-//  BigDecimal getRequiredQty();
-//  BigDecimal getOrderedQty();
 }

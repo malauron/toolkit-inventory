@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface ButcheryReceivingService {
     ButcheryReceivingDto getButcheryReceiving(Long butcheryReceivingId);
     Optional<ButcheryReceivingItemView> getButcheryReceivingItem(Long butcheryReceivingItemId);
+    Optional<ButcheryReceivingItem> findById(Long butcheryReceivingItemId);
     ButcheryReceiving save(ButcheryReceivingDto butcheryReceivingDto);
     ButcheryReceivingDto setButcheryReceiving(ButcheryReceivingDto butcheryReceivingDto);
     ButcheryReceivingDto setReceivingStatus(ButcheryReceivingDto butcheryReceivingDto);

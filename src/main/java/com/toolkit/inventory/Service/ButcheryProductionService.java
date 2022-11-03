@@ -1,8 +1,10 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.ButcheryProductionItem;
-import com.toolkit.inventory.Domain.ButcheryProductionSource;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryProductionDto;
+import com.toolkit.inventory.Projection.*;
+
+import java.util.Set;
 
 public interface ButcheryProductionService {
 
@@ -14,6 +16,11 @@ public interface ButcheryProductionService {
     ButcheryProductionDto putButcheryProductionItem(ButcheryProductionItem butcheryProductionItem);
     ButcheryProductionDto deleteButcheryProductionSource(ButcheryProductionSource butcheryProductionSource);
     ButcheryProductionDto putButcheryProductionSource(ButcheryProductionSource butcheryProductionSource);
-    ButcheryProductionDto getButcheryProductions();
+    ButcheryProductionDto findByButcheryReceivingId(Long butcheryReceivingId);
+
+    Set<ButcheryProductionSourceAggregatedView> unitTest(Long id);
+    Set<ButcheryProductionItemAggregatedView> unitTest2(Long id);
+    Set<ButcheryProductionAggregatedView> unitTest3();
+//    Set<ButcheryProductionSourceShortView> unitTest4();
 
 }

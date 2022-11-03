@@ -1,6 +1,7 @@
 package com.toolkit.inventory.Repository;
 
 import com.toolkit.inventory.Domain.ButcheryProduction;
+import com.toolkit.inventory.Projection.ButcheryProductionAggregatedView;
 import com.toolkit.inventory.Projection.ButcheryProductionView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,5 +36,8 @@ public interface ButcheryProductionRepository extends JpaRepository<ButcheryProd
                    @RequestParam("warehouseName") String warehouseName,
                    @RequestParam("productionStatus") Set<String> productionStatus,
                    Pageable pageable);
+
+    @Query(value = "SELECT b FROM ButcheryProduction b ORDER BY b.butcheryProductionId")
+    Set<ButcheryProductionAggregatedView> searchButcheryProduction();
 
 }
