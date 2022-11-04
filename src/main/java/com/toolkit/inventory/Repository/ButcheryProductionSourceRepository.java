@@ -2,9 +2,6 @@ package com.toolkit.inventory.Repository;
 
 import com.toolkit.inventory.Domain.ButcheryProduction;
 import com.toolkit.inventory.Domain.ButcheryProductionSource;
-import com.toolkit.inventory.Domain.ButcheryReceiving;
-import com.toolkit.inventory.Domain.ButcheryReceivingItem;
-import com.toolkit.inventory.Projection.ButcheryProductionAggregatedView;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceAggregatedView;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceShortView;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
@@ -12,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,6 +38,7 @@ public interface ButcheryProductionSourceRepository extends JpaRepository<Butche
 
     @Query(value = "SELECT b.butcheryProduction AS butcheryProduction FROM ButcheryProductionSource b " +
             "WHERE b.butcheryReceivingItem.butcheryReceiving.butcheryReceivingId = :butcheryReceivingId " +
+            "AND b.butcheryProduction.productionStatus = 'Posted' " +
             "GROUP BY b.butcheryProduction")
     Set<ButcheryProductionSourceShortView> findByButcheryReceivingId(Long butcheryReceivingId);
 
