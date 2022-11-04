@@ -25,9 +25,16 @@ public interface ButcheryReceivingItemRepository extends JpaRepository<ButcheryR
             "AND b.isAvailable=TRUE")
     Optional<ButcheryReceivingItemView> findByIdAndIsAvailable(Long butcheryReceivingItemId);
 
+//    @Modifying
+//    @Query(value = "UPDATE ButcheryReceivingItem b SET b.usedQty = b.usedQty + :usedQty, " +
+//            "b.isAvailable = CASE WHEN ((b.usedQty + :usedQty) > b.receivedQty) THEN FALSE ELSE b.isAvailable END " +
+//            "WHERE b.butcheryReceivingItemId = :id")
+//    void setUsedQty(BigDecimal usedQty, Long id);
+
+
     @Modifying
     @Query(value = "UPDATE ButcheryReceivingItem b SET b.usedQty = b.usedQty + :usedQty, " +
-            "b.isAvailable = CASE WHEN ((b.usedQty + :usedQty) > b.receivedQty) THEN FALSE ELSE b.isAvailable END " +
+            "b.isAvailable = CASE WHEN (b.usedQty >= b.receivedQty) THEN FALSE ELSE b.isAvailable END " +
             "WHERE b.butcheryReceivingItemId = :id")
     void setUsedQty(BigDecimal usedQty, Long id);
 }
