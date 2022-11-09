@@ -81,6 +81,13 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
     }
 
     @Override
+    public Set<ButcheryReceivingItemView> getButcheryReceivingItemsByWarehouseId(Long warehouseId) {
+        Optional<Warehouse> opt = this.warehouseRepository.findById(warehouseId);
+
+        return this.butcheryReceivingItemRepository.findByWarehouseAndIsAvailable(opt.get());
+    }
+
+    @Override
     @Transactional
     public ButcheryReceiving save(ButcheryReceivingDto butcheryReceivingDto) {
 

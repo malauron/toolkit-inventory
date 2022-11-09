@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -38,6 +39,13 @@ public class ButcheryReceivingController {
           @RequestParam Long butcheryReceivingItemId) {
     return this.butcheryReceivingService.getButcheryReceivingItem(butcheryReceivingItemId);
   }
+
+  @GetMapping("/butcheryReceivingItems/warehouses")
+  public Set<ButcheryReceivingItemView> getButcheryReceivingItemByWarehouse(
+          @RequestParam Long warehouseId) {
+    return this.butcheryReceivingService.getButcheryReceivingItemsByWarehouseId(warehouseId);
+  }
+
   @PostMapping("/butcheryReceivings")
   public ButcheryReceiving save(@RequestBody ButcheryReceivingDto butcheryReceivingDto) {
 
