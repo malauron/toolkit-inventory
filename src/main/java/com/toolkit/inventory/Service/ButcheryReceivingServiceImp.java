@@ -331,9 +331,9 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                 newReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
                 newReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
                 newReceivingItem.setDocumentedQty(butcheryReceivingItem.getDocumentedQty());
-                newReceivingItem.setUsedQty(butcheryReceivingItem.getUsedQty());
+                newReceivingItem.setUsedQty(BigDecimal.ZERO);
                 newReceivingItem.setRemarks(butcheryReceivingItem.getRemarks());
-                newReceivingItem.setIsAvailable(butcheryReceivingItem.getIsAvailable());
+                newReceivingItem.setIsAvailable(false);
                 newReceivingItem.setTotalAmount((butcheryReceivingItem.getTotalAmount()));
 
                 this.butcheryReceivingItemRepository.save(newReceivingItem);

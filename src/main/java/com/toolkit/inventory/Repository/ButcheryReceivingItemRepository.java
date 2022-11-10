@@ -4,10 +4,13 @@ import com.toolkit.inventory.Domain.ButcheryReceiving;
 import com.toolkit.inventory.Domain.ButcheryReceivingItem;
 import com.toolkit.inventory.Domain.Warehouse;
 import com.toolkit.inventory.Projection.ButcheryReceivingItemView;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -29,11 +32,13 @@ public interface ButcheryReceivingItemRepository extends JpaRepository<ButcheryR
     @Query(value = "SELECT b FROM ButcheryReceivingItem  b WHERE b.isAvailable=TRUE AND b.butcheryReceiving.warehouse = :warehouse")
     Set<ButcheryReceivingItemView> findByWarehouseAndIsAvailable(Warehouse warehouse);
 
-//    @Modifying
-//    @Query(value = "UPDATE ButcheryReceivingItem b SET b.usedQty = b.usedQty + :usedQty, " +
-//            "b.isAvailable = CASE WHEN ((b.usedQty + :usedQty) > b.receivedQty) THEN FALSE ELSE b.isAvailable END " +
-//            "WHERE b.butcheryReceivingItemId = :id")
-//    void setUsedQty(BigDecimal usedQty, Long id);
+    @Query(value = "SELECT b FROM ButcheryReceivingItem  b WHERE b.isAvailable=TRUE " +
+                   "AND b.item.itemName LIKE %:itemName% " +
+                   "AND b.butcheryReceiving.warehouse.warehouseId = :warehouseId")
+    Page<ButcheryReceivingItem> findByWarehouseAndIsAvailablePageable(
+            @RequestParam("warehouseId") Long warehouseId,
+            @RequestParam("itemName") String itemName,
+            Pageable pageable);
 
     @Modifying
     @Query(value = "UPDATE ButcheryReceivingItem b SET b.usedQty = b.usedQty + :usedQty, " +
