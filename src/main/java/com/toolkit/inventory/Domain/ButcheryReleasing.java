@@ -33,6 +33,10 @@ public class ButcheryReleasing {
     private Warehouse warehouse;
 
     @ManyToOne
+    @JoinColumn(name = "destination_warehouse_id")
+    private Warehouse destinationWarehouse;
+
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

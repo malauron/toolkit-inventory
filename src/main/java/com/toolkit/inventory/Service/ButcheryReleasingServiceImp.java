@@ -59,20 +59,21 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
         ButcheryReleasingDto butcheryReleasingDto =
                 new ButcheryReleasingDto();
 
-        Optional<ButcheryReleasing> optProd
+        Optional<ButcheryReleasing> optRel
                 = this.butcheryReleasingRepository.findById(butcheryReleasingId);
 
-        if (optProd.isPresent()) {
+        if (optRel.isPresent()) {
             butcheryReleasingDto.setButcheryReleasingId(butcheryReleasingId);
-            butcheryReleasingDto.setWarehouse(optProd.get().getWarehouse());
-            butcheryReleasingDto.setCustomer(optProd.get().getCustomer());
-            butcheryReleasingDto.setTotalAmount(optProd.get().getTotalAmount());
-            butcheryReleasingDto.setReleasingStatus(optProd.get().getReleasingStatus());
-            butcheryReleasingDto.setDateCreated(optProd.get().getDateCreated());
+            butcheryReleasingDto.setWarehouse(optRel.get().getWarehouse());
+            butcheryReleasingDto.setDestinationWarehouse(optRel.get().getDestinationWarehouse());
+//            butcheryReleasingDto.setCustomer(optRel.get().getCustomer());
+            butcheryReleasingDto.setTotalAmount(optRel.get().getTotalAmount());
+            butcheryReleasingDto.setReleasingStatus(optRel.get().getReleasingStatus());
+            butcheryReleasingDto.setDateCreated(optRel.get().getDateCreated());
 
             Set<ButcheryReleasingItem> butcheryReleasingItems =
                     this.butcheryReleasingItemRepository
-                            .findByButcheryReleasingOrderByItemName(optProd.get());
+                            .findByButcheryReleasingOrderByItemName(optRel.get());
 
             butcheryReleasingDto.setButcheryReleasingItems(butcheryReleasingItems);
         }
@@ -96,11 +97,17 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
             newButcheryReleasing.setWarehouse(optWhse.get());
         }
 
-        Optional<Customer> optCust = this.customerRepository.findById(butcheryReleasingDto.getCustomer().getCustomerId());
+        Optional<Warehouse> optDestWhse = this.warehouseRepository.findById(butcheryReleasingDto.getDestinationWarehouse().getWarehouseId());
 
-        if (optCust.isPresent()) {
-            newButcheryReleasing.setCustomer(optCust.get());
+        if (optDestWhse.isPresent()) {
+            newButcheryReleasing.setDestinationWarehouse(optDestWhse.get());
         }
+
+//        Optional<Customer> optCust = this.customerRepository.findById(butcheryReleasingDto.getCustomer().getCustomerId());
+//
+//        if (optCust.isPresent()) {
+//            newButcheryReleasing.setCustomer(optCust.get());
+//        }
 
         butcheryReleasingDto.getButcheryReleasingItems().forEach(butcheryReleasingItem -> {
 
@@ -175,9 +182,13 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                     butcheryReleasing.setWarehouse(butcheryReleasingDto.getWarehouse());
                 }
 
-                if (butcheryReleasingDto.getCustomer() != null) {
-                    butcheryReleasing.setCustomer(butcheryReleasingDto.getCustomer());
+                if (butcheryReleasingDto.getDestinationWarehouse() != null) {
+                    butcheryReleasing.setDestinationWarehouse(butcheryReleasingDto.getDestinationWarehouse());
                 }
+
+//                if (butcheryReleasingDto.getCustomer() != null) {
+//                    butcheryReleasing.setCustomer(butcheryReleasingDto.getCustomer());
+//                }
 
                 this.butcheryReleasingRepository.save(butcheryReleasing);
 

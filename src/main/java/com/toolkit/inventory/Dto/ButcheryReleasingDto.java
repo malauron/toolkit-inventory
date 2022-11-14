@@ -15,6 +15,7 @@ import java.util.Set;
 public class ButcheryReleasingDto {
     private Long butcheryReleasingId;
     private Warehouse warehouse;
+    private Warehouse destinationWarehouse;
     private Customer customer;
     private Set<ButcheryReleasingItem> butcheryReleasingItems;
     private ButcheryReleasingItem butcheryReleasingItem;

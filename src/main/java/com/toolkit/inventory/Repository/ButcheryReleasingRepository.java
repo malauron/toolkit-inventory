@@ -27,15 +27,28 @@ public interface ButcheryReleasingRepository extends JpaRepository<ButcheryRelea
 
     @Query(value = "SELECT b FROM ButcheryReleasing b " +
                    "WHERE (CONCAT(b.butcheryReleasingId,'') LIKE %:butcheryReleasingId% " +
-                   "OR b.customer.customerName LIKE %:customerName% " +
+                   "OR b.destinationWarehouse.warehouseName LIKE %:destinationWhse% " +
                    "OR b.warehouse.warehouseName LIKE %:warehouseName%) " +
                    "AND b.releasingStatus IN :releasingStatus " +
                    "ORDER BY b.butcheryReleasingId DESC")
     Page<ButcheryReleasing> findByCustomParam(
             @RequestParam("butcheryReleasingId") String butcheryReleasingId,
             @RequestParam("warehouseName") String warehouseName,
-            @RequestParam("customerName") String customerName,
+            @RequestParam("destinationWhse") String destinationWhse,
             @RequestParam("releasingStatus") Set<String> releasingStatus,
             Pageable pageable);
 
+
+//    @Query(value = "SELECT b FROM ButcheryReleasing b " +
+//            "WHERE (CONCAT(b.butcheryReleasingId,'') LIKE %:butcheryReleasingId% " +
+//            "OR b.customer.customerName LIKE %:customerName% " +
+//            "OR b.warehouse.warehouseName LIKE %:warehouseName%) " +
+//            "AND b.releasingStatus IN :releasingStatus " +
+//            "ORDER BY b.butcheryReleasingId DESC")
+//    Page<ButcheryReleasing> findByCustomParam(
+//            @RequestParam("butcheryReleasingId") String butcheryReleasingId,
+//            @RequestParam("warehouseName") String warehouseName,
+//            @RequestParam("customerName") String customerName,
+//            @RequestParam("releasingStatus") Set<String> releasingStatus,
+//            Pageable pageable);
 }

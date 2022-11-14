@@ -12,6 +12,7 @@ import java.util.Date;
 public interface ButcheryReleasingView {
     Long getButcheryReleasingId();
     Warehouse getWarehouse();
+    Warehouse getDestinationWarehouse();
     Customer getCustomer();
     BigDecimal getTotalAmount();
     String getReleasingStatus();
