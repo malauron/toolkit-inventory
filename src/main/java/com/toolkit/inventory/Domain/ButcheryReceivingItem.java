@@ -1,11 +1,14 @@
 package com.toolkit.inventory.Domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,6 +25,10 @@ public class ButcheryReceivingItem {
     @ManyToOne
     @JoinColumn(name = "butchery_receiving_id")
     private ButcheryReceiving butcheryReceiving;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "butcheryReceivingItem")
+    private Set<ButcheryLivestock> butcheryLivestocks = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "item_id")
@@ -69,5 +76,16 @@ public class ButcheryReceivingItem {
     @Version
     @Column(name = "version")
     private Long version;
+
+    public void addButcheryLivestock(ButcheryLivestock butcheryLivestock) {
+        if (butcheryLivestock != null) {
+            if (this.butcheryLivestocks == null) {
+                this.butcheryLivestocks = new HashSet<>();
+            }
+
+            this.butcheryLivestocks.add(butcheryLivestock);
+            butcheryLivestock.setButcheryReceivingItem(this);
+        }
+    }
 
 }
