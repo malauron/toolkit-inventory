@@ -29,6 +29,8 @@ public class PurchaseServiceImp implements PurchaseService {
 
   private WarehouseRepository warehouseRepository;
 
+  private InventoryItemRepository inventoryItemRepository;
+
   public PurchaseServiceImp(PurchaseRepository purchaseRepository,
                             PurchaseItemRepository purchaseItemRepository,
                             PurchaseItemGenericRepository purchaseItemGenericRepository,
@@ -36,7 +38,8 @@ public class PurchaseServiceImp implements PurchaseService {
                             ItemUomRepository itemUomRepository,
                             ItemCostRepository itemCostRepository,
                             ItemGenericRepository itemGenericRepository,
-                            WarehouseRepository warehouseRepository) {
+                            WarehouseRepository warehouseRepository,
+                            InventoryItemRepository inventoryItemRepository) {
     this.purchaseRepository = purchaseRepository;
     this.purchaseItemRepository = purchaseItemRepository;
     this.purchaseItemGenericRepository = purchaseItemGenericRepository;
@@ -45,6 +48,7 @@ public class PurchaseServiceImp implements PurchaseService {
     this.itemCostRepository = itemCostRepository;
     this.itemGenericRepository = itemGenericRepository;
     this.warehouseRepository = warehouseRepository;
+    this.inventoryItemRepository = inventoryItemRepository;
   }
 
   @Override
@@ -282,6 +286,8 @@ public class PurchaseServiceImp implements PurchaseService {
             }
 
             this.itemCostRepository.setQtyCost(ttlQty, cost, item, tmpWhse.get());
+
+            this.inventoryItemRepository.setPurchasedQty(ttlQty, item, tmpWhse.get());
 
           });
 
