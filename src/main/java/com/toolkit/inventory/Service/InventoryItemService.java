@@ -11,4 +11,5 @@ public interface InventoryItemService {
     Set<InventoryItem> findAllByWarehouseIdWithQty(Long warehouseId);
     void setPrice(InventoryItemDto inventoryItemDto);
     void setEndingQty(BigDecimal qty, Long inventoryItemId);
+    void setQty(Long id);
 }

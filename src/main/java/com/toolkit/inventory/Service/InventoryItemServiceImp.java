@@ -46,4 +46,10 @@ public class InventoryItemServiceImp implements InventoryItemService {
     public void setEndingQty(BigDecimal qty, Long inventoryItemId) {
         this.inventoryItemRepository.setEndingQty(qty, inventoryItemId);
     }
+
+    @Override
+    @Transactional
+    public void setQty(Long id) {
+        this.inventoryItemRepository.setQty(id);
+    }
 }

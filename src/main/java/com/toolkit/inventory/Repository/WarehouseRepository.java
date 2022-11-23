@@ -9,9 +9,13 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+
 @CrossOrigin
 @RepositoryRestResource(excerptProjection = WarehouseView.class)
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
+
+  Optional<Warehouse> findByWarehouseId(@RequestParam Long id);
 
   Page<Warehouse> findByWarehouseNameContainingOrderByWarehouseName(
           @RequestParam("warehouseName") String warehouseName,
