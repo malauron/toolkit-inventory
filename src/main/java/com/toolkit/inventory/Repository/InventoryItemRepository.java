@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.persistence.LockModeType;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.Set;
 
 @RepositoryRestResource(excerptProjection = InventoryItemView.class)
 public interface InventoryItemRepository extends JpaRepository<InventoryItem, Long> {
@@ -24,9 +25,9 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
     Optional<InventoryItem> findByInventoryItemId(Long id);
 
     @Modifying
-    @Query(value = "UPDATE InventoryItem i SET i.purchasedQty = i.purchasedQty + :qty " +
+    @Query(value = "UPDATE InventoryItem i SET i.purchasedQty = i.purchasedQty + :qty, i.cost = :cost " +
             "WHERE i.item = :item AND i.warehouse = :warehouse")
-    void setPurchasedQty(BigDecimal qty, Item item, Warehouse warehouse);
+    void setPurchasedQtyCost(BigDecimal qty, BigDecimal cost, Item item, Warehouse warehouse);
 
     @Modifying
     @Query(value = "UPDATE InventoryItem i SET i.endingQty = i.endingQty + :qty " +
@@ -39,5 +40,10 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
             @RequestParam("warehouseId") Long warehouseId,
             @RequestParam("itemName") String itemName,
             Pageable pageable);
+
+    @Query(value = "SELECT i FROM InventoryItem i WHERE (i.beginningQty > 0 OR i.purchasedQty > 0 " +
+            "OR i.endingQty > 0) AND i.warehouse.warehouseId = :warehouseId " +
+            "ORDER BY i.item.itemName")
+    Set<InventoryItem> findAllByWarehouseIdWithQty(Long warehouseId);
 
 }

@@ -287,7 +287,7 @@ public class PurchaseServiceImp implements PurchaseService {
 
             this.itemCostRepository.setQtyCost(ttlQty, cost, item, tmpWhse.get());
 
-            this.inventoryItemRepository.setPurchasedQty(ttlQty, item, tmpWhse.get());
+            this.inventoryItemRepository.setPurchasedQtyCost(ttlQty, cost, item, tmpWhse.get());
 
           });
 
