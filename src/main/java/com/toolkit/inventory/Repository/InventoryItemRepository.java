@@ -51,7 +51,7 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
     void setQty(Long warehouseId);
 
     @Query(value = "SELECT i FROM InventoryItem i WHERE i.warehouse.warehouseId = :warehouseId " +
-            "AND i.item.itemName LIKE %:itemName% ORDER BY i.item.itemName")
+            "AND (i.item.itemName LIKE %:itemName% OR i.item.itemCode LIKE %:itemName%) ORDER BY i.item.itemName")
     Page<InventoryItem> findByCustomParam(
             @RequestParam("warehouseId") Long warehouseId,
             @RequestParam("itemName") String itemName,

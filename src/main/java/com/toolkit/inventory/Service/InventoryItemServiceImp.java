@@ -50,6 +50,8 @@ public class InventoryItemServiceImp implements InventoryItemService {
     @Override
     @Transactional
     public void setQty(Long id) {
+
         this.inventoryItemRepository.setQty(id);
+
     }
 }

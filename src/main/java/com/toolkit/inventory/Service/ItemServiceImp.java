@@ -27,6 +27,8 @@ public class ItemServiceImp implements ItemService {
 
     private ItemGenericRepository itemGenericRepository;
 
+    private InventoryItemRepository inventoryItemRepository;
+
     private WarehouseRepository warehouseRepository;
 
     public ItemServiceImp(ItemRepository itemRepository,
@@ -35,6 +37,7 @@ public class ItemServiceImp implements ItemService {
                           UomRepository uomRepository,
                           ItemBomRepository itemBomRepository,
                           ItemGenericRepository itemGenericRepository,
+                          InventoryItemRepository inventoryItemRepository,
                           WarehouseRepository warehouseRepository) {
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
@@ -42,6 +45,7 @@ public class ItemServiceImp implements ItemService {
         this.uomRepository = uomRepository;
         this.itemBomRepository = itemBomRepository;
         this.itemGenericRepository = itemGenericRepository;
+        this.inventoryItemRepository = inventoryItemRepository;
         this.warehouseRepository = warehouseRepository;
     }
 
@@ -160,6 +164,18 @@ public class ItemServiceImp implements ItemService {
                 itemCost.setCost(BigDecimal.ZERO);
 
                 this.itemCostRepository.save(itemCost);
+
+                InventoryItem inventoryItem = new InventoryItem();
+
+                inventoryItem.setItem(newItem);
+                inventoryItem.setWarehouse(warehouse);
+                inventoryItem.setBeginningQty(BigDecimal.ZERO);
+                inventoryItem.setPurchasedQty(BigDecimal.ZERO);
+                inventoryItem.setEndingQty(BigDecimal.ZERO);
+                inventoryItem.setCost(BigDecimal.ZERO);
+                inventoryItem.setPrice(BigDecimal.ZERO);
+
+                this.inventoryItemRepository.save(inventoryItem);
 
             });
 
