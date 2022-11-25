@@ -35,16 +35,6 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
     void setEndingQty(BigDecimal qty, Long inventoryItemId);
 
     @Modifying
-    @Query(value = "UPDATE InventoryItem i SET i.beginningQty = 0, i.purchasedQty = 0 " +
-            "WHERE  i.warehouse.warehouseId = :warehouseId")
-    void setBeginningPurchaseQty(Long warehouseId);
-
-    @Modifying
-    @Query(value = "UPDATE InventoryItem i SET i.beginningQty = i.endingQty " +
-            "WHERE i.warehouse.warehouseId = :warehouseId")
-    void setBeginningQty(Long warehouseId);
-
-    @Modifying
     @Query(value = "UPDATE InventoryItem i SET i.beginningQty = i.endingQty, " +
             "i.purchasedQty = 0, i.endingQty = 0 " +
             "WHERE i.warehouse.warehouseId = :warehouseId")

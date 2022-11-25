@@ -40,9 +40,8 @@ public class InventoryItemController {
     }
 
     @PutMapping("inventoryItems/qty")
-    public void setQty(@RequestBody InventoryItemDto inventoryItemDto) {
-        this.inventoryItemService.setQty(
-                inventoryItemDto.getWarehouse().getWarehouseId()
-        );
+    public void finalizeInventory(@RequestBody InventoryItemDto inventoryItemDto) {
+        this.inventoryItemService.finalizeInventory(inventoryItemDto);
     }
+
 }

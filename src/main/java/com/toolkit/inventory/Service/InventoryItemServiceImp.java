@@ -1,8 +1,14 @@
 package com.toolkit.inventory.Service;
 
+import com.toolkit.inventory.Domain.InventoryHistory;
+import com.toolkit.inventory.Domain.InventoryHistoryItem;
 import com.toolkit.inventory.Domain.InventoryItem;
+import com.toolkit.inventory.Domain.Warehouse;
 import com.toolkit.inventory.Dto.InventoryItemDto;
+import com.toolkit.inventory.Repository.InventoryHistoryItemRepository;
+import com.toolkit.inventory.Repository.InventoryHistoryRepository;
 import com.toolkit.inventory.Repository.InventoryItemRepository;
+import com.toolkit.inventory.Repository.WarehouseRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,11 +20,20 @@ import java.util.Set;
 public class InventoryItemServiceImp implements InventoryItemService {
 
     private InventoryItemRepository inventoryItemRepository;
+    private WarehouseRepository warehouseRepository;
+    private InventoryHistoryRepository inventoryHistoryRepository;
+    private InventoryHistoryItemRepository inventoryHistoryItemRepository;
 
     public InventoryItemServiceImp(
-            InventoryItemRepository inventoryItemRepository
+            InventoryItemRepository inventoryItemRepository,
+            WarehouseRepository warehouseRepository,
+            InventoryHistoryRepository inventoryHistoryRepository,
+            InventoryHistoryItemRepository inventoryHistoryItemRepository
     ){
         this.inventoryItemRepository = inventoryItemRepository;
+        this.warehouseRepository = warehouseRepository;
+        this.inventoryHistoryRepository = inventoryHistoryRepository;
+        this.inventoryHistoryItemRepository = inventoryHistoryItemRepository;
     }
 
     @Override
@@ -49,9 +64,45 @@ public class InventoryItemServiceImp implements InventoryItemService {
 
     @Override
     @Transactional
-    public void setQty(Long id) {
+    public void finalizeInventory(InventoryItemDto inventoryItemDto) {
 
-        this.inventoryItemRepository.setQty(id);
+        Optional<Warehouse> optWhse = this.warehouseRepository
+                .findById(inventoryItemDto.getWarehouse().getWarehouseId());
+        if (optWhse.isPresent()) {
+
+            Warehouse warehouse = optWhse.get();
+
+            Set<InventoryItem> inventoryItems = this.inventoryItemRepository
+                    .findAllByWarehouseIdWithQty(warehouse.getWarehouseId());
+
+            if (!inventoryItems.isEmpty()) {
+
+                InventoryHistory invHis = new InventoryHistory();
+
+                invHis.setWarehouse(warehouse);
+
+                InventoryHistory inventoryHistory = this.inventoryHistoryRepository.saveAndFlush(invHis);
+
+                inventoryItems.forEach(inventoryItem -> {
+                    InventoryHistoryItem inventoryHistoryItem = new InventoryHistoryItem();
+
+                    inventoryHistoryItem.setInventoryHistory(inventoryHistory);
+                    inventoryHistoryItem.setItem(inventoryItem.getItem());
+                    inventoryHistoryItem.setBeginningQty(inventoryItem.getBeginningQty());
+                    inventoryHistoryItem.setPurchasedQty(inventoryItem.getPurchasedQty());
+                    inventoryHistoryItem.setEndingQty(inventoryItem.getEndingQty());
+                    inventoryHistoryItem.setCost(inventoryItem.getCost());
+                    inventoryHistoryItem.setPrice(inventoryItem.getPrice());
+
+                    this.inventoryHistoryItemRepository.save(inventoryHistoryItem);
+
+                });
+
+                this.inventoryItemRepository.setQty(warehouse.getWarehouseId());
+
+            }
+
+        }
 
     }
 }
