@@ -173,7 +173,7 @@ public class ItemServiceImp implements ItemService {
                 inventoryItem.setPurchasedQty(BigDecimal.ZERO);
                 inventoryItem.setEndingQty(BigDecimal.ZERO);
                 inventoryItem.setCost(BigDecimal.ZERO);
-                inventoryItem.setPrice(BigDecimal.ZERO);
+                inventoryItem.setPrice(newItem.getPrice());
 
                 this.inventoryItemRepository.save(inventoryItem);
 
