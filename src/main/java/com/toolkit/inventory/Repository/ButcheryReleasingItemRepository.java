@@ -11,8 +11,14 @@ import java.util.Set;
 @RepositoryRestResource
 public interface ButcheryReleasingItemRepository extends JpaRepository<ButcheryReleasingItem, Long> {
 
-    @Query(value = "SELECT b FROM ButcheryReleasingItem  b WHERE b.butcheryReleasing = :butcheryReleasing ORDER BY b.item.itemName")
+    @Query(value = "SELECT b FROM ButcheryReleasingItem  b WHERE b.butcheryReleasing = :butcheryReleasing " +
+            "ORDER BY b.item.itemName, b.item.itemCode ")
     Set<ButcheryReleasingItem> findByButcheryReleasingOrderByItemName(ButcheryReleasing butcheryReleasing);
+
+    @Query(value = "SELECT b FROM ButcheryReleasingItem  b WHERE b.butcheryReleasing.butcheryReleasingId = :butcheryReleasingId " +
+            "ORDER BY b.item.itemName, b.item.itemCode ")
+    Set<ButcheryReleasingItem> findByButcheryReleasingIdOrderByItemName(Long butcheryReleasingId);
+
 
     @Query(value = "SELECT b FROM ButcheryReleasingItem  b WHERE b.butcheryReleasing = :butcheryReleasing ORDER BY b.item.itemId")
     Set<ButcheryReleasingItem> findByButcheryReleasingOrderByItemId(ButcheryReleasing butcheryReleasing);

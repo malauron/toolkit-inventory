@@ -407,11 +407,19 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                 releasing.setTotalAmount(this.butcheryReleasingRepository
                         .getTotalAmount(releasing));
             } else {
-                butcheryReleasingDto.setErrorDescription("Unable to process your request since this transaction has already been tagged as " +
+                butcheryReleasingDto.setErrorDescription("Unable to process your request since " +
+                        "this transaction has already been tagged as " +
                         releasing.getReleasingStatus());
             }
         }
 
         return butcheryReleasingDto;
+    }
+
+    @Override
+    public Set<ButcheryReleasingItem> getButcheryReleasingItems(Long butcheryReleasingId) {
+
+        return this.butcheryReleasingItemRepository.findByButcheryReleasingIdOrderByItemName(butcheryReleasingId);
+
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -28,6 +29,13 @@ public class ButcheryReleasingController {
           @RequestParam Long butcheryReleasingId) {
 
     return this.butcheryReleasingService.getButcheryReleasing(butcheryReleasingId);
+
+  }
+
+  @GetMapping("/butcheryReleasingItems")
+  public Set<ButcheryReleasingItem> getButcheryReleasingItems(@RequestParam Long butcheryReleasingId) {
+
+    return this.butcheryReleasingService.getButcheryReleasingItems(butcheryReleasingId);
 
   }
 
