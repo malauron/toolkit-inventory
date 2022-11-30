@@ -16,7 +16,7 @@ public interface ButcheryReleasingItemRepository extends JpaRepository<ButcheryR
     Set<ButcheryReleasingItem> findByButcheryReleasingOrderByItemName(ButcheryReleasing butcheryReleasing);
 
     @Query(value = "SELECT b FROM ButcheryReleasingItem  b WHERE b.butcheryReleasing.butcheryReleasingId = :butcheryReleasingId " +
-            "ORDER BY b.item.itemName, b.item.itemCode ")
+            "ORDER BY b.item.itemName, b.barcode ")
     Set<ButcheryReleasingItem> findByButcheryReleasingIdOrderByItemName(Long butcheryReleasingId);
 
 

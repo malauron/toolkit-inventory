@@ -284,18 +284,27 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
             receivingDto.setReceivingStatus(butcheryReceiving.getReceivingStatus());
 
-            ButcheryReceivingItem newReceivingItem = new ButcheryReceivingItem();
+//            ButcheryReceivingItem newReceivingItem = new ButcheryReceivingItem();
+            ButcheryReceivingItem newReceivingItem;
 
-            newReceivingItem.setButcheryReceiving(butcheryReceiving);
 
             if (butcheryReceiving.getReceivingStatus().equals("Unposted")) {
 
                 if (butcheryReceivingItem.getButcheryReceivingItemId() != null) {
 
-                    newReceivingItem.setButcheryReceivingItemId(
-                            butcheryReceivingItem.getButcheryReceivingItemId());
+//                    newReceivingItem.setButcheryReceivingItemId(
+//                            butcheryReceivingItem.getButcheryReceivingItemId());
+
+                        newReceivingItem = this.butcheryReceivingItemRepository.findById(
+                                butcheryReceivingItem.getButcheryReceivingItemId()
+                        ).get();
+
+                } else {
+
+                    newReceivingItem = new ButcheryReceivingItem();
 
                 }
+                newReceivingItem.setButcheryReceiving(butcheryReceiving);
 
                 Item item = null;
 
