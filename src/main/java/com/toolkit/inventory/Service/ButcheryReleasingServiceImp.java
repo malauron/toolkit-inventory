@@ -66,7 +66,7 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
             butcheryReleasingDto.setButcheryReleasingId(butcheryReleasingId);
             butcheryReleasingDto.setWarehouse(optRel.get().getWarehouse());
             butcheryReleasingDto.setDestinationWarehouse(optRel.get().getDestinationWarehouse());
-//            butcheryReleasingDto.setCustomer(optRel.get().getCustomer());
+            butcheryReleasingDto.setCustomer(optRel.get().getCustomer());
             butcheryReleasingDto.setTotalAmount(optRel.get().getTotalAmount());
             butcheryReleasingDto.setReleasingStatus(optRel.get().getReleasingStatus());
             butcheryReleasingDto.setDateCreated(optRel.get().getDateCreated());
@@ -103,11 +103,11 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
             newButcheryReleasing.setDestinationWarehouse(optDestWhse.get());
         }
 
-//        Optional<Customer> optCust = this.customerRepository.findById(butcheryReleasingDto.getCustomer().getCustomerId());
-//
-//        if (optCust.isPresent()) {
-//            newButcheryReleasing.setCustomer(optCust.get());
-//        }
+        if (butcheryReleasingDto.getCustomer() != null) {
+            Optional<Customer> optCust = this.customerRepository
+                    .findById(butcheryReleasingDto.getCustomer().getCustomerId());
+            butcheryReleasingDto.setCustomer(optCust.get());
+        }
 
         butcheryReleasingDto.getButcheryReleasingItems().forEach(butcheryReleasingItem -> {
 
@@ -186,9 +186,10 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                     butcheryReleasing.setDestinationWarehouse(butcheryReleasingDto.getDestinationWarehouse());
                 }
 
-//                if (butcheryReleasingDto.getCustomer() != null) {
-//                    butcheryReleasing.setCustomer(butcheryReleasingDto.getCustomer());
-//                }
+                if (butcheryReleasingDto.getCustomer() != null) {
+                    Optional<Customer> optCust = this.customerRepository.findById(butcheryReleasingDto.getCustomer().getCustomerId());
+                    butcheryReleasing.setCustomer(optCust.get());
+                }
 
                 this.butcheryReleasingRepository.save(butcheryReleasing);
 
