@@ -1,4 +1,4 @@
-package com.toolkit.inventory.Utility;
+package com.toolkit.inventory.Security.Utility;
 
 public class SecurityParams {
 

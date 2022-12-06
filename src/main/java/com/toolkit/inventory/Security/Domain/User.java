@@ -1,8 +1,10 @@
-package com.toolkit.inventory.Domain;
+package com.toolkit.inventory.Security.Domain;
 
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,6 +24,9 @@ public class User {
 
   @Column(name = "password")
   private String password;
+
+  @Column(name = "authority_id")
+  private Set<Authority> authorities = new HashSet<>();
 
   @Column(name = "account_non_expired")
   private Boolean accountNonExpired;
