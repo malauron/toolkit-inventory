@@ -1,13 +1,19 @@
 package com.toolkit.inventory.Security.Domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
+/**
+ * @noinspection JpaDataSourceORMInspection, JpaModelReferenceInspection
+ */
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "authorities")
 public class Authority {
 
@@ -16,7 +22,9 @@ public class Authority {
     @Column(name = "authority_id")
     private Long authorityId;
 
-    @Column(name = "role")
-    private String role;
+    @Column(name = "permission")
+    private String permission;
 
+    @ManyToMany(mappedBy = "authorities")
+    private Set<Role> roles;
 }

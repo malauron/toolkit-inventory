@@ -3,13 +3,17 @@ package com.toolkit.inventory.Security.Domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+/**
+ * @noinspection JpaDataSourceORMInspection, JpaModelReferenceInspection
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
@@ -25,19 +29,37 @@ public class User {
   @Column(name = "password")
   private String password;
 
-  @Column(name = "authority_id")
-  private Set<Authority> authorities = new HashSet<>();
+  @Singular
+  @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+  @JoinTable(name = "user_roles",
+          joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+          inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")})
+  private Set<Role> roles;
 
+  @Transient
+  private Set<Authority> authorities;
+
+  public Set<Authority> getAuthorities() {
+    return this.roles.stream()
+            .map(Role::getAuthorities)
+            .flatMap(Set::stream)
+            .collect(Collectors.toSet());
+  }
+
+  @Builder.Default
   @Column(name = "account_non_expired")
-  private Boolean accountNonExpired;
+  private Boolean accountNonExpired = true;
 
+  @Builder.Default
   @Column(name = "account_non_locked")
-  private Boolean accountNonLocked;
+  private Boolean accountNonLocked = true;
 
+  @Builder.Default
   @Column(name = "credentials_non_expired")
-  private Boolean credentialsNonExpired;
+  private Boolean credentialsNonExpired = true;
 
+  @Builder.Default
   @Column(name = "enabled")
-  private Boolean enabled;
+  private Boolean enabled = true;
 
 }
