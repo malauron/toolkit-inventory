@@ -17,10 +17,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-//                http
-//                .authorizeRequests(authorize -> {
+                http
+                .authorizeRequests(authorize -> {
 //                    authorize
-//                            .antMatchers("/h2-console/**").permitAll() //do not use in production!
+//                            .antMatchers("/h2-console/**").permitAll(); //do not use in production!
 //                            .antMatchers("/", "/webjars/**", "/login", "/resources/**").permitAll()
 //                            .antMatchers(HttpMethod.GET, "/api/v1/beer/**")
 //                                .hasAnyRole("ADMIN", "CUSTOMER", "USER")
@@ -32,13 +32,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                                .hasAnyRole("ADMIN", "CUSTOMER")
 //                            .mvcMatchers("/beers/find", "/beers/{beerId}")
 //                                .hasAnyRole("ADMIN", "CUSTOMER", "USER");
-//                } )
-//                .authorizeRequests()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().and()
-//                .httpBasic()
-//                .and().csrf().disable();
+                } )
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().and()
+                .httpBasic()
+                .and().csrf().disable();
 
                 //h2 console config
 //                http.headers().frameOptions().sameOrigin();

@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class JWTTokenProvider {
 
   public boolean isTokenValid(String username, String token) {
     JWTVerifier verifier = getJWTVerifier();
-    return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
+    return !ObjectUtils.isEmpty(username) && !isTokenExpired(verifier, token);
   }
 
   public String getSubject(String token) {
