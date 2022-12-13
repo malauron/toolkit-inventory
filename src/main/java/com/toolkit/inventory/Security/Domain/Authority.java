@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Security.Domain;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class Authority {
     @Column(name = "permission")
     private String permission;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "authorities")
     private Set<Role> roles;
 }

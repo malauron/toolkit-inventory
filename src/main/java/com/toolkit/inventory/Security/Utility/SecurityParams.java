@@ -12,6 +12,6 @@ public class SecurityParams {
   public static final String FORBIDDEN_MEASSAGE = "You need to login to access this page.";
   public static final String ACCESS_DENIED_MESSAGE = "You need to have permission to access this page.";
   public static final String OPTIONS_HTTP_METHOD = "OPNIONS";
-  public static final String[] PUBLIC_URLS = {"/"};
+  public static final String[] PUBLIC_URLS = {"/api/v1/login"};
 
 }
