@@ -4,12 +4,8 @@ import com.toolkit.inventory.Security.Domain.User;
 import com.toolkit.inventory.Security.Dto.ResponseDto;
 import com.toolkit.inventory.Security.Dto.UserDto;
 import com.toolkit.inventory.Security.Service.UserService;
-import com.toolkit.inventory.Security.Utility.JWTTokenProvider;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.OK;
