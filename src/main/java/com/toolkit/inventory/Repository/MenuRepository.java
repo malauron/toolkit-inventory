@@ -9,7 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@CrossOrigin
 @RepositoryRestResource(excerptProjection = MenuView.class)
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 

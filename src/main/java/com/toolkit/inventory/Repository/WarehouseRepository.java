@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-@CrossOrigin
 @RepositoryRestResource(excerptProjection = WarehouseView.class)
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 

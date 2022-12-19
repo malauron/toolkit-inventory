@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-@CrossOrigin
 @RepositoryRestResource(excerptProjection = ItemView.class)
 public interface ItemRepository extends JpaRepository<Item, Long> {
 

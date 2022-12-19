@@ -5,6 +5,7 @@ import com.toolkit.inventory.Domain.ItemGeneric;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RepositoryRestResource
 public interface ItemGenericRepository extends JpaRepository<ItemGeneric, Long> {

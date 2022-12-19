@@ -44,7 +44,7 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
     // call an internal helper method
     exposeIds(config);
 
-    cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);
+//    cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);
 
   }
 
