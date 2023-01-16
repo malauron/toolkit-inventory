@@ -91,11 +91,8 @@ public class PosSaleServiceImp implements PosSaleService {
             newPosSale.setWarehouse(optWhse.get());
         }
 
-        if (posSaleDto.getCustomer() != null) {
-            Optional<Customer> optCust = this.customerRepository
-                    .findById(posSaleDto.getCustomer().getCustomerId());
-            posSaleDto.setCustomer(optCust.get());
-        }
+        Optional<Customer> optCust = this.customerRepository.findById(posSaleDto.getCustomer().getCustomerId());
+        newPosSale.setCustomer(optCust.get());
 
         posSaleDto.getPosSaleItems().forEach(posSaleItem -> {
 
