@@ -70,7 +70,7 @@ public class ItemServiceImp implements ItemService {
 
         if (itemDto.getItem().getItemId() > 0) {
 
-            Optional<Item> optItem    = this.itemRepository.findById(itemDto.getItem().getItemId());
+            Optional<Item> optItem = this.itemRepository.findById(itemDto.getItem().getItemId());
 
             if (optItem.isPresent()) {
                 Item item = optItem.get();
