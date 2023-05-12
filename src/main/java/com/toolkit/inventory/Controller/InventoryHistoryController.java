@@ -23,10 +23,6 @@ public class InventoryHistoryController {
     }
 
     @GetMapping("/inventoryHistoryItems")
-//    public Set<InventoryHistoryItem> findByInventoryHistoryId(InventoryHistoryDto inventoryHistoryDto) {
-//        return this.inventoryHistoryService
-//                .findAllByInventoryHistoryId(inventoryHistoryDto.getInventoryHistoryId());
-//    }
     public Set<InventoryHistoryItem> findByInventoryHistoryId(Long inventoryHistoryId) {
         return this.inventoryHistoryService
                 .findAllByInventoryHistoryId(inventoryHistoryId);
