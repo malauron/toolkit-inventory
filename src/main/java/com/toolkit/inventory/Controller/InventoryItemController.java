@@ -22,9 +22,7 @@ public class InventoryItemController {
 
     @GetMapping("/inventoryItems")
     public Set<InventoryItem> findAllByWarehouseIdWithQty(Long warehouseId) {
-
         return this.inventoryItemService.findAllByWarehouseIdWithQty(warehouseId);
-
     }
 
     @PutMapping("/inventoryItems/price")
