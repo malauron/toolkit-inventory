@@ -1,8 +1,6 @@
 package com.toolkit.inventory.Repository;
 
-import com.toolkit.inventory.Domain.ButcheryReleasing;
 import com.toolkit.inventory.Domain.PosSale;
-import com.toolkit.inventory.Projection.ButcheryReleasingView;
 import com.toolkit.inventory.Projection.PosSaleView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
