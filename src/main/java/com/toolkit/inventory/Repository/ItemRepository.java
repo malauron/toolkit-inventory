@@ -21,6 +21,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
   Page<Item> findByItemNameContainingOrderByItemName(@RequestParam("itenName") String itemName, Pageable pageable);
 
   @Query(value = "SELECT i FROM Item i")
-  Set<ItemWithItemPriceView> findAllItems();
+  Set<Item> findAllItems();
 
 }

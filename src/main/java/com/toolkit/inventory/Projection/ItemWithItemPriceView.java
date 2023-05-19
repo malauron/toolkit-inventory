@@ -17,7 +17,7 @@ public interface ItemWithItemPriceView {
     String getItemName();
     Uom getUom();
     BigDecimal getPrice();
-    @Value("#{@posItemPriceRepository.findByItem(target)}")
-    Set<PosItemPrice> getPosItemPrices();
+//    @Value("#{@posItemPriceRepository.findByItem(target)}")
+//    Set<PosItemPrice> getPosItemPrices();
 
 }
