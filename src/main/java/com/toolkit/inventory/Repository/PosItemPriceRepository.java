@@ -1,16 +1,23 @@
 package com.toolkit.inventory.Repository;
 
-import com.toolkit.inventory.Domain.Item;
 import com.toolkit.inventory.Domain.PosItemPrice;
 import com.toolkit.inventory.Projection.PosItemPriceView;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Set;
+import java.util.Optional;
 
 @RepositoryRestResource(excerptProjection = PosItemPriceView.class)
 public interface PosItemPriceRepository extends JpaRepository<PosItemPrice, Long> {
 
-    Set<PosItemPrice> findByItem(Item item);
+    @Query(value = "SELECT p FROM PosItemPrice p " +
+                    "WHERE p.warehouse.warehouseId = :warehouseId " +
+                    "AND p.item.itemId = :itemId")
+    Optional<PosItemPriceView> findByWarehouseIdAndItemId(
+            @RequestParam Long warehouseId,
+            @RequestParam Long itemId
+    );
 
 }

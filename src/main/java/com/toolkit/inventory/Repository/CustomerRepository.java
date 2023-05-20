@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RepositoryRestResource(excerptProjection = CustomerView.class)
-//@RepositoryRestResource
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Page<Customer> findByCustomerNameContainingOrderByCustomerName(
