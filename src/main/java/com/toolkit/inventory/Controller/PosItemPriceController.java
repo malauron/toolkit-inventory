@@ -1,9 +1,8 @@
 package com.toolkit.inventory.Controller;
 
+import com.toolkit.inventory.Dto.PosItemPriceDto;
 import com.toolkit.inventory.Service.PosItemPriceService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
@@ -16,5 +15,10 @@ public class PosItemPriceController {
             PosItemPriceService posItemPriceService
     ){
         this.posItemPriceService = posItemPriceService;
+    }
+
+    @PostMapping("/posItemPrice")
+    public PosItemPriceDto save(@RequestBody PosItemPriceDto posItemPriceDto) {
+        return posItemPriceService.save(posItemPriceDto);
     }
 }
