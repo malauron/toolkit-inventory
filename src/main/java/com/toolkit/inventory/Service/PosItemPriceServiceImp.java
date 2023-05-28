@@ -7,6 +7,7 @@ import com.toolkit.inventory.Dto.PosItemPriceDto;
 import com.toolkit.inventory.Repository.ItemRepository;
 import com.toolkit.inventory.Repository.PosItemPriceRepository;
 import com.toolkit.inventory.Repository.WarehouseRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,9 +34,11 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
 
         Optional<Item> optionalItem =  this.itemRepository
                 .findById(posItemPriceDto.getItem().getItemId());
+        posItemPriceDto.setItem(optionalItem.get());
 
         Optional<Warehouse> optionalWarehouse = this.warehouseRepository
                 .findByWarehouseId(posItemPriceDto.getWarehouse().getWarehouseId());
+        posItemPriceDto.setWarehouse(optionalWarehouse.get());
 
         if (posItemPriceDto.getPosItemPriceId() > 0) {
 
@@ -46,11 +49,16 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
             posItemPrice.setWarehouse(optionalWarehouse.get());
             posItemPrice.setDefaultPrice(posItemPriceDto.getDefaultPrice());
 
-            this.posItemPriceRepository.saveAndFlush(posItemPrice);
+            try {
 
-            System.out.println(posItemPrice);
+                this.posItemPriceRepository.saveAndFlush(posItemPrice);
+
+                posItemPriceDto.setPosItemPriceId(posItemPrice.getPosItemPriceId());
+
+            } catch (DataIntegrityViolationException e){
+                System.out.println(e);
+            };
         }
-
         return posItemPriceDto;
     }
 }
