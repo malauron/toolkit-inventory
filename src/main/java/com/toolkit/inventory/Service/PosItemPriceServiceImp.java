@@ -4,6 +4,7 @@ import com.toolkit.inventory.Domain.Item;
 import com.toolkit.inventory.Domain.PosItemPrice;
 import com.toolkit.inventory.Domain.Warehouse;
 import com.toolkit.inventory.Dto.PosItemPriceDto;
+import com.toolkit.inventory.Projection.PosItemPriceView;
 import com.toolkit.inventory.Repository.ItemRepository;
 import com.toolkit.inventory.Repository.PosItemPriceRepository;
 import com.toolkit.inventory.Repository.WarehouseRepository;
@@ -51,14 +52,28 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
 
             try {
 
-                this.posItemPriceRepository.saveAndFlush(posItemPrice);
+                this.savePosItemPrice(posItemPrice);
 
                 posItemPriceDto.setPosItemPriceId(posItemPrice.getPosItemPriceId());
 
             } catch (DataIntegrityViolationException e){
-                System.out.println(e);
+                Optional<PosItemPriceView> optionalPosItemPrice = this.posItemPriceRepository
+                                                                .findByWarehouseIdAndItemId(
+                                                                        posItemPrice.getWarehouse().getWarehouseId(),
+                                                                        posItemPrice.getItem().getItemId());
+
+                posItemPrice.setPosItemPriceId(optionalPosItemPrice.get().getPosItemPriceId());
+
+                this.savePosItemPrice(posItemPrice);
+
+                posItemPriceDto.setPosItemPriceId(posItemPrice.getPosItemPriceId());
+
             };
         }
         return posItemPriceDto;
+    }
+
+    private void savePosItemPrice(PosItemPrice posItemPrice) throws DataIntegrityViolationException {
+        this.posItemPriceRepository.saveAndFlush(posItemPrice);
     }
 }
