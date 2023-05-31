@@ -47,7 +47,7 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
             posItemPrice = optionalPosItemPrice.get();
             posItemPrice.setDefaultPrice(posItemPriceDto.getDefaultPrice());
 
-            this.posItemPriceRepository.save(posItemPrice);
+            this.posItemPriceRepository.saveAndFlush(posItemPrice);
 
         } else {
 
@@ -65,7 +65,7 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
 
             try {
 
-                this.posItemPriceRepository.save(posItemPrice);
+                this.posItemPriceRepository.saveAndFlush(posItemPrice);
 
             } catch (DataIntegrityViolationException e){
 
@@ -75,7 +75,7 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
                                                                         posItemPrice.getItem().getItemId());
                 posItemPrice.setPosItemPriceId(optionalPosItemPrice.get().getPosItemPriceId());
 
-                this.posItemPriceRepository.save(posItemPrice);
+                this.posItemPriceRepository.saveAndFlush(posItemPrice);
 
             };
 
@@ -100,7 +100,7 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
                 posItemPriceLevel = optPriceLevel.get();
                 posItemPriceLevel.setPrice(priceLevelDto.getPrice());
 
-                this.posItemPriceLevelRepository.save(posItemPriceLevel);
+                this.posItemPriceLevelRepository.saveAndFlush(posItemPriceLevel);
 
             } else {
 
@@ -116,7 +116,7 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
 
                 try {
 
-                    this.posItemPriceLevelRepository.save(posItemPriceLevel);
+                    this.posItemPriceLevelRepository.saveAndFlush(posItemPriceLevel);
 
                 } catch (DataIntegrityViolationException e) {
 
@@ -127,15 +127,13 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
                                                                         );
                     posItemPriceLevel.setPosItemPriceLevelId(optPriceLevel.get().getPosItemPriceLevelId());
 
-                    this.posItemPriceLevelRepository.save(posItemPriceLevel);
+                    this.posItemPriceLevelRepository.saveAndFlush(posItemPriceLevel);
 
                 }
 
             }
 
             posItemPriceLevels.add(posItemPriceLevel);
-
-//            posItemPriceDto.getPosItemPriceLevels().add(posItemPriceLevel);
 
         });
 
