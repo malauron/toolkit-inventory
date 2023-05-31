@@ -18,5 +18,5 @@ public class PosItemPriceDto {
     private Warehouse warehouse;
     private Item item;
     private BigDecimal defaultPrice;
-
+    private String errorMsg;
 }

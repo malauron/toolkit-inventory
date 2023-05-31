@@ -44,10 +44,17 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
 
             Optional<PosItemPrice> optionalPosItemPrice = this.posItemPriceRepository
                                                             .findById(posItemPriceDto.getPosItemPriceId());
-            posItemPrice = optionalPosItemPrice.get();
-            posItemPrice.setDefaultPrice(posItemPriceDto.getDefaultPrice());
+            if (optionalPosItemPrice.isPresent()) {
+                posItemPrice = optionalPosItemPrice.get();
+                posItemPrice.setDefaultPrice(posItemPriceDto.getDefaultPrice());
 
-            this.posItemPriceRepository.saveAndFlush(posItemPrice);
+                this.posItemPriceRepository.saveAndFlush(posItemPrice);
+            } else {
+
+                posItemPriceDto.setErrorMsg("Item Price not found.");
+
+                return posItemPriceDto;
+            }
 
         } else {
 
@@ -111,8 +118,6 @@ public class PosItemPriceServiceImp implements PosItemPriceService {
                                                             .findById(priceLevelDto.getCustomerGroup().getCustomerGroupId());
                 posItemPriceLevel.setCustomerGroup(optCustGrp.get());
                 posItemPriceLevel.setPrice(priceLevelDto.getPrice());
-
-                System.out.println(posItemPriceLevel);
 
                 try {
 
