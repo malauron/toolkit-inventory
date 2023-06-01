@@ -17,7 +17,7 @@ public class PosItemPriceController {
         this.posItemPriceService = posItemPriceService;
     }
 
-    @PostMapping("/posItemPrice")
+    @PostMapping("/posItemPrices")
     public PosItemPriceDto save(@RequestBody PosItemPriceDto posItemPriceDto) {
         return posItemPriceService.save(posItemPriceDto);
     }
