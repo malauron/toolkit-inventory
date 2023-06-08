@@ -52,7 +52,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
-
 //        http.csrf().disable().cors().and()
 //                .sessionManagement().sessionCreationPolicy(STATELESS)
 //                .and().authorizeRequests().antMatchers("/api/v1/login/**").permitAll()
@@ -107,17 +106,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
