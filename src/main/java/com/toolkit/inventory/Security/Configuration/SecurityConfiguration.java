@@ -57,7 +57,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .and().authorizeRequests().antMatchers("/api/v1/login/**").permitAll()
 //                .anyRequest().authenticated();
 
-
 //                .and()
 //                .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
 //                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -92,6 +91,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 //h2 console config
 //                http.headers().frameOptions().sameOrigin();
+
     }
 
     @Bean
