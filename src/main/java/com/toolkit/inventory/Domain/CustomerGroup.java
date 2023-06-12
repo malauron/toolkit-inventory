@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Getter
 @Setter
 @Entity

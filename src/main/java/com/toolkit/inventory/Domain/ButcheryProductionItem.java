@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
-/** @noinspection JpaDataSourceORMInspection*/
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Getter
 @Setter
