@@ -22,11 +22,12 @@ public class ItemUom {
   @Column(name = "uom_id")
   private Long uomId;
 
+//  @Id
   @ManyToOne
   @JoinColumn(name = "item_id", insertable = false, updatable = false)
   private Item item;
 
-  @Id
+//  @Id
   @ManyToOne
   @JoinColumn(name = "uom_id", insertable = false, updatable = false)
   private Uom uom;
