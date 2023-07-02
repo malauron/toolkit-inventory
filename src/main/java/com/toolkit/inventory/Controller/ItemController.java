@@ -41,9 +41,13 @@ public class ItemController {
 
     @PostMapping("/items")
     public ItemDto save(@RequestBody ItemDto itemDto) {
+        try {
 
-        return itemService.save(itemDto);
-
+            return itemService.save(itemDto);
+        } catch (Exception e) {
+            System.out.println("errorrrr!!");
+        }
+        return null;
     }
 
     @PutMapping("/items")

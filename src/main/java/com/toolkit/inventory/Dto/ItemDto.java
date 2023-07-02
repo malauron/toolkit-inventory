@@ -16,4 +16,5 @@ public class ItemDto {
     private Set<ItemUom> itemUoms;
     private Set<ItemBom> itemBoms;
     private ItemGeneric itemGeneric;
+    private String errorDesc;
 }

@@ -3,6 +3,7 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Repository.*;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -86,99 +87,108 @@ public class ItemServiceImp implements ItemService {
 
         } else {
 
-            Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
+            try {
 
-            newItemDto.setItem(newItem);
+                Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
 
-            if (newItem.getItemClass() == ItemClass.Stock) {
+                newItemDto.setItem(newItem);
 
-                //Alternative Unit of Measure
-                Set<ItemUom> itemUoms = new HashSet<>();
+                if (newItem.getItemClass() == ItemClass.Stock) {
 
-                itemDto.getItemUoms().forEach(itemUom -> {
+                    //Alternative Unit of Measure
+                    Set<ItemUom> itemUoms = new HashSet<>();
 
-                    Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
+                    itemDto.getItemUoms().forEach(itemUom -> {
 
-                    ItemUom newItemUom = new ItemUom();
+                        Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
 
-                    newItemUom.setItemId(newItem.getItemId());
-                    newItemUom.setItem(newItem);
-                    newItemUom.setUom(optUom.get());
-                    newItemUom.setUomId(optUom.get().getUomId());
-                    newItemUom.setQuantity(itemUom.getQuantity());
+                        ItemUom newItemUom = new ItemUom();
 
-                    itemUoms.add(this.itemUomRepository.save(newItemUom));
+                        newItemUom.setItemId(newItem.getItemId());
+                        newItemUom.setItem(newItem);
+                        newItemUom.setUom(optUom.get());
+                        newItemUom.setUomId(optUom.get().getUomId());
+                        newItemUom.setQuantity(itemUom.getQuantity());
 
-                    newItemDto.setItemUoms(itemUoms);
+                        itemUoms.add(this.itemUomRepository.save(newItemUom));
+
+                        newItemDto.setItemUoms(itemUoms);
+
+                    });
+
+                } else if (newItem.getItemClass() == ItemClass.Assembly) {
+
+                    //Bill of Materials
+                    Set<ItemBom> itemBoms = new HashSet<>();
+
+                    itemDto.getItemBoms().forEach(itemBom -> {
+
+                        Optional<Item> optSubItem = this.itemRepository.findById(itemBom.getSubItem().getItemId());
+
+                        Optional<Uom> optReqUom = this.uomRepository.findById(itemBom.getRequiredUom().getUomId());
+
+                        ItemBom newItemBom = new ItemBom();
+
+                        newItemBom.setMainItem(newItem);
+                        newItemBom.setSubItem(optSubItem.get());
+                        newItemBom.setRequiredUom(optReqUom.get());
+                        newItemBom.setRequiredQty(itemBom.getRequiredQty());
+
+                        itemBoms.add(this.itemBomRepository.save(newItemBom));
+
+                        newItemDto.setItemBoms(itemBoms);
+
+                    });
+
+                } else if (newItem.getItemClass() == ItemClass.Branded) {
+
+                    //Generic Item
+                    ItemGeneric itemGeneric = new ItemGeneric();
+
+                    itemGeneric.setMainItem(newItem);
+                    itemGeneric.setSubItem(itemDto.getItemGeneric().getSubItem());
+                    itemGeneric.setRequiredUom(itemDto.getItemGeneric().getRequiredUom());
+                    itemGeneric.setRequiredQty(itemDto.getItemGeneric().getRequiredQty());
+
+                    itemGeneric = this.itemGenericRepository.save(itemGeneric);
+
+                    newItemDto.setItemGeneric(itemGeneric);
+
+                }
+
+                List<Warehouse> warehouses = this.warehouseRepository.findAll();
+
+                warehouses.forEach(warehouse -> {
+
+                    ItemCost itemCost = new ItemCost();
+
+                    itemCost.setItem(newItem);
+                    itemCost.setWarehouse(warehouse);
+                    itemCost.setQty(BigDecimal.ZERO);
+                    itemCost.setCost(BigDecimal.ZERO);
+
+                    this.itemCostRepository.save(itemCost);
+
+                    InventoryItem inventoryItem = new InventoryItem();
+
+                    inventoryItem.setItem(newItem);
+                    inventoryItem.setWarehouse(warehouse);
+                    inventoryItem.setBeginningQty(BigDecimal.ZERO);
+                    inventoryItem.setPurchasedQty(BigDecimal.ZERO);
+                    inventoryItem.setEndingQty(BigDecimal.ZERO);
+                    inventoryItem.setCost(BigDecimal.ZERO);
+                    inventoryItem.setPrice(newItem.getPrice());
+
+                    this.inventoryItemRepository.save(inventoryItem);
 
                 });
-
-            } else if (newItem.getItemClass() == ItemClass.Assembly) {
-
-                //Bill of Materials
-                Set<ItemBom> itemBoms = new HashSet<>();
-
-                itemDto.getItemBoms().forEach(itemBom -> {
-
-                    Optional<Item> optSubItem = this.itemRepository.findById(itemBom.getSubItem().getItemId());
-
-                    Optional<Uom> optReqUom = this.uomRepository.findById(itemBom.getRequiredUom().getUomId());
-
-                    ItemBom newItemBom = new ItemBom();
-
-                    newItemBom.setMainItem(newItem);
-                    newItemBom.setSubItem(optSubItem.get());
-                    newItemBom.setRequiredUom(optReqUom.get());
-                    newItemBom.setRequiredQty(itemBom.getRequiredQty());
-
-                    itemBoms.add(this.itemBomRepository.save(newItemBom));
-
-                    newItemDto.setItemBoms(itemBoms);
-
-                });
-
-            } else if (newItem.getItemClass() == ItemClass.Branded) {
-
-                //Generic Item
-                ItemGeneric itemGeneric = new ItemGeneric();
-
-                itemGeneric.setMainItem(newItem);
-                itemGeneric.setSubItem(itemDto.getItemGeneric().getSubItem());
-                itemGeneric.setRequiredUom(itemDto.getItemGeneric().getRequiredUom());
-                itemGeneric.setRequiredQty(itemDto.getItemGeneric().getRequiredQty());
-
-                itemGeneric = this.itemGenericRepository.save(itemGeneric);
-
-                newItemDto.setItemGeneric(itemGeneric);
-
+            } catch (ConstraintViolationException e) {
+                newItemDto.setErrorDesc(e.getConstraintName());
+            } catch (Exception e) {
+                System.out.println("Error in the code!!!");
+                System.out.println(e.getMessage());
+                newItemDto.setErrorDesc(e.toString());
             }
-
-            List<Warehouse> warehouses = this.warehouseRepository.findAll();
-
-            warehouses.forEach(warehouse -> {
-
-                ItemCost itemCost = new ItemCost();
-
-                itemCost.setItem(newItem);
-                itemCost.setWarehouse(warehouse);
-                itemCost.setQty(BigDecimal.ZERO);
-                itemCost.setCost(BigDecimal.ZERO);
-
-                this.itemCostRepository.save(itemCost);
-
-                InventoryItem inventoryItem = new InventoryItem();
-
-                inventoryItem.setItem(newItem);
-                inventoryItem.setWarehouse(warehouse);
-                inventoryItem.setBeginningQty(BigDecimal.ZERO);
-                inventoryItem.setPurchasedQty(BigDecimal.ZERO);
-                inventoryItem.setEndingQty(BigDecimal.ZERO);
-                inventoryItem.setCost(BigDecimal.ZERO);
-                inventoryItem.setPrice(newItem.getPrice());
-
-                this.inventoryItemRepository.save(inventoryItem);
-
-            });
 
         }
 
