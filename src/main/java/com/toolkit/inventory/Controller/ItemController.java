@@ -6,6 +6,7 @@ import com.toolkit.inventory.Domain.ItemGeneric;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Service.ItemService;
 import com.toolkit.inventory.Service.ItemUomService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -42,17 +43,19 @@ public class ItemController {
     @PostMapping("/items")
     public ItemDto save(@RequestBody ItemDto itemDto) {
         try {
-
+            itemDto.setErrorDesc(null);
             return itemService.save(itemDto);
+        } catch (DataIntegrityViolationException e){
+            itemDto.setErrorDesc(e.getMostSpecificCause().toString());
         } catch (Exception e) {
-            System.out.println("errorrrr!!");
+            itemDto.setErrorDesc(e.getMessage());
         }
-        return null;
+        return itemDto;
     }
 
     @PutMapping("/items")
     public ItemDto update(@RequestBody ItemDto itemDto) {
-        itemService.save(itemDto);
+//        itemService.save(itemDto);
         return itemDto;
     }
 

@@ -3,7 +3,7 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Repository.*;
-import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -65,7 +65,7 @@ public class ItemServiceImp implements ItemService {
 
     @Transactional
     @Override
-    public ItemDto save(ItemDto itemDto) {
+    public ItemDto save(ItemDto itemDto) throws DataIntegrityViolationException, Exception {
 
         ItemDto newItemDto = new ItemDto();
 
@@ -87,7 +87,7 @@ public class ItemServiceImp implements ItemService {
 
         } else {
 
-            try {
+//            try {
 
                 Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
 
@@ -182,13 +182,13 @@ public class ItemServiceImp implements ItemService {
                     this.inventoryItemRepository.save(inventoryItem);
 
                 });
-            } catch (ConstraintViolationException e) {
-                newItemDto.setErrorDesc(e.getConstraintName());
-            } catch (Exception e) {
-                System.out.println("Error in the code!!!");
-                System.out.println(e.getMessage());
-                newItemDto.setErrorDesc(e.toString());
-            }
+//            } catch (ConstraintViolationException e) {
+//                newItemDto.setErrorDesc(e.getConstraintName());
+//            } catch (Exception e) {
+//                System.out.println("Error in the code!!!");
+//                System.out.println(e.getMessage());
+//                newItemDto.setErrorDesc(e.toString());
+//            }
 
         }
 
