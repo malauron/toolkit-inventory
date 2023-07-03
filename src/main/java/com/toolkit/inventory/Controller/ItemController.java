@@ -55,7 +55,14 @@ public class ItemController {
 
     @PutMapping("/items")
     public ItemDto update(@RequestBody ItemDto itemDto) {
-//        itemService.save(itemDto);
+        try {
+            itemDto.setErrorDesc(null);
+            return itemService.save(itemDto);
+        } catch (DataIntegrityViolationException e){
+            itemDto.setErrorDesc(e.getMostSpecificCause().toString());
+        } catch (Exception e) {
+            itemDto.setErrorDesc(e.getMessage());
+        }
         return itemDto;
     }
 
