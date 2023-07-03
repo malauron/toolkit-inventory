@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class ItemAddOnContent {
     @Column(name = "item_add_on_content_id")
     private Long itemAddOnContentId;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "item_add_on_detail_id")
     private ItemAddOnDetail itemAddOnDetail;

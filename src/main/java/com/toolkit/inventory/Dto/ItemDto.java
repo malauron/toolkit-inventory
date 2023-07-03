@@ -1,9 +1,6 @@
 package com.toolkit.inventory.Dto;
 
-import com.toolkit.inventory.Domain.Item;
-import com.toolkit.inventory.Domain.ItemBom;
-import com.toolkit.inventory.Domain.ItemGeneric;
-import com.toolkit.inventory.Domain.ItemUom;
+import com.toolkit.inventory.Domain.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +14,5 @@ public class ItemDto {
     private Set<ItemBom> itemBoms;
     private ItemGeneric itemGeneric;
     private String errorDesc;
+    private Set<ItemAddOnDetail> itemAddOnDetails;
 }

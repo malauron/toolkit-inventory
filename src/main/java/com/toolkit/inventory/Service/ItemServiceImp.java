@@ -17,19 +17,14 @@ import java.util.Set;
 public class ItemServiceImp implements ItemService {
 
     private ItemRepository itemRepository;
-
     private ItemUomRepository itemUomRepository;
-
     private ItemCostRepository itemCostRepository;
-
     private UomRepository uomRepository;
-
     private ItemBomRepository itemBomRepository;
-
     private ItemGenericRepository itemGenericRepository;
-
     private InventoryItemRepository inventoryItemRepository;
-
+    private ItemAddOnDetailRepository itemAddOnDetailRepository;
+    private ItemAddOnContentRepository itemAddOnContentRepository;
     private WarehouseRepository warehouseRepository;
 
     public ItemServiceImp(ItemRepository itemRepository,
@@ -39,6 +34,8 @@ public class ItemServiceImp implements ItemService {
                           ItemBomRepository itemBomRepository,
                           ItemGenericRepository itemGenericRepository,
                           InventoryItemRepository inventoryItemRepository,
+                          ItemAddOnDetailRepository itemAddOnDetailRepository,
+                          ItemAddOnContentRepository itemAddOnContentRepository,
                           WarehouseRepository warehouseRepository) {
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
@@ -47,6 +44,8 @@ public class ItemServiceImp implements ItemService {
         this.itemBomRepository = itemBomRepository;
         this.itemGenericRepository = itemGenericRepository;
         this.inventoryItemRepository = inventoryItemRepository;
+        this.itemAddOnDetailRepository = itemAddOnDetailRepository;
+        this.itemAddOnContentRepository = itemAddOnContentRepository;
         this.warehouseRepository = warehouseRepository;
     }
 
@@ -87,108 +86,126 @@ public class ItemServiceImp implements ItemService {
 
         } else {
 
-//            try {
 
-                Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
+            Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
 
-                newItemDto.setItem(newItem);
+            newItemDto.setItem(newItem);
 
-                if (newItem.getItemClass() == ItemClass.Stock) {
+            if (newItem.getItemClass() == ItemClass.Stock) {
 
-                    //Alternative Unit of Measure
-                    Set<ItemUom> itemUoms = new HashSet<>();
+                //Alternative Unit of Measure
+                Set<ItemUom> itemUoms = new HashSet<>();
 
-                    itemDto.getItemUoms().forEach(itemUom -> {
+                itemDto.getItemUoms().forEach(itemUom -> {
 
-                        Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
+                    Optional<Uom> optUom = this.uomRepository.findById(itemUom.getUom().getUomId());
 
-                        ItemUom newItemUom = new ItemUom();
+                    ItemUom newItemUom = new ItemUom();
 
-                        newItemUom.setItemId(newItem.getItemId());
-                        newItemUom.setItem(newItem);
-                        newItemUom.setUom(optUom.get());
-                        newItemUom.setUomId(optUom.get().getUomId());
-                        newItemUom.setQuantity(itemUom.getQuantity());
+                    newItemUom.setItemId(newItem.getItemId());
+                    newItemUom.setItem(newItem);
+                    newItemUom.setUom(optUom.get());
+                    newItemUom.setUomId(optUom.get().getUomId());
+                    newItemUom.setQuantity(itemUom.getQuantity());
 
-                        itemUoms.add(this.itemUomRepository.save(newItemUom));
-
-                        newItemDto.setItemUoms(itemUoms);
-
-                    });
-
-                } else if (newItem.getItemClass() == ItemClass.Assembly) {
-
-                    //Bill of Materials
-                    Set<ItemBom> itemBoms = new HashSet<>();
-
-                    itemDto.getItemBoms().forEach(itemBom -> {
-
-                        Optional<Item> optSubItem = this.itemRepository.findById(itemBom.getSubItem().getItemId());
-
-                        Optional<Uom> optReqUom = this.uomRepository.findById(itemBom.getRequiredUom().getUomId());
-
-                        ItemBom newItemBom = new ItemBom();
-
-                        newItemBom.setMainItem(newItem);
-                        newItemBom.setSubItem(optSubItem.get());
-                        newItemBom.setRequiredUom(optReqUom.get());
-                        newItemBom.setRequiredQty(itemBom.getRequiredQty());
-
-                        itemBoms.add(this.itemBomRepository.save(newItemBom));
-
-                        newItemDto.setItemBoms(itemBoms);
-
-                    });
-
-                } else if (newItem.getItemClass() == ItemClass.Branded) {
-
-                    //Generic Item
-                    ItemGeneric itemGeneric = new ItemGeneric();
-
-                    itemGeneric.setMainItem(newItem);
-                    itemGeneric.setSubItem(itemDto.getItemGeneric().getSubItem());
-                    itemGeneric.setRequiredUom(itemDto.getItemGeneric().getRequiredUom());
-                    itemGeneric.setRequiredQty(itemDto.getItemGeneric().getRequiredQty());
-
-                    itemGeneric = this.itemGenericRepository.save(itemGeneric);
-
-                    newItemDto.setItemGeneric(itemGeneric);
-
-                }
-
-                List<Warehouse> warehouses = this.warehouseRepository.findAll();
-
-                warehouses.forEach(warehouse -> {
-
-                    ItemCost itemCost = new ItemCost();
-
-                    itemCost.setItem(newItem);
-                    itemCost.setWarehouse(warehouse);
-                    itemCost.setQty(BigDecimal.ZERO);
-                    itemCost.setCost(BigDecimal.ZERO);
-
-                    this.itemCostRepository.save(itemCost);
-
-                    InventoryItem inventoryItem = new InventoryItem();
-
-                    inventoryItem.setItem(newItem);
-                    inventoryItem.setWarehouse(warehouse);
-                    inventoryItem.setBeginningQty(BigDecimal.ZERO);
-                    inventoryItem.setPurchasedQty(BigDecimal.ZERO);
-                    inventoryItem.setEndingQty(BigDecimal.ZERO);
-                    inventoryItem.setCost(BigDecimal.ZERO);
-                    inventoryItem.setPrice(newItem.getPrice());
-
-                    this.inventoryItemRepository.save(inventoryItem);
+                    itemUoms.add(this.itemUomRepository.save(newItemUom));
 
                 });
-//            } catch (ConstraintViolationException e) {
-//                newItemDto.setErrorDesc(e.getConstraintName());
-//            } catch (Exception e) {
-//                System.out.println("Error in the code!!!");
-//                System.out.println(e.getMessage());
-//                newItemDto.setErrorDesc(e.toString());
-//            }
+
+                newItemDto.setItemUoms(itemUoms);
+
+            } else if (newItem.getItemClass() == ItemClass.Assembly) {
+
+                //Bill of Materials
+                Set<ItemBom> itemBoms = new HashSet<>();
+
+                itemDto.getItemBoms().forEach(itemBom -> {
+
+                    Optional<Item> optSubItem = this.itemRepository.findById(itemBom.getSubItem().getItemId());
+
+                    Optional<Uom> optReqUom = this.uomRepository.findById(itemBom.getRequiredUom().getUomId());
+
+                    ItemBom newItemBom = new ItemBom();
+
+                    newItemBom.setMainItem(newItem);
+                    newItemBom.setSubItem(optSubItem.get());
+                    newItemBom.setRequiredUom(optReqUom.get());
+                    newItemBom.setRequiredQty(itemBom.getRequiredQty());
+
+                    itemBoms.add(this.itemBomRepository.save(newItemBom));
+
+                });
+
+                newItemDto.setItemBoms(itemBoms);
+
+                itemDto.getItemAddOnDetails().forEach(itemAddOnDetail -> {
+                    ItemAddOnDetail newItemAddOnDetail = new ItemAddOnDetail();
+
+                    newItemAddOnDetail.setItem(newItem);
+                    newItemAddOnDetail.setDescription(itemAddOnDetail.getDescription());
+                    newItemAddOnDetail.setIsRequired(itemAddOnDetail.getIsRequired());
+                    newItemAddOnDetail.setMaxNoOfItems(itemAddOnDetail.getMaxNoOfItems());
+                    ItemAddOnDetail savedItemAddOnDetail = this.itemAddOnDetailRepository.saveAndFlush(newItemAddOnDetail);
+                    itemAddOnDetail.setItemAddOnDetailId(savedItemAddOnDetail.getItemAddOnDetailId());
+
+                    itemAddOnDetail.getItemAddOnContents().forEach(itemAddOnContent -> {
+                        ItemAddOnContent newItemAddOnContent = new ItemAddOnContent();
+                        Optional<Item> contentItem = this.itemRepository.findById(itemAddOnContent.getItem().getItemId());
+                        Optional<Uom> contentUom = this.uomRepository.findById(itemAddOnContent.getUom().getUomId());
+
+                        newItemAddOnContent.setItemAddOnDetail(savedItemAddOnDetail);
+                        newItemAddOnContent.setItem(contentItem.get());
+                        newItemAddOnContent.setUom(contentUom.get());
+                        newItemAddOnContent.setQty(itemAddOnContent.getQty());
+                        newItemAddOnContent.setPrice(itemAddOnContent.getPrice());
+                        newItemAddOnContent.setAltDesc(itemAddOnContent.getAltDesc());
+                        ItemAddOnContent saveItemAddOnContent = this.itemAddOnContentRepository.saveAndFlush(newItemAddOnContent);
+                        itemAddOnContent.setItemAddOnContentId(saveItemAddOnContent.getItemAddOnContentId());
+                    });
+                });
+
+            } else if (newItem.getItemClass() == ItemClass.Branded) {
+
+                //Generic Item
+                ItemGeneric itemGeneric = new ItemGeneric();
+
+                itemGeneric.setMainItem(newItem);
+                itemGeneric.setSubItem(itemDto.getItemGeneric().getSubItem());
+                itemGeneric.setRequiredUom(itemDto.getItemGeneric().getRequiredUom());
+                itemGeneric.setRequiredQty(itemDto.getItemGeneric().getRequiredQty());
+
+                itemGeneric = this.itemGenericRepository.save(itemGeneric);
+
+                newItemDto.setItemGeneric(itemGeneric);
+
+            }
+
+            List<Warehouse> warehouses = this.warehouseRepository.findAll();
+
+            warehouses.forEach(warehouse -> {
+
+                ItemCost itemCost = new ItemCost();
+
+                itemCost.setItem(newItem);
+                itemCost.setWarehouse(warehouse);
+                itemCost.setQty(BigDecimal.ZERO);
+                itemCost.setCost(BigDecimal.ZERO);
+
+                this.itemCostRepository.save(itemCost);
+
+                InventoryItem inventoryItem = new InventoryItem();
+
+                inventoryItem.setItem(newItem);
+                inventoryItem.setWarehouse(warehouse);
+                inventoryItem.setBeginningQty(BigDecimal.ZERO);
+                inventoryItem.setPurchasedQty(BigDecimal.ZERO);
+                inventoryItem.setEndingQty(BigDecimal.ZERO);
+                inventoryItem.setCost(BigDecimal.ZERO);
+                inventoryItem.setPrice(newItem.getPrice());
+
+                this.inventoryItemRepository.save(inventoryItem);
+
+            });
 
         }
 
