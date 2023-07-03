@@ -226,6 +226,19 @@ public class ItemServiceImp implements ItemService {
         return itemDto;
     }
 
+    @Override
+    public ItemDto getItemAddOn(Long itemId) {
+
+        Set<ItemAddOnDetail> itemAddOnDetails = this.itemAddOnDetailRepository.findByItemId(itemId);
+
+        ItemDto itemDto = new ItemDto();
+
+        itemDto.setItemAddOnDetails(itemAddOnDetails);
+
+        return itemDto;
+
+    }
+
     @Transactional
     @Override
     public ItemBom addItemBom(ItemBom itemBom) {

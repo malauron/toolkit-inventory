@@ -16,6 +16,8 @@ public interface ItemService {
 
     ItemDto getItemBom(Long itemId);
 
+    ItemDto getItemAddOn(Long itemId);
+
     ItemBom addItemBom(ItemBom itemBom);
 
     void deleteItemBom(Long itemBomId);
