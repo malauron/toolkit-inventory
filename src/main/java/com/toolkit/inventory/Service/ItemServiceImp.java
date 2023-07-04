@@ -164,6 +164,8 @@ public class ItemServiceImp implements ItemService {
                     });
                 });
 
+                newItemDto.setItemAddOnDetails(itemDto.getItemAddOnDetails());
+
             } else if (newItem.getItemClass() == ItemClass.Branded) {
 
                 //Generic Item
