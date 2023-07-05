@@ -1,8 +1,6 @@
 package com.toolkit.inventory.Controller;
 
-import com.toolkit.inventory.Domain.ItemBom;
-import com.toolkit.inventory.Domain.ItemCost;
-import com.toolkit.inventory.Domain.ItemGeneric;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ItemDto;
 import com.toolkit.inventory.Service.ItemService;
 import com.toolkit.inventory.Service.ItemUomService;
@@ -80,6 +78,13 @@ public class ItemController {
 
     }
 
+    @GetMapping("/itemAddOns")
+    public ItemDto getItemAddOns(@RequestParam Long itemId) {
+
+        return this.itemService.getItemAddOns(itemId);
+
+    }
+
     @GetMapping("/itemGenerics")
     public ItemDto getItemGenerics(@RequestParam Long itemId) {
 
@@ -98,6 +103,20 @@ public class ItemController {
     public ItemBom addItemBoms(@RequestBody ItemBom itemBom){
 
         return this.itemService.addItemBom(itemBom);
+
+    }
+
+    @PostMapping("/itemAddOnDetails")
+    public ItemAddOnDetail addItemAddOnDetail(@RequestBody ItemAddOnDetail itemAddOnDetail) {
+
+        return this.itemService.addItemAddOnDetail(itemAddOnDetail);
+
+    }
+
+    @PostMapping("/itemAddOnContents")
+    public ItemAddOnContent addItemAddOnContent(@RequestBody ItemAddOnContent itemAddOnContent) {
+
+        return this.itemService.addItemAddOnContent(itemAddOnContent);
 
     }
 

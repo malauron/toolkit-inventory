@@ -1,8 +1,6 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.ItemBom;
-import com.toolkit.inventory.Domain.ItemCost;
-import com.toolkit.inventory.Domain.ItemGeneric;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ItemDto;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -16,9 +14,13 @@ public interface ItemService {
 
     ItemDto getItemBom(Long itemId);
 
-    ItemDto getItemAddOn(Long itemId);
+    ItemDto getItemAddOns(Long itemId);
 
     ItemBom addItemBom(ItemBom itemBom);
+
+    ItemAddOnDetail addItemAddOnDetail(ItemAddOnDetail itemAddOnDetail);
+
+    ItemAddOnContent addItemAddOnContent(ItemAddOnContent itemAddOnContent);
 
     void deleteItemBom(Long itemBomId);
 

@@ -229,7 +229,7 @@ public class ItemServiceImp implements ItemService {
     }
 
     @Override
-    public ItemDto getItemAddOn(Long itemId) {
+    public ItemDto getItemAddOns(Long itemId) {
 
         Set<ItemAddOnDetail> itemAddOnDetails = this.itemAddOnDetailRepository.findByItemId(itemId);
 
@@ -251,12 +251,29 @@ public class ItemServiceImp implements ItemService {
 
     @Transactional
     @Override
+    public ItemAddOnDetail addItemAddOnDetail(ItemAddOnDetail itemAddOnDetail) {
+
+        return this.itemAddOnDetailRepository.save(itemAddOnDetail);
+
+    }
+
+    @Transactional
+    @Override
+    public ItemAddOnContent addItemAddOnContent(ItemAddOnContent itemAddOnContent) {
+
+        return this.itemAddOnContentRepository.save(itemAddOnContent);
+
+    }
+
+    @Transactional
+    @Override
     public void deleteItemBom(Long itemBomId){
 
         this.itemBomRepository.deleteById(itemBomId);
 
     }
 
+    @Transactional
     @Override
     public ItemDto getItemGeneric(Long itemId) {
         Optional<Item> optItem = this.itemRepository.findById(itemId);
@@ -292,7 +309,9 @@ public class ItemServiceImp implements ItemService {
 
     @Override
     public Set<ItemCost> getItemCosts(Long warehouseId) {
+
         return this.itemCostRepository.findByWarehouseId(warehouseId);
+
     }
 
 
