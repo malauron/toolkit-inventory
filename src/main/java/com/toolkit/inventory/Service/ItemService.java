@@ -24,6 +24,10 @@ public interface ItemService {
 
     void deleteItemBom(Long itemBomId);
 
+    void deleteItemAddOnDetail(Long itemAddOnDetailId);
+
+    void deleteItemAddOnContent(Long itemAddOnContentId);
+
     ItemDto getItemGeneric(Long itemId);
 
     ItemGeneric updateItemGeneric(ItemGeneric itemGeneric);

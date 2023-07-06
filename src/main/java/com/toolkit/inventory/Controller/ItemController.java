@@ -127,4 +127,18 @@ public class ItemController {
 
     }
 
+    @DeleteMapping("/itemAddOnDetails")
+    public void deleteItemAddOnDetail(@RequestParam Long itemAddOnDetailId) {
+
+        this.itemService.deleteItemAddOnDetail(itemAddOnDetailId);
+
+    }
+
+    @DeleteMapping("/itemAddOnContents")
+    public void deleteItemAddOnContent(@RequestParam Long itemAddOnContentId) {
+
+        this.itemService.deleteItemAddOnContent(itemAddOnContentId);
+
+    }
+
 }

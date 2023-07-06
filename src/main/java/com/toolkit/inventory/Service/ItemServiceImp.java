@@ -275,6 +275,22 @@ public class ItemServiceImp implements ItemService {
 
     @Transactional
     @Override
+    public void deleteItemAddOnDetail(Long itemAddOnDetailId) {
+
+        this.itemAddOnDetailRepository .deleteById(itemAddOnDetailId);
+
+    }
+
+    @Transactional
+    @Override
+    public void deleteItemAddOnContent(Long itemAddOnContentId) {
+
+        this.itemAddOnContentRepository.deleteById(itemAddOnContentId);
+
+    }
+
+    @Transactional
+    @Override
     public ItemDto getItemGeneric(Long itemId) {
         Optional<Item> optItem = this.itemRepository.findById(itemId);
 
