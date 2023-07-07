@@ -138,6 +138,7 @@ public class ItemServiceImp implements ItemService {
 
                 newItemDto.setItemBoms(itemBoms);
 
+                // Add-ons
                 itemDto.getItemAddOnDetails().forEach(itemAddOnDetail -> {
                     ItemAddOnDetail newItemAddOnDetail = new ItemAddOnDetail();
 
