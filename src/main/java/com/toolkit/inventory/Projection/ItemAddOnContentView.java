@@ -13,6 +13,7 @@ public interface ItemAddOnContentView {
     Long getItemAddOnContentId();
     Item getItem();
     Uom getUom();
+    BigDecimal getQty();
     BigDecimal getPrice();
     String getAltDesc();
 
