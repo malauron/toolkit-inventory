@@ -17,6 +17,8 @@ public interface ItemView {
   Date getDateCreated();
   String getItemClass();
   BigDecimal getPrice();
+  Boolean getIsWeighable();
+  Boolean getIsWeightBasedCost();
   Boolean getIsActive();
 
 }

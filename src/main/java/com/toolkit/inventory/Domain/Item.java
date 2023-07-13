@@ -41,6 +41,12 @@ public class Item {
   @Column(name = "is_active")
   private Boolean isActive;
 
+  @Column(name = "is_weighable")
+  private Boolean isWeighable;
+
+  @Column(name = "is_weight_based_cost")
+  private Boolean isWeightBasedCost;
+
   @CreationTimestamp
   @Column(name = "date_created")
   private Date dateCreated;
