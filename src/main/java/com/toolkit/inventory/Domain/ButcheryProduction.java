@@ -24,7 +24,6 @@ public class ButcheryProduction {
     @Column(name = "butchery_production_id")
     private Long butcheryProductionId;
 
-
     @JsonManagedReference
     @OneToMany(mappedBy = "butcheryProduction", cascade = CascadeType.ALL)
     private Set<ButcheryProductionItem> butcheryProductionItems =
