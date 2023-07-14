@@ -1,4 +1,7 @@
 package com.toolkit.inventory.Repository;
 
-public interface ButcheryBatchRepository {
+import com.toolkit.inventory.Domain.ButcheryBatch;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ButcheryBatchRepository  extends JpaRepository<ButcheryBatch, Long> {
 }
