@@ -1,9 +1,9 @@
 package com.toolkit.inventory.Repository;
 
-import com.toolkit.inventory.Domain.ButcheryBatch;
+import com.toolkit.inventory.Domain.ButcheryBatchDetailItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface ButcheryBatchRepository  extends JpaRepository<ButcheryBatch, Long> {
+public interface ButcheryBatchDetailItemRepository extends JpaRepository<ButcheryBatchDetailItem, Long> {
 }
