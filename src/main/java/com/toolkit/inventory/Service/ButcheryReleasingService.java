@@ -14,5 +14,4 @@ public interface ButcheryReleasingService {
     ButcheryReleasingDto deleteButcheryReleasingItem(ButcheryReleasingItem butcheryReleasingItem);
     ButcheryReleasingDto putButcheryReleasingItem(ButcheryReleasingItem butcheryReleasingItem);
     Set<ButcheryReleasingItem> getButcheryReleasingItems(Long butcheryReleasingId);
-
 }

@@ -2,6 +2,7 @@ package com.toolkit.inventory.Dto;
 
 import com.toolkit.inventory.Domain.ButcheryBatchDetail;
 import com.toolkit.inventory.Domain.ButcheryBatchInventory;
+import com.toolkit.inventory.Domain.VendorWarehouse;
 import com.toolkit.inventory.Security.Domain.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,11 +14,13 @@ import java.util.Set;
 @Setter
 public class ButcheryBatchDto {
     private Long butcheryBatchId;
-    private String remarks;
     private Date dateReceived;
+    private VendorWarehouse vendorWarehouse;
+    private String remarks;
+    private String batchStatus;
     private Boolean isOpen;
     private Boolean hasInventory;
-    private User user;
+    private User createdBy;
     private Set<ButcheryBatchDetail> butcheryBatchDetails;
     private Set<ButcheryBatchInventory> butcheryBatchInventories;
     private Date dateCreated;

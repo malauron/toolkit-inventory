@@ -24,11 +24,18 @@ public class ButcheryBatch {
     @Column(name = "butchery_batch_id")
     private Long butcheryBatchId;
 
+    @Column(name = "date_received")
+    private Date dateReceived;
+
+    @ManyToOne
+    @JoinColumn(name = "vendor_warehouse_id")
+    private VendorWarehouse vendorWarehouse;
+
     @Column(name = "remarks")
     private String remarks;
 
-    @Column(name = "date_received")
-    private Date dateReceived;
+    @Column(name = "batch_status")
+    private String batchStatus;
 
     @Column(name = "has_inventory")
     private Boolean hasInventory;
@@ -38,7 +45,7 @@ public class ButcheryBatch {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private User user;
+    private User createdBy;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "butcheryBatch", cascade = CascadeType.ALL)

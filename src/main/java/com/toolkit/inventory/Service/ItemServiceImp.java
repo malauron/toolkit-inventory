@@ -86,7 +86,6 @@ public class ItemServiceImp implements ItemService {
 
         } else {
 
-
             Item newItem = this.itemRepository.saveAndFlush(itemDto.getItem());
 
             newItemDto.setItem(newItem);
