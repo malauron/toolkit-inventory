@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "butchery_batches")
+@Table(name = "butchery_batch_details")
 public class ButcheryBatchDetail {
 
     @Id
@@ -26,8 +26,12 @@ public class ButcheryBatchDetail {
     @JoinColumn(name = "butchery_batch_id")
     private ButcheryBatch butcheryBatch;
 
-    @Column(name = "reference")
-    private String reference;
+    @Column(name = "reference_no")
+    private String referenceNo;
+
+    @ManyToOne
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "butcheryBatchDetail", cascade = CascadeType.ALL)

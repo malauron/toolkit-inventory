@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Dto;
 
+import com.toolkit.inventory.Domain.ButcheryBatch;
 import com.toolkit.inventory.Domain.ButcheryBatchDetail;
 import com.toolkit.inventory.Domain.ButcheryBatchInventory;
 import com.toolkit.inventory.Domain.VendorWarehouse;
@@ -23,5 +24,6 @@ public class ButcheryBatchDto {
     private User createdBy;
     private Set<ButcheryBatchDetail> butcheryBatchDetails;
     private Set<ButcheryBatchInventory> butcheryBatchInventories;
+    private ButcheryBatch butcheryBatch;
     private Date dateCreated;
 }
