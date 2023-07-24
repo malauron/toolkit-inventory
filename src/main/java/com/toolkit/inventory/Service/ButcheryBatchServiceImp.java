@@ -52,79 +52,72 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
     @Transactional
     public ButcheryBatchDto save(ButcheryBatchDto butcheryBatchDto) {
 
-        ButcheryBatch butcheryBatch;
+        ButcheryBatch butcheryBatch = butcheryBatchDto.getButcheryBatch();
 
-        if (butcheryBatchDto.getButcheryBatchId() > 0) {
+        if (butcheryBatch.getButcheryBatchId() > 0) {
 
-            Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository
-                    .findById(butcheryBatchDto.getButcheryBatchId());
+            ButcheryBatch optBatch = this.butcheryBatchRepository
+                    .findById(butcheryBatchDto.getButcheryBatch().getButcheryBatchId()).get();
 
-            butcheryBatch = optBatch.get();
-            butcheryBatch.setBatchStatus(butcheryBatchDto.getBatchStatus());
-            butcheryBatch.setHasInventory(butcheryBatchDto.getHasInventory());
-            butcheryBatch.setIsOpen(butcheryBatchDto.getIsOpen());
+//            butcheryBatch = optBatch.get();
+//            butcheryBatch.setBatchStatus(butcheryBatchDto.getBatchStatus());
+//            butcheryBatch.setHasInventory(butcheryBatchDto.getHasInventory());
+//            butcheryBatch.setIsOpen(butcheryBatchDto.getIsOpen());
+
+            optBatch.setVendorWarehouse(butcheryBatch.getVendorWarehouse());
+            optBatch.setRemarks(butcheryBatch.getRemarks());
+            optBatch.setIsOpen(butcheryBatch.getIsOpen());
+
+            butcheryBatch = this.butcheryBatchRepository.saveAndFlush(optBatch);
 
         } else {
 
-            butcheryBatch = new ButcheryBatch();
             butcheryBatch.setBatchStatus("Unposted");
             butcheryBatch.setHasInventory(false);
             butcheryBatch.setIsOpen(false);
-            butcheryBatch.setButcheryBatchDetails(butcheryBatchDto.getButcheryBatchDetails());
 
             Optional<User> user = this.userRepository.findByUsername(butcheryBatchDto.getCreatedBy().getUsername());
             butcheryBatch.setCreatedBy(user.get());
 
-        }
+            Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
+                    .findByVendorWarehouseId(butcheryBatch.getVendorWarehouse().getVendorWarehouseId());
 
-        Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
-                .findByVendorWarehouseId(butcheryBatchDto.getVendorWarehouse().getVendorWarehouseId());
+            butcheryBatch.setVendorWarehouse(vendorWarehouse.get());
 
-        butcheryBatch.setVendorWarehouse(vendorWarehouse.get());
-        butcheryBatch.setDateReceived(butcheryBatchDto.getDateReceived());
-        butcheryBatch.setRemarks(butcheryBatchDto.getRemarks());
+            if (butcheryBatch.getButcheryBatchId() == 0) {
+                butcheryBatch.getButcheryBatchDetails().forEach(batchDetail -> {
 
-//        butcheryBatch = this.butcheryBatchRepository.saveAndFlush(butcheryBatch);
+                    Optional<Vendor> optVendor = this.vendorRepository.findById(batchDetail.getVendor().getVendorId());
 
-        if (butcheryBatchDto.getButcheryBatchId() == 0) {
-//            ButcheryBatch newBatch = butcheryBatch;
-            butcheryBatchDto.getButcheryBatchDetails().forEach(batchDetail -> {
+                    batchDetail.setVendor(optVendor.get());
 
-                Optional<Vendor> optVendor = this.vendorRepository.findById(batchDetail.getVendor().getVendorId());
+                    batchDetail.getButcheryBatchDetailItems().forEach(batchDetailItem -> {
 
-//                batchDetail.setButcheryBatch(newBatch);
-                batchDetail.setVendor(optVendor.get());
+                        Optional<Item> optItem = this.itemRepository.findById(batchDetailItem.getItem().getItemId());
+                        Optional<Uom> optUom = this.uomRepository.findById(batchDetailItem.getRequiredUom().getUomId());
 
-//                ButcheryBatchDetail newDetail = this.butcheryBatchDetailRepository.saveAndFlush(batchDetail);
+                        batchDetailItem.setItem(optItem.get());
+                        batchDetailItem.setBaseUom(optItem.get().getUom());
+                        batchDetailItem.setBaseQty(new BigDecimal(1));
+                        batchDetailItem.setRequiredUom(optUom.get());
 
-                batchDetail.getButcheryBatchDetailItems().forEach(batchDetailItem -> {
+                        if (batchDetailItem.getBaseUom().getUomId() != batchDetailItem.getRequiredUom().getUomId()) {
+                            ItemUomId itemUomId = new ItemUomId();
+                            itemUomId.setItemId(optItem.get().getItemId());
+                            itemUomId.setUomId(optUom.get().getUomId());
 
-                    Optional<Item> optItem = this.itemRepository.findById(batchDetailItem.getItem().getItemId());
-                    Optional<Uom> optUom = this.uomRepository.findById(batchDetailItem.getRequiredUom().getUomId());
+                            Optional<ItemUom> optItemUom = this.itemUomRepository.findById(itemUomId);
 
-//                    batchDetailItem.setButcheryBatchDetail(newDetail);
-                    batchDetailItem.setItem(optItem.get());
-                    batchDetailItem.setBaseUom(optItem.get().getUom());
-                    batchDetailItem.setBaseQty(new BigDecimal(1));
-                    batchDetailItem.setRequiredUom(optUom.get());
+                            batchDetailItem.setBaseQty(optItemUom.get().getQuantity());
+                        }
 
-                    if (batchDetailItem.getBaseUom().getUomId() != batchDetailItem.getRequiredUom().getUomId()) {
-                        ItemUomId itemUomId = new ItemUomId();
-                        itemUomId.setItemId(optItem.get().getItemId());
-                        itemUomId.setUomId(optUom.get().getUomId());
-
-                        Optional<ItemUom> optItemUom = this.itemUomRepository.findById(itemUomId);
-
-                        batchDetailItem.setBaseQty(optItemUom.get().getQuantity());
-                    }
-
-//                    this.butcheryBatchDetailItemRepository.saveAndFlush(batchDetailItem);
+                    });
                 });
-//                ButcheryBatchDetail newDetail = this.butcheryBatchDetailRepository.saveAndFlush(batchDetail);
-            });
-        }
+            }
 
-        butcheryBatch = this.butcheryBatchRepository.saveAndFlush(butcheryBatch);
+            butcheryBatch = this.butcheryBatchRepository.saveAndFlush(butcheryBatch);
+
+        }
 
         butcheryBatchDto.setButcheryBatchId(butcheryBatch.getButcheryBatchId());
         butcheryBatchDto.setBatchStatus(butcheryBatch.getBatchStatus());
