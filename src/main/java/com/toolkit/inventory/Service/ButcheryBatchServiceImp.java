@@ -79,7 +79,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             optBatch.setRemarks(butcheryBatch.getRemarks());
             optBatch.setIsOpen(butcheryBatch.getIsOpen());
 
-            butcheryBatch = this.butcheryBatchRepository.saveAndFlush(optBatch);
+            this.butcheryBatchRepository.saveAndFlush(optBatch);
 
         } else {
 
@@ -127,14 +127,10 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             }
 
             butcheryBatch = this.butcheryBatchRepository.saveAndFlush(butcheryBatch);
+            butcheryBatchDto.setButcheryBatch(butcheryBatch);
+            butcheryBatchDto.setCreatedBy(null);
 
         }
-
-        butcheryBatchDto.setButcheryBatchId(butcheryBatch.getButcheryBatchId());
-        butcheryBatchDto.setBatchStatus(butcheryBatch.getBatchStatus());
-        butcheryBatchDto.setHasInventory(butcheryBatch.getHasInventory());
-        butcheryBatchDto.setIsOpen(butcheryBatch.getIsOpen());
-        butcheryBatchDto.setCreatedBy(null);
 
         return butcheryBatchDto;
     }

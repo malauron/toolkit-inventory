@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.toolkit.inventory.Domain.ButcheryBatch;
 import com.toolkit.inventory.Domain.ButcheryBatchDetail;
 import com.toolkit.inventory.Domain.ButcheryBatchInventory;
