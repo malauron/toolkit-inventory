@@ -18,6 +18,11 @@ public class ButcheryBatchController {
         this.butcheryBatchService = butcheryBatchService;
     }
 
+    @GetMapping("/butcheryBatches")
+    public ButcheryBatchDto getButcheryBatch(@RequestParam Long butcheryBatchId) {
+        return this.butcheryBatchService.getButcheryBatch(butcheryBatchId);
+    }
+
     @PostMapping("/butcheryBatches")
     public ButcheryBatchDto save(@RequestBody ButcheryBatchDto butcheryBatchDto) {
         return this.butcheryBatchService.save(butcheryBatchDto);

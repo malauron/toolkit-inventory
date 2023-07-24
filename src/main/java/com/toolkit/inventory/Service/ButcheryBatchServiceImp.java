@@ -49,6 +49,17 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
     }
 
     @Override
+    public ButcheryBatchDto getButcheryBatch(Long butcheryBatchId) {
+
+        Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryBatchId);
+
+        ButcheryBatchDto butcheryBatchDto = new ButcheryBatchDto();
+        butcheryBatchDto.setButcheryBatch(optBatch.get());
+
+        return butcheryBatchDto;
+    }
+
+    @Override
     @Transactional
     public ButcheryBatchDto save(ButcheryBatchDto butcheryBatchDto) {
 

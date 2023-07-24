@@ -42,6 +42,9 @@ public class ButcheryBatchDetailItem {
     @Column(name = "required_qty")
     private BigDecimal requiredQty;
 
+    @Column(name = "received_qty")
+    private BigDecimal receivedQty;
+
     @Column(name = "required_weight_kg")
     private BigDecimal requiredWeightKg;
 
