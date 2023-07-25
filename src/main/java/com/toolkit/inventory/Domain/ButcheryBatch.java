@@ -44,7 +44,7 @@ public class ButcheryBatch {
     @Column(name = "is_open")
     private Boolean isOpen;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;

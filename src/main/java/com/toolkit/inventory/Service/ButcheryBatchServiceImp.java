@@ -70,11 +70,6 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             ButcheryBatch optBatch = this.butcheryBatchRepository
                     .findById(butcheryBatchDto.getButcheryBatch().getButcheryBatchId()).get();
 
-//            butcheryBatch = optBatch.get();
-//            butcheryBatch.setBatchStatus(butcheryBatchDto.getBatchStatus());
-//            butcheryBatch.setHasInventory(butcheryBatchDto.getHasInventory());
-//            butcheryBatch.setIsOpen(butcheryBatchDto.getIsOpen());
-
             optBatch.setVendorWarehouse(butcheryBatch.getVendorWarehouse());
             optBatch.setRemarks(butcheryBatch.getRemarks());
             optBatch.setIsOpen(butcheryBatch.getIsOpen());
@@ -87,7 +82,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             butcheryBatch.setHasInventory(false);
             butcheryBatch.setIsOpen(false);
 
-            Optional<User> user = this.userRepository.findByUsername(butcheryBatchDto.getCreatedBy().getUsername());
+            Optional<User> user = this.userRepository.findByUsername(butcheryBatch.getCreatedBy().getUsername());
             butcheryBatch.setCreatedBy(user.get());
 
             Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
@@ -128,10 +123,19 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
             butcheryBatch = this.butcheryBatchRepository.saveAndFlush(butcheryBatch);
             butcheryBatchDto.setButcheryBatch(butcheryBatch);
-            butcheryBatchDto.setCreatedBy(null);
+//            butcheryBatchDto.setCreatedBy(null);
 
         }
 
         return butcheryBatchDto;
     }
+
+    @Override
+    @Transactional
+    public ButcheryBatchDto saveButcheryBatchDetail(ButcheryBatchDto butcheryBatchDto) {
+
+        return null;
+    }
+
+
 }

@@ -15,16 +15,10 @@ import java.util.Set;
 @Getter
 @Setter
 public class ButcheryBatchDto {
-    private Long butcheryBatchId;
-    private Date dateReceived;
-    private VendorWarehouse vendorWarehouse;
-    private String remarks;
-    private String batchStatus;
-    private Boolean isOpen;
-    private Boolean hasInventory;
-    private User createdBy;
+//    private User createdBy;
     private Set<ButcheryBatchDetail> butcheryBatchDetails;
     private Set<ButcheryBatchInventory> butcheryBatchInventories;
     private ButcheryBatch butcheryBatch;
-    private Date dateCreated;
+    private String error;
+//    private Date dateCreated;
 }
