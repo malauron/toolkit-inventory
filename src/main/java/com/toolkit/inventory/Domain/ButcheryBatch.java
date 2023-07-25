@@ -1,6 +1,5 @@
 package com.toolkit.inventory.Domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.toolkit.inventory.Security.Domain.User;
 import lombok.Getter;
@@ -44,7 +43,6 @@ public class ButcheryBatch {
     @Column(name = "is_open")
     private Boolean isOpen;
 
-//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "created_by")
     private User createdBy;
@@ -66,5 +64,9 @@ public class ButcheryBatch {
     @UpdateTimestamp
     @Column(name = "date_updated")
     private Date dateUpdated;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
 }

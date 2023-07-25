@@ -27,4 +27,24 @@ public class ButcheryBatchController {
     public ButcheryBatchDto save(@RequestBody ButcheryBatchDto butcheryBatchDto) {
         return this.butcheryBatchService.save(butcheryBatchDto);
     }
+
+    @PostMapping("/butcheryBatchDetails")
+    public ButcheryBatchDto saveButcheryBatchDetail(@RequestBody ButcheryBatchDto butcheryBatchDto) {
+        return this.butcheryBatchService.saveButcheryBatchDetail(butcheryBatchDto);
+    }
+
+    @PostMapping("/butcheryBatchDetailItems")
+    public ButcheryBatchDto saveButcheryBatchDetailItem(@RequestBody ButcheryBatchDto butcheryBatchDto) {
+        return this.butcheryBatchService.saveButcheryBatchDetailItem(butcheryBatchDto);
+    }
+
+    @DeleteMapping("/butcheryBatchDetails")
+    public ButcheryBatchDto deleteButcheryBatchDetail(@RequestBody ButcheryBatchDto butcheryBatchDto) {
+        return this.butcheryBatchService.deleteButcheryBatchDetail(butcheryBatchDto);
+    }
+
+    @DeleteMapping("/butcheryBatchDetailItems")
+    public ButcheryBatchDto deleteButcheryBatchDetailItem(@RequestBody ButcheryBatchDto butcheryBatchDto) {
+        return this.butcheryBatchService.deleteButcheryBatchDetailItem(butcheryBatchDto);
+    }
 }

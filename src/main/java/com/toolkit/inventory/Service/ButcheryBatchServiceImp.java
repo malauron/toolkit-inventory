@@ -15,15 +15,15 @@ import java.util.Optional;
 @Service
 public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
-    private ButcheryBatchRepository butcheryBatchRepository;
-    private ButcheryBatchDetailRepository butcheryBatchDetailRepository;
-    private ButcheryBatchDetailItemRepository butcheryBatchDetailItemRepository;
-    private VendorWarehouseRepository vendorWarehouseRepository;
-    private VendorRepository vendorRepository;
-    private ItemRepository itemRepository;
-    private UomRepository uomRepository;
-    private ItemUomRepository itemUomRepository;
-    private UserRepository userRepository;
+    final ButcheryBatchRepository butcheryBatchRepository;
+    final ButcheryBatchDetailRepository butcheryBatchDetailRepository;
+    final ButcheryBatchDetailItemRepository butcheryBatchDetailItemRepository;
+    final VendorWarehouseRepository vendorWarehouseRepository;
+    final VendorRepository vendorRepository;
+    final ItemRepository itemRepository;
+    final UomRepository uomRepository;
+    final ItemUomRepository itemUomRepository;
+    final UserRepository userRepository;
 
     @Autowired
     public ButcheryBatchServiceImp(
@@ -72,9 +72,12 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
             optBatch.setVendorWarehouse(butcheryBatch.getVendorWarehouse());
             optBatch.setRemarks(butcheryBatch.getRemarks());
+            optBatch.setDateReceived(butcheryBatch.getDateReceived());
             optBatch.setIsOpen(butcheryBatch.getIsOpen());
 
             this.butcheryBatchRepository.saveAndFlush(optBatch);
+
+            butcheryBatch.setCreatedBy(null);
 
         } else {
 
@@ -122,8 +125,8 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             }
 
             butcheryBatch = this.butcheryBatchRepository.saveAndFlush(butcheryBatch);
+
             butcheryBatchDto.setButcheryBatch(butcheryBatch);
-//            butcheryBatchDto.setCreatedBy(null);
 
         }
 
@@ -134,8 +137,150 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
     @Transactional
     public ButcheryBatchDto saveButcheryBatchDetail(ButcheryBatchDto butcheryBatchDto) {
 
-        return null;
+        ButcheryBatchDetail tmpDetail = butcheryBatchDto.getButcheryBatchDetail();
+
+        ButcheryBatchDetail butcheryBatchDetail;
+
+        Optional<Vendor> optVendor = this.vendorRepository.findById(tmpDetail.getVendor().getVendorId());
+
+        if (tmpDetail.getButcheryBatchDetailId() > 0 ) {
+
+            Optional<ButcheryBatchDetail> optDetail = this.butcheryBatchDetailRepository.findById(tmpDetail.getButcheryBatchDetailId());
+
+            if (optDetail.isPresent()) {
+                butcheryBatchDetail = optDetail.get();
+
+                butcheryBatchDetail.setReferenceNo(tmpDetail.getReferenceNo());
+            }  else {
+                butcheryBatchDto.setError("Batch detail not found.");
+                return butcheryBatchDto;
+            }
+
+        } else {
+
+            ButcheryBatch butcheryBatch = butcheryBatchDto.getButcheryBatch();
+
+            if (butcheryBatch.getButcheryBatchId() > 0) {
+
+                Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryBatch.getButcheryBatchId());
+
+                if (optBatch.isPresent()) {
+
+                    butcheryBatch = optBatch.get();
+
+                    butcheryBatchDetail = butcheryBatchDto.getButcheryBatchDetail();
+
+                    butcheryBatchDetail.setButcheryBatch(butcheryBatch);
+
+                } else {
+                    butcheryBatchDto.setError("Batch not found.");
+                    return butcheryBatchDto;
+                }
+            } else {
+                butcheryBatchDto.setError("No batch number.");
+                return butcheryBatchDto;
+            }
+        }
+
+        butcheryBatchDetail.setVendor(optVendor.get());
+
+        butcheryBatchDetail = this.butcheryBatchDetailRepository.saveAndFlush(butcheryBatchDetail);
+
+        butcheryBatchDto.setButcheryBatchDetail(butcheryBatchDetail);
+
+        return butcheryBatchDto;
+
     }
 
+    @Override
+    @Transactional
+    public ButcheryBatchDto saveButcheryBatchDetailItem(ButcheryBatchDto butcheryBatchDto) {
 
+        ButcheryBatchDetailItem tmpDetailItem = butcheryBatchDto.getButcheryBatchDetailItem();
+
+        ButcheryBatchDetailItem butcheryBatchDetailItem;
+
+        Optional<Item> optItem = this.itemRepository.findById(tmpDetailItem.getItem().getItemId());
+        Optional<Uom> optUom = this.uomRepository.findById(tmpDetailItem.getRequiredUom().getUomId());
+
+        if (tmpDetailItem.getButcheryBatchDetailItemId() > 0) {
+
+            Optional<ButcheryBatchDetailItem> optDetailItem = this.butcheryBatchDetailItemRepository.findById(tmpDetailItem.getButcheryBatchDetailItemId());
+
+            if (optDetailItem.isPresent()) {
+                butcheryBatchDetailItem = optDetailItem.get();
+
+                butcheryBatchDetailItem.setRequiredQty(tmpDetailItem.getRequiredQty());
+                butcheryBatchDetailItem.setReceivedQty(tmpDetailItem.getReceivedQty());
+                butcheryBatchDetailItem.setRequiredWeightKg(tmpDetailItem.getRequiredWeightKg());
+                butcheryBatchDetailItem.setReceivedWeightKg(tmpDetailItem.getReceivedWeightKg());
+            } else {
+                butcheryBatchDto.setError("Batch detail item not found.");
+                return butcheryBatchDto;
+            }
+        } else {
+
+            ButcheryBatchDetail butcheryBatchDetail = butcheryBatchDto.getButcheryBatchDetail();
+
+            if (butcheryBatchDetail.getButcheryBatchDetailId() > 0) {
+
+                Optional<ButcheryBatchDetail> optBatchDetail = this.butcheryBatchDetailRepository.findById(butcheryBatchDetail.getButcheryBatchDetailId());
+
+                if (optBatchDetail.isPresent()) {
+                    butcheryBatchDetail = optBatchDetail.get();
+
+                    butcheryBatchDetailItem = butcheryBatchDto.getButcheryBatchDetailItem();
+
+                    butcheryBatchDetailItem.setButcheryBatchDetail(butcheryBatchDetail);
+                } else {
+                    butcheryBatchDto.setError("Batch detail not found.");
+                    return butcheryBatchDto;
+                }
+            } else {
+                butcheryBatchDto.setError("No batch detail number.");
+                return butcheryBatchDto;
+            }
+        }
+
+        butcheryBatchDetailItem.setItem(optItem.get());
+        butcheryBatchDetailItem.setBaseUom(optItem.get().getUom());
+        butcheryBatchDetailItem.setBaseQty(new BigDecimal(1));
+        butcheryBatchDetailItem.setRequiredUom(optUom.get());
+
+        if (butcheryBatchDetailItem.getBaseUom().getUomId() != butcheryBatchDetailItem.getRequiredUom().getUomId()) {
+            ItemUomId itemUomId = new ItemUomId();
+            itemUomId.setItemId(optItem.get().getItemId());
+            itemUomId.setUomId(optUom.get().getUomId());
+
+            Optional<ItemUom> optItemUom = this.itemUomRepository.findById(itemUomId);
+
+            butcheryBatchDetailItem.setBaseQty(optItemUom.get().getQuantity());
+        }
+
+        butcheryBatchDetailItem = this.butcheryBatchDetailItemRepository.saveAndFlush(butcheryBatchDetailItem);
+
+        butcheryBatchDto.setButcheryBatchDetailItem(butcheryBatchDetailItem);
+
+        return butcheryBatchDto;
+    }
+
+    @Override
+    @Transactional
+    public ButcheryBatchDto deleteButcheryBatchDetail(ButcheryBatchDto butcheryBatchDto) {
+        ButcheryBatchDetail tmpDetail = butcheryBatchDto.getButcheryBatchDetail();
+
+        this.butcheryBatchDetailRepository.deleteById(tmpDetail.getButcheryBatchDetailId());
+
+        return butcheryBatchDto;
+    }
+
+    @Override
+    @Transactional
+    public ButcheryBatchDto deleteButcheryBatchDetailItem(ButcheryBatchDto butcheryBatchDto) {
+        ButcheryBatchDetailItem tmpDetailItem = butcheryBatchDto.getButcheryBatchDetailItem();
+
+        this.butcheryBatchDetailItemRepository.deleteById(tmpDetailItem.getButcheryBatchDetailItemId());
+
+        return butcheryBatchDto;
+    }
 }
