@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +33,12 @@ public class ButcheryBatchDetail {
     @ManyToOne
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
+
+    @Column(name = "total_required_weight_kg")
+    private BigDecimal totalRequiredWeightKg;
+
+    @Column(name = "total_received_weight_kg")
+    private BigDecimal totalReceivedWeightKg;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "butcheryBatchDetail", cascade = CascadeType.ALL)

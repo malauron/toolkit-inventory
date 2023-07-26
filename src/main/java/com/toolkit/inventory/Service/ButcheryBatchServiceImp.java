@@ -100,6 +100,9 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
                     batchDetail.setVendor(optVendor.get());
 
+                    BigDecimal ttlRequiredWt = new BigDecimal(0);
+                    BigDecimal ttlReceivedWt = new BigDecimal(0);
+
                     batchDetail.getButcheryBatchDetailItems().forEach(batchDetailItem -> {
 
                         Optional<Item> optItem = this.itemRepository.findById(batchDetailItem.getItem().getItemId());
@@ -120,7 +123,14 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                             batchDetailItem.setBaseQty(optItemUom.get().getQuantity());
                         }
 
+                        ttlRequiredWt.add(batchDetailItem.getRequiredWeightKg());
+                        ttlReceivedWt.add(batchDetailItem.getReceivedWeightKg());
+
                     });
+
+                    batchDetail.setTotalRequiredWeightKg(ttlRequiredWt);
+                    batchDetail.setTotalReceivedWeightKg(ttlReceivedWt);
+
                 });
             }
 
