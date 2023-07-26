@@ -2,6 +2,7 @@ package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryBatchDto;
+import com.toolkit.inventory.Projection.ButcheryBatchDetailAggregatedView;
 import com.toolkit.inventory.Repository.*;
 import com.toolkit.inventory.Security.Domain.User;
 import com.toolkit.inventory.Security.Repository.UserRepository;
@@ -259,13 +260,17 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
             butcheryBatchDetailItem = this.butcheryBatchDetailItemRepository.saveAndFlush(butcheryBatchDetailItem);
 
-            /**
-             *
-             * SET REQUIRED AND RECEIVED WEIGHT
-             *
-             **/
+            Optional<ButcheryBatchDetailAggregatedView> optDetailView = this.butcheryBatchDetailItemRepository
+                    .getBatchDetailById(butcheryBatchDetail.getButcheryBatchDetailId());
 
+            if (optDetailView.isPresent()) {
+                butcheryBatchDetail.setTotalRequiredWeightKg(optDetailView.get().getTotalRequiredWeightKg());
+                butcheryBatchDetail.setTotalReceivedWeightKg(optDetailView.get().getTotalReceivedWeightKg());
+            }
 
+            butcheryBatchDetail = this.butcheryBatchDetailRepository.saveAndFlush(butcheryBatchDetail);
+
+            butcheryBatchDto.setButcheryBatchDetail(butcheryBatchDetail);
             butcheryBatchDto.setButcheryBatchDetailItem(butcheryBatchDetailItem);
 
             return butcheryBatchDto;
