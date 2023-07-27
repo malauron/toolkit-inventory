@@ -95,6 +95,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             butcheryBatch.setVendorWarehouse(vendorWarehouse.get());
 
             if (butcheryBatch.getButcheryBatchId() == 0) {
+
                 butcheryBatch.getButcheryBatchDetails().forEach(batchDetail -> {
 
                     Optional<Vendor> optVendor = this.vendorRepository.findById(batchDetail.getVendor().getVendorId());
@@ -295,9 +296,30 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
     @Override
     @Transactional
     public ButcheryBatchDto deleteButcheryBatchDetailItem(ButcheryBatchDto butcheryBatchDto) {
-        ButcheryBatchDetailItem tmpDetailItem = butcheryBatchDto.getButcheryBatchDetailItem();
 
-        this.butcheryBatchDetailItemRepository.deleteById(tmpDetailItem.getButcheryBatchDetailItemId());
+        Optional<ButcheryBatchDetail> tmpDetail = this.butcheryBatchDetailRepository.findById(butcheryBatchDto.getButcheryBatchDetail().getButcheryBatchDetailId());
+
+        if (tmpDetail.isPresent()) {
+
+            ButcheryBatchDetail butcheryBatchDetail = tmpDetail.get();
+
+            ButcheryBatchDetailItem tmpDetailItem = butcheryBatchDto.getButcheryBatchDetailItem();
+
+            this.butcheryBatchDetailItemRepository.deleteById(tmpDetailItem.getButcheryBatchDetailItemId());
+
+            Optional<ButcheryBatchDetailAggregatedView> optDetailView = this.butcheryBatchDetailItemRepository
+                    .getBatchDetailById(butcheryBatchDetail.getButcheryBatchDetailId());
+
+            if (optDetailView.isPresent()) {
+                butcheryBatchDetail.setTotalRequiredWeightKg(optDetailView.get().getTotalRequiredWeightKg());
+                butcheryBatchDetail.setTotalReceivedWeightKg(optDetailView.get().getTotalReceivedWeightKg());
+            }
+
+            butcheryBatchDetail = this.butcheryBatchDetailRepository.saveAndFlush(butcheryBatchDetail);
+
+            butcheryBatchDto.setButcheryBatchDetail(butcheryBatchDetail);
+
+        }
 
         return butcheryBatchDto;
     }
