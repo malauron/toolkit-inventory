@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,4 +48,15 @@ public class ButcheryBatchDetail {
     private Set<ButcheryBatchDetailItem> butcheryBatchDetailItems =
             new HashSet<>();
 
+    @CreationTimestamp
+    @Column(name = "date_created")
+    private Date dateCreated;
+
+    @UpdateTimestamp
+    @Column(name = "date_updated")
+    private Date dateUpdated;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 }

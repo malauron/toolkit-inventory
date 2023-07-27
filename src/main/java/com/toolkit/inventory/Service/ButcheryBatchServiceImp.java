@@ -101,9 +101,8 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                     Optional<Vendor> optVendor = this.vendorRepository.findById(batchDetail.getVendor().getVendorId());
 
                     batchDetail.setVendor(optVendor.get());
-
-                    BigDecimal ttlRequiredWt = new BigDecimal(0);
-                    BigDecimal ttlReceivedWt = new BigDecimal(0);
+                    batchDetail.setTotalRequiredWeightKg(BigDecimal.ZERO);
+                    batchDetail.setTotalReceivedWeightKg(BigDecimal.ZERO);
 
                     batchDetail.getButcheryBatchDetailItems().forEach(batchDetailItem -> {
 
@@ -125,13 +124,11 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                             batchDetailItem.setBaseQty(optItemUom.get().getQuantity());
                         }
 
-                        ttlRequiredWt.add(batchDetailItem.getRequiredWeightKg());
-                        ttlReceivedWt.add(batchDetailItem.getReceivedWeightKg());
+                        batchDetail.setTotalRequiredWeightKg(batchDetail.getTotalRequiredWeightKg().add(batchDetailItem.getRequiredWeightKg()));
+                        batchDetail.setTotalReceivedWeightKg(batchDetail.getTotalReceivedWeightKg().add(batchDetailItem.getReceivedWeightKg()));
 
                     });
 
-                    batchDetail.setTotalRequiredWeightKg(ttlRequiredWt);
-                    batchDetail.setTotalReceivedWeightKg(ttlReceivedWt);
 
                 });
             }
@@ -163,6 +160,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                 butcheryBatchDetail = optDetail.get();
 
                 butcheryBatchDetail.setReferenceNo(tmpDetail.getReferenceNo());
+
             }  else {
                 butcheryBatchDto.setError("Batch detail not found.");
                 return butcheryBatchDto;
@@ -183,6 +181,8 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                     butcheryBatchDetail = butcheryBatchDto.getButcheryBatchDetail();
 
                     butcheryBatchDetail.setButcheryBatch(butcheryBatch);
+                    butcheryBatchDetail.setTotalRequiredWeightKg(new BigDecimal(0));
+                    butcheryBatchDetail.setTotalReceivedWeightKg(new BigDecimal(0));
 
                 } else {
                     butcheryBatchDto.setError("Batch not found.");
@@ -274,12 +274,10 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             butcheryBatchDto.setButcheryBatchDetail(butcheryBatchDetail);
             butcheryBatchDto.setButcheryBatchDetailItem(butcheryBatchDetailItem);
 
-            return butcheryBatchDto;
-
         } else {
             butcheryBatchDto.setError("Batch detail not found.");
-            return butcheryBatchDto;
         }
+        return butcheryBatchDto;
 
     }
 

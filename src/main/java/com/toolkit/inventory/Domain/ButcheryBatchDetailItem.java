@@ -3,9 +3,12 @@ package com.toolkit.inventory.Domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
@@ -50,4 +53,16 @@ public class ButcheryBatchDetailItem {
 
     @Column(name = "received_weight_kg")
     private BigDecimal receivedWeightKg;
+
+    @CreationTimestamp
+    @Column(name = "date_created")
+    private Date dateCreated;
+
+    @UpdateTimestamp
+    @Column(name = "date_updated")
+    private Date dateUpdated;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 }
