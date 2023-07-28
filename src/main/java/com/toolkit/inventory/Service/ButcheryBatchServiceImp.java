@@ -80,10 +80,6 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                 Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
                         .findByVendorWarehouseId(butcheryBatch.getVendorWarehouse().getVendorWarehouseId());
                 optBatch.setVendorWarehouse(vendorWarehouse.get());
-//            } else if (optBatch.getBatchStatus() == "Posted") {
-//                if (optBatch.getBatchStatus().equals(true) && butcheryBatch.getBatchStatus().equals(false)) {
-//                    optBatch.setBatchStatus(butcheryBatch.getBatchStatus());
-//                }
             }
 
             optBatch.setRemarks(butcheryBatch.getRemarks());
