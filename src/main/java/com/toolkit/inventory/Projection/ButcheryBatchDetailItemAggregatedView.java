@@ -5,8 +5,8 @@ import org.springframework.data.rest.core.config.Projection;
 
 import java.math.BigDecimal;
 
-@Projection(name = "butcheryBatchDetailAggregatedView", types = { ButcheryBatchDetail.class })
-public interface ButcheryBatchDetailAggregatedView {
+@Projection(name = "butcheryBatchDetailItemAggregatedView", types = { ButcheryBatchDetail.class })
+public interface ButcheryBatchDetailItemAggregatedView {
     ButcheryBatchDetail getButcheryBatchDetail();
     BigDecimal getTotalRequiredWeightKg();
     BigDecimal getTotalReceivedWeightKg();

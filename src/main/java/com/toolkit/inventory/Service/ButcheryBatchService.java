@@ -9,4 +9,5 @@ public interface ButcheryBatchService {
     ButcheryBatchDto saveButcheryBatchDetailItem(ButcheryBatchDto butcheryBatchDto);
     ButcheryBatchDto deleteButcheryBatchDetail(ButcheryBatchDto butcheryBatchDto);
     ButcheryBatchDto deleteButcheryBatchDetailItem(ButcheryBatchDto butcheryBatchDto);
+    ButcheryBatchDto updateBatchStatus(ButcheryBatchDto batchDto);
 }

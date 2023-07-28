@@ -2,7 +2,8 @@ package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryBatchDto;
-import com.toolkit.inventory.Projection.ButcheryBatchDetailAggregatedView;
+import com.toolkit.inventory.Projection.ButcheryBatchDetailItemAggregatedView;
+import com.toolkit.inventory.Projection.ButcheryBatchDetailItemInventoryView;
 import com.toolkit.inventory.Repository.*;
 import com.toolkit.inventory.Security.Domain.User;
 import com.toolkit.inventory.Security.Repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ButcheryBatchServiceImp implements ButcheryBatchService{
@@ -19,6 +21,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
     final ButcheryBatchRepository butcheryBatchRepository;
     final ButcheryBatchDetailRepository butcheryBatchDetailRepository;
     final ButcheryBatchDetailItemRepository butcheryBatchDetailItemRepository;
+    final ButcheryBatchInventoryRepository butcheryBatchInventoryRepository;
     final VendorWarehouseRepository vendorWarehouseRepository;
     final VendorRepository vendorRepository;
     final ItemRepository itemRepository;
@@ -31,6 +34,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             ButcheryBatchRepository butcheryBatchRepository,
             ButcheryBatchDetailRepository butcheryBatchDetailRepository,
             ButcheryBatchDetailItemRepository butcheryBatchDetailItemRepository,
+            ButcheryBatchInventoryRepository butcheryBatchInventoryRepository,
             VendorWarehouseRepository vendorWarehouseRepository,
             VendorRepository vendorRepository,
             ItemRepository itemRepository,
@@ -41,6 +45,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
         this.butcheryBatchRepository = butcheryBatchRepository;
         this.butcheryBatchDetailRepository = butcheryBatchDetailRepository;
         this.butcheryBatchDetailItemRepository = butcheryBatchDetailItemRepository;
+        this.butcheryBatchInventoryRepository = butcheryBatchInventoryRepository;
         this.vendorWarehouseRepository = vendorWarehouseRepository;
         this.vendorRepository = vendorRepository;
         this.itemRepository = itemRepository;
@@ -71,7 +76,16 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             ButcheryBatch optBatch = this.butcheryBatchRepository
                     .findById(butcheryBatchDto.getButcheryBatch().getButcheryBatchId()).get();
 
-            optBatch.setVendorWarehouse(butcheryBatch.getVendorWarehouse());
+            if (optBatch.getBatchStatus() == "Unposted") {
+                Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
+                        .findByVendorWarehouseId(butcheryBatch.getVendorWarehouse().getVendorWarehouseId());
+                optBatch.setVendorWarehouse(vendorWarehouse.get());
+//            } else if (optBatch.getBatchStatus() == "Posted") {
+//                if (optBatch.getBatchStatus().equals(true) && butcheryBatch.getBatchStatus().equals(false)) {
+//                    optBatch.setBatchStatus(butcheryBatch.getBatchStatus());
+//                }
+            }
+
             optBatch.setRemarks(butcheryBatch.getRemarks());
             optBatch.setDateReceived(butcheryBatch.getDateReceived());
             optBatch.setIsOpen(butcheryBatch.getIsOpen());
@@ -261,7 +275,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
             butcheryBatchDetailItem = this.butcheryBatchDetailItemRepository.saveAndFlush(butcheryBatchDetailItem);
 
-            Optional<ButcheryBatchDetailAggregatedView> optDetailView = this.butcheryBatchDetailItemRepository
+            Optional<ButcheryBatchDetailItemAggregatedView> optDetailView = this.butcheryBatchDetailItemRepository
                     .getBatchDetailById(butcheryBatchDetail.getButcheryBatchDetailId());
 
             if (optDetailView.isPresent()) {
@@ -305,7 +319,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
             this.butcheryBatchDetailItemRepository.deleteById(tmpDetailItem.getButcheryBatchDetailItemId());
 
-            Optional<ButcheryBatchDetailAggregatedView> optDetailView = this.butcheryBatchDetailItemRepository
+            Optional<ButcheryBatchDetailItemAggregatedView> optDetailView = this.butcheryBatchDetailItemRepository
                     .getBatchDetailById(butcheryBatchDetail.getButcheryBatchDetailId());
 
             if (optDetailView.isPresent()) {
@@ -319,6 +333,47 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
         }
 
+        return butcheryBatchDto;
+    }
+
+    @Override
+    @Transactional
+    public ButcheryBatchDto updateBatchStatus(ButcheryBatchDto butcheryBatchDto) {
+
+        ButcheryBatch tmpBatch = butcheryBatchDto.getButcheryBatch();
+        Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(tmpBatch.getButcheryBatchId());
+        if (optBatch.isPresent()) {
+            ButcheryBatch butcheryBatch = optBatch.get();
+
+            if (butcheryBatch.getBatchStatus().equals("Unposted")) {
+                butcheryBatch.setBatchStatus(tmpBatch.getBatchStatus());
+                butcheryBatch.setIsOpen(false);
+
+                if (butcheryBatch.getBatchStatus().equals("Posted")) {
+                    butcheryBatch.setIsOpen(true);
+                    Set<ButcheryBatchDetailItemInventoryView> inventories =
+                            this.butcheryBatchDetailItemRepository.getInventories(butcheryBatch.getButcheryBatchId());
+
+                    inventories.forEach(inv -> {
+                        ButcheryBatchInventory butcheryBatchInventory = new ButcheryBatchInventory();
+
+                        butcheryBatchInventory.setButcheryBatch(butcheryBatch);
+                        butcheryBatchInventory.setItem(inv.getItem());
+                        butcheryBatchInventory.setReceivedQty(inv.getReceivedQty());
+                        butcheryBatchInventory.setRemainingQty(inv.getReceivedQty());
+                        butcheryBatchInventory.setReceivedWeightKg(inv.getReceivedWeightKg());
+                        butcheryBatchInventory.setRemainingWeightKg(inv.getReceivedWeightKg());
+                        this.butcheryBatchInventoryRepository.saveAndFlush(butcheryBatchInventory);
+                    });
+                }
+
+                butcheryBatchDto.setButcheryBatch(this.butcheryBatchRepository.saveAndFlush(butcheryBatch));
+            } else {
+                butcheryBatchDto.setButcheryBatch(butcheryBatch);
+            }
+        } else {
+            butcheryBatchDto.setError("Batch not found.");
+        }
         return butcheryBatchDto;
     }
 }

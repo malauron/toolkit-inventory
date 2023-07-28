@@ -28,6 +28,11 @@ public class ButcheryBatchController {
         return this.butcheryBatchService.save(butcheryBatchDto);
     }
 
+    @PutMapping("/butcheryBatches")
+    public ButcheryBatchDto updateButcheryBatch(@RequestBody ButcheryBatchDto butcheryBatchDto) {
+        return this.butcheryBatchService.updateBatchStatus(butcheryBatchDto);
+    }
+
     @PostMapping("/butcheryBatchDetails")
     public ButcheryBatchDto saveButcheryBatchDetail(@RequestBody ButcheryBatchDto butcheryBatchDto) {
         return this.butcheryBatchService.saveButcheryBatchDetail(butcheryBatchDto);
