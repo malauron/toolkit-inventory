@@ -96,52 +96,48 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             butcheryBatch.setHasInventory(false);
             butcheryBatch.setIsOpen(false);
 
-            Optional<User> user = this.userRepository.findByUsername(butcheryBatch.getCreatedBy().getUsername());
-            butcheryBatch.setCreatedBy(user.get());
-
             Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
                     .findByVendorWarehouseId(butcheryBatch.getVendorWarehouse().getVendorWarehouseId());
 
             butcheryBatch.setVendorWarehouse(vendorWarehouse.get());
 
-            if (butcheryBatch.getButcheryBatchId() == 0) {
+            Optional<User> user = this.userRepository.findByUsername(butcheryBatch.getCreatedBy().getUsername());
+            butcheryBatch.setCreatedBy(user.get());
 
-                butcheryBatch.getButcheryBatchDetails().forEach(batchDetail -> {
+            butcheryBatch.getButcheryBatchDetails().forEach(batchDetail -> {
 
-                    Optional<Vendor> optVendor = this.vendorRepository.findById(batchDetail.getVendor().getVendorId());
+                Optional<Vendor> optVendor = this.vendorRepository.findById(batchDetail.getVendor().getVendorId());
 
-                    batchDetail.setVendor(optVendor.get());
-                    batchDetail.setTotalRequiredWeightKg(BigDecimal.ZERO);
-                    batchDetail.setTotalReceivedWeightKg(BigDecimal.ZERO);
+                batchDetail.setVendor(optVendor.get());
+                batchDetail.setTotalRequiredWeightKg(BigDecimal.ZERO);
+                batchDetail.setTotalReceivedWeightKg(BigDecimal.ZERO);
 
-                    batchDetail.getButcheryBatchDetailItems().forEach(batchDetailItem -> {
+                batchDetail.getButcheryBatchDetailItems().forEach(batchDetailItem -> {
 
-                        Optional<Item> optItem = this.itemRepository.findById(batchDetailItem.getItem().getItemId());
-                        Optional<Uom> optUom = this.uomRepository.findById(batchDetailItem.getRequiredUom().getUomId());
+                    Optional<Item> optItem = this.itemRepository.findById(batchDetailItem.getItem().getItemId());
+                    Optional<Uom> optUom = this.uomRepository.findById(batchDetailItem.getRequiredUom().getUomId());
 
-                        batchDetailItem.setItem(optItem.get());
-                        batchDetailItem.setBaseUom(optItem.get().getUom());
-                        batchDetailItem.setBaseQty(new BigDecimal(1));
-                        batchDetailItem.setRequiredUom(optUom.get());
+                    batchDetailItem.setItem(optItem.get());
+                    batchDetailItem.setBaseUom(optItem.get().getUom());
+                    batchDetailItem.setBaseQty(new BigDecimal(1));
+                    batchDetailItem.setRequiredUom(optUom.get());
 
-                        if (batchDetailItem.getBaseUom().getUomId() != batchDetailItem.getRequiredUom().getUomId()) {
-                            ItemUomId itemUomId = new ItemUomId();
-                            itemUomId.setItemId(optItem.get().getItemId());
-                            itemUomId.setUomId(optUom.get().getUomId());
+                    if (batchDetailItem.getBaseUom().getUomId() != batchDetailItem.getRequiredUom().getUomId()) {
+                        ItemUomId itemUomId = new ItemUomId();
+                        itemUomId.setItemId(optItem.get().getItemId());
+                        itemUomId.setUomId(optUom.get().getUomId());
 
-                            Optional<ItemUom> optItemUom = this.itemUomRepository.findById(itemUomId);
+                        Optional<ItemUom> optItemUom = this.itemUomRepository.findById(itemUomId);
 
-                            batchDetailItem.setBaseQty(optItemUom.get().getQuantity());
-                        }
+                        batchDetailItem.setBaseQty(optItemUom.get().getQuantity());
+                    }
 
-                        batchDetail.setTotalRequiredWeightKg(batchDetail.getTotalRequiredWeightKg().add(batchDetailItem.getRequiredWeightKg()));
-                        batchDetail.setTotalReceivedWeightKg(batchDetail.getTotalReceivedWeightKg().add(batchDetailItem.getReceivedWeightKg()));
-
-                    });
-
+                    batchDetail.setTotalRequiredWeightKg(batchDetail.getTotalRequiredWeightKg().add(batchDetailItem.getRequiredWeightKg()));
+                    batchDetail.setTotalReceivedWeightKg(batchDetail.getTotalReceivedWeightKg().add(batchDetailItem.getReceivedWeightKg()));
 
                 });
-            }
+
+            });
 
             butcheryBatch = this.butcheryBatchRepository.saveAndFlush(butcheryBatch);
 
@@ -156,62 +152,54 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
     @Transactional
     public ButcheryBatchDto saveButcheryBatchDetail(ButcheryBatchDto butcheryBatchDto) {
 
+        ButcheryBatch butcheryBatch = butcheryBatchDto.getButcheryBatch();
         ButcheryBatchDetail tmpDetail = butcheryBatchDto.getButcheryBatchDetail();
-
         ButcheryBatchDetail butcheryBatchDetail;
 
-        Optional<Vendor> optVendor = this.vendorRepository.findById(tmpDetail.getVendor().getVendorId());
+        if (butcheryBatch.getButcheryBatchId() > 0) {
+            Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryBatch.getButcheryBatchId());
 
-        if (tmpDetail.getButcheryBatchDetailId() > 0 ) {
+            if (optBatch.isPresent()) {
+                butcheryBatch = optBatch.get();
 
-            Optional<ButcheryBatchDetail> optDetail = this.butcheryBatchDetailRepository.findById(tmpDetail.getButcheryBatchDetailId());
-
-            if (optDetail.isPresent()) {
-                butcheryBatchDetail = optDetail.get();
-
-                butcheryBatchDetail.setReferenceNo(tmpDetail.getReferenceNo());
-
-            }  else {
-                butcheryBatchDto.setError("Batch detail not found.");
-                return butcheryBatchDto;
-            }
-
-        } else {
-
-            ButcheryBatch butcheryBatch = butcheryBatchDto.getButcheryBatch();
-
-            if (butcheryBatch.getButcheryBatchId() > 0) {
-
-                Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryBatch.getButcheryBatchId());
-
-                if (optBatch.isPresent()) {
-
-                    butcheryBatch = optBatch.get();
-
+                if (butcheryBatch.getBatchStatus().equals("Unposted")) {
                     butcheryBatchDetail = butcheryBatchDto.getButcheryBatchDetail();
 
-                    butcheryBatchDetail.setButcheryBatch(butcheryBatch);
-                    butcheryBatchDetail.setTotalRequiredWeightKg(new BigDecimal(0));
-                    butcheryBatchDetail.setTotalReceivedWeightKg(new BigDecimal(0));
+                    if (tmpDetail.getButcheryBatchDetailId() > 0 ) {
+                        Optional<ButcheryBatchDetail> optDetail = this.butcheryBatchDetailRepository.findById(tmpDetail.getButcheryBatchDetailId());
 
+                        if (optDetail.isPresent()) {
+                            butcheryBatchDetail = optDetail.get();
+
+                            butcheryBatchDetail.setReferenceNo(tmpDetail.getReferenceNo());
+
+                        }  else {
+                            butcheryBatchDto.setError("Batch detail not found.");
+                            return butcheryBatchDto;
+                        }
+                    } else {
+                        butcheryBatchDetail.setButcheryBatch(butcheryBatch);
+                        butcheryBatchDetail.setTotalRequiredWeightKg(new BigDecimal(0));
+                        butcheryBatchDetail.setTotalReceivedWeightKg(new BigDecimal(0));
+                    }
+
+                    Optional<Vendor> optVendor = this.vendorRepository.findById(tmpDetail.getVendor().getVendorId());
+
+                    butcheryBatchDetail.setVendor(optVendor.get());
+
+                    butcheryBatchDetail = this.butcheryBatchDetailRepository.saveAndFlush(butcheryBatchDetail);
+
+                    butcheryBatchDto.setButcheryBatchDetail(butcheryBatchDetail);
                 } else {
-                    butcheryBatchDto.setError("Batch not found.");
-                    return butcheryBatchDto;
+                    butcheryBatchDto.setError("Unable to save information since batch is already " + butcheryBatch.getBatchStatus());
                 }
             } else {
-                butcheryBatchDto.setError("No batch number.");
-                return butcheryBatchDto;
+                butcheryBatchDto.setError("Batch not found.");
             }
+        } else {
+            butcheryBatchDto.setError("No batch number.");
         }
-
-        butcheryBatchDetail.setVendor(optVendor.get());
-
-        butcheryBatchDetail = this.butcheryBatchDetailRepository.saveAndFlush(butcheryBatchDetail);
-
-        butcheryBatchDto.setButcheryBatchDetail(butcheryBatchDetail);
-
         return butcheryBatchDto;
-
     }
 
     @Override
@@ -223,6 +211,8 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
         if (tmpDetail.isPresent()) {
 
             ButcheryBatchDetail butcheryBatchDetail = tmpDetail.get();
+
+            if (butcheryBatchDetail.getButcheryBatch().getBatchStatus().equals("")) {}
 
             ButcheryBatchDetailItem tmpDetailItem = butcheryBatchDto.getButcheryBatchDetailItem();
 

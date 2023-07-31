@@ -28,15 +28,15 @@ public interface ButcheryReceivingRepository extends JpaRepository<ButcheryRecei
 
     @Query(value = "SELECT b FROM ButcheryReceiving b " +
                    "WHERE (CONCAT(b.butcheryReceivingId,'') LIKE %:butcheryReceivingId% " +
-                   "OR b.vendor.vendorName LIKE %:vendorName% " +
-                   "OR b.warehouse.warehouseName LIKE %:warehouseName%) " +
+                   "OR b.vendor.vendorName LIKE %:vendorName%) " +
                    "AND b.receivingStatus IN :receivingStatus " +
+                   "AND b.warehouse.warehouseId = :warehouseId " +
                    "ORDER BY b.butcheryReceivingId DESC")
     Page<ButcheryReceiving> findByCustomParam(
             @RequestParam("butcheryReceivingId") String butcheryReceivingId,
-            @RequestParam("warehouseName") String warehouseName,
             @RequestParam("vendorName") String vendorName,
             @RequestParam("receivingStatus") Set<String> receivingStatus,
+            @RequestParam("warehouseId") Long warehouseId,
             Pageable pageable);
 
 }
