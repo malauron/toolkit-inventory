@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Projection;
 
+import com.toolkit.inventory.Domain.ButcheryBatch;
 import com.toolkit.inventory.Domain.ButcheryReceiving;
 import com.toolkit.inventory.Domain.Vendor;
 import com.toolkit.inventory.Domain.Warehouse;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Projection(name = "butcheryReceivingView", types = {ButcheryReceiving.class})
 public interface ButcheryReceivingView {
     Long getButcheryReceivingId();
+    ButcheryBatch getButcheryBatch();
     Warehouse getWarehouse();
     Vendor getVendor();
     String getReferenceCode();

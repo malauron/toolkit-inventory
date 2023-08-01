@@ -16,17 +16,11 @@ import java.util.Set;
 public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
     private ButcheryReceivingRepository butcheryReceivingRepository;
-
     private ButcheryReceivingItemRepository butcheryReceivingItemRepository;
-
     private ItemRepository itemRepository;
-
     private ItemUomRepository itemUomRepository;
-
     private ItemCostRepository itemCostRepository;
-
     private WarehouseRepository warehouseRepository;
-
     private VendorRepository customerRepository;
 
     @Autowired
@@ -57,6 +51,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
         if (optRecv.isPresent()) {
             butcheryReceivingDto.setButcheryReceivingId(butcheryReceivingId);
+            butcheryReceivingDto.setButcheryBatch(optRecv.get().getButcheryBatch());
             butcheryReceivingDto.setWarehouse(optRecv.get().getWarehouse());
             butcheryReceivingDto.setVendor(optRecv.get().getVendor());
             butcheryReceivingDto.setReferenceCode(optRecv.get().getReferenceCode());

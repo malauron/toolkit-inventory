@@ -18,7 +18,7 @@ public interface ButcheryBatchRepository  extends JpaRepository<ButcheryBatch, L
     @Query(value = "SELECT b FROM ButcheryBatch  b " +
             "WHERE b.vendorWarehouse.vendorWarehouseName like %:searchDesc% " +
             "OR b.remarks like %:searchDesc% " +
-            "ORDER BY b.vendorWarehouse.vendorWarehouseName, b.butcheryBatchId")
+            "ORDER BY b.butcheryBatchId DESC")
     Page<ButcheryBatch> findByWarehouseRemarks(
             @RequestParam("searchDesc") String searchDesc,
             Pageable pageable);

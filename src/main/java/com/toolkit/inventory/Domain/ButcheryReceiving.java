@@ -30,6 +30,10 @@ public class ButcheryReceiving {
             new HashSet<>();
 
     @ManyToOne
+    @JoinColumn(name = "butchery_batch_id")
+    private ButcheryBatch butcheryBatch;
+
+    @ManyToOne
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
