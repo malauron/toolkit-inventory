@@ -12,7 +12,7 @@ import java.util.Date;
 @Projection(name = "butcheryReceivingView", types = {ButcheryReceiving.class})
 public interface ButcheryReceivingView {
     Long getButcheryReceivingId();
-    ButcheryBatch getButcheryBatch();
+    ButcheryBatchView getButcheryBatch();
     Warehouse getWarehouse();
     Vendor getVendor();
     String getReferenceCode();

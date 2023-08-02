@@ -15,25 +15,16 @@ import java.util.Set;
 @Service
 public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
-    private ButcheryProductionRepository butcheryProductionRepository;
-
-    private ButcheryProductionItemRepository butcheryProductionItemRepository;
-
-    private ButcheryProductionSourceRepository butcheryProductionSourceRepository;
-
-    private ButcheryReceivingRepository butcheryReceivingRepository;
-
-    private ButcheryReceivingItemRepository butcheryReceivingItemRepository;
-
-    private ItemRepository itemRepository;
-
-    private ItemUomRepository itemUomRepository;
-
-    private ItemCostRepository itemCostRepository;
-
-//    private ItemGenericRepository itemGenericRepository;
-
-    private WarehouseRepository warehouseRepository;
+    final ButcheryProductionRepository butcheryProductionRepository;
+    final ButcheryProductionItemRepository butcheryProductionItemRepository;
+    final ButcheryProductionSourceRepository butcheryProductionSourceRepository;
+    final ButcheryReceivingRepository butcheryReceivingRepository;
+    final ButcheryReceivingItemRepository butcheryReceivingItemRepository;
+    final ButcheryBatchRepository butcheryBatchRepository;
+    final ItemRepository itemRepository;
+    final ItemUomRepository itemUomRepository;
+    final ItemCostRepository itemCostRepository;
+    final WarehouseRepository warehouseRepository;
 
     @Autowired
     public ButcheryProductionServiceImp(ButcheryProductionRepository butcheryProductionRepository,
@@ -41,19 +32,19 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                                         ButcheryProductionSourceRepository butcheryProductionSourceRepository,
                                         ButcheryReceivingRepository butcheryReceivingRepository,
                                         ButcheryReceivingItemRepository butcheryReceivingItemRepository,
+                                        ButcheryBatchRepository butcheryBatchRepository,
                                         ItemRepository itemRepository, ItemUomRepository itemUomRepository,
                                         ItemCostRepository itemCostRepository,
-                                        ItemGenericRepository itemGenericRepository,
                                         WarehouseRepository warehouseRepository) {
         this.butcheryProductionRepository = butcheryProductionRepository;
         this.butcheryProductionItemRepository = butcheryProductionItemRepository;
         this.butcheryProductionSourceRepository = butcheryProductionSourceRepository;
         this.butcheryReceivingRepository = butcheryReceivingRepository;
         this.butcheryReceivingItemRepository = butcheryReceivingItemRepository;
+        this.butcheryBatchRepository = butcheryBatchRepository;
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
-//        this.itemGenericRepository = itemGenericRepository;
         this.warehouseRepository = warehouseRepository;
     }
 
@@ -69,6 +60,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         if (optProd.isPresent()) {
             butcheryProductionDto.setButcheryProductionId(butcheryProductionId);
             butcheryProductionDto.setWarehouse(optProd.get().getWarehouse());
+            butcheryProductionDto.setButcheryBatch(optProd.get().getButcheryBatch());
             butcheryProductionDto.setTotalAmount(optProd.get().getTotalAmount());
             butcheryProductionDto.setProductionStatus(optProd.get().getProductionStatus());
             butcheryProductionDto.setDateCreated(optProd.get().getDateCreated());
@@ -110,6 +102,12 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         if (optWhse.isPresent()) {
             newButcheryProduction.setWarehouse(optWhse.get());
+        }
+
+        Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryProductionDto.getButcheryBatch().getButcheryBatchId());
+
+        if (optBatch.isPresent()) {
+            newButcheryProduction.setButcheryBatch(optBatch.get());
         }
 
         butcheryProductionDto.getButcheryProductionSources().forEach(butcheryProductionSource -> {

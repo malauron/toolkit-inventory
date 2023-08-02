@@ -15,23 +15,26 @@ import java.util.Set;
 @Service
 public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
-    private ButcheryReceivingRepository butcheryReceivingRepository;
-    private ButcheryReceivingItemRepository butcheryReceivingItemRepository;
-    private ItemRepository itemRepository;
-    private ItemUomRepository itemUomRepository;
-    private ItemCostRepository itemCostRepository;
-    private WarehouseRepository warehouseRepository;
-    private VendorRepository customerRepository;
+    final ButcheryReceivingRepository butcheryReceivingRepository;
+    final ButcheryReceivingItemRepository butcheryReceivingItemRepository;
+    final ButcheryBatchRepository butcheryBatchRepository;
+    final ItemRepository itemRepository;
+    final ItemUomRepository itemUomRepository;
+    final ItemCostRepository itemCostRepository;
+    final WarehouseRepository warehouseRepository;
+    final VendorRepository customerRepository;
 
     @Autowired
     public ButcheryReceivingServiceImp(ButcheryReceivingRepository butcheryReceivingRepository,
                                        ButcheryReceivingItemRepository butcheryReceivingItemRepository,
+                                       ButcheryBatchRepository butcheryBatchRepository,
                                        ItemRepository itemRepository, ItemUomRepository itemUomRepository,
                                        ItemCostRepository itemCostRepository,
                                        WarehouseRepository warehouseRepository,
                                        VendorRepository customerRepository) {
         this.butcheryReceivingRepository = butcheryReceivingRepository;
         this.butcheryReceivingItemRepository = butcheryReceivingItemRepository;
+        this.butcheryBatchRepository = butcheryBatchRepository;
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
@@ -96,6 +99,12 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
         if (optWhse.isPresent()) {
             newButcheryReceiving.setWarehouse(optWhse.get());
+        }
+
+        Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryReceivingDto.getButcheryBatch().getButcheryBatchId());
+
+        if (optBatch.isPresent()) {
+            newButcheryReceiving.setButcheryBatch(optBatch.get());
         }
 
         Optional<Vendor> optVend = this.customerRepository.findById(butcheryReceivingDto.getVendor().getVendorId());

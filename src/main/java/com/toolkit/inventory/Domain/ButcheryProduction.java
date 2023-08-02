@@ -38,6 +38,10 @@ public class ButcheryProduction {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
+    @ManyToOne
+    @JoinColumn(name = "butchery_batch_id")
+    private ButcheryBatch butcheryBatch;
+
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 

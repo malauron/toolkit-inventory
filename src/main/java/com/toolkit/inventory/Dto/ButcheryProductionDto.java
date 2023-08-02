@@ -1,9 +1,6 @@
 package com.toolkit.inventory.Dto;
 
-import com.toolkit.inventory.Domain.ButcheryProduction;
-import com.toolkit.inventory.Domain.ButcheryProductionItem;
-import com.toolkit.inventory.Domain.ButcheryProductionSource;
-import com.toolkit.inventory.Domain.Warehouse;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceShortView;
 import com.toolkit.inventory.Projection.ButcheryProductionSourceView;
 import lombok.Getter;
@@ -18,6 +15,7 @@ import java.util.Set;
 public class ButcheryProductionDto {
     private Long butcheryProductionId;
     private Warehouse warehouse;
+    private ButcheryBatch butcheryBatch;
     private Set<ButcheryProduction> butcheryProductions;
     private Set<ButcheryProductionItem> butcheryProductionItems;
     private Set<ButcheryProductionSource> butcheryProductionSources;
