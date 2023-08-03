@@ -71,7 +71,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
             butcheryProductionDto.setButcheryProductionSourceViews(butcheryProductionSources);
 
-
 //            Set<ButcheryProductionSource> butcheryProductionSources =
 //                    this.butcheryProductionSourceRepository
 //                            .findByButcheryProductionOrderByButcheryReceivingItemId(optProd.get());

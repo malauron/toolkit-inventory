@@ -53,17 +53,23 @@ public class ButcheryReceivingItem {
     @JoinColumn(name = "required_uom_id")
     private Uom requiredUom;
 
+    @Column(name = "documented_qty")
+    private BigDecimal documentedQty;
+
     @Column(name = "received_qty")
     private BigDecimal receivedQty;
+
+    @Column(name = "documented_weight_kg")
+    private BigDecimal documented_weight_kg;
+
+    @Column(name = "received_weight_kg")
+    private BigDecimal receivedWeightKg;
 
     @Column(name = "item_cost")
     private BigDecimal itemCost;
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
-
-    @Column(name = "documented_qty")
-    private BigDecimal documentedQty;
 
     @Column(name = "used_qty")
     private BigDecimal usedQty;

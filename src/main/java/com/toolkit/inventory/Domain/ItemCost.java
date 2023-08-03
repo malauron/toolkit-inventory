@@ -33,6 +33,7 @@ public class ItemCost {
   private BigDecimal cost;
 
   @Version
-  private long  version;
+  @Column(name = "version")
+  private Long version;
 
 }
