@@ -33,12 +33,8 @@ public class ButcheryBatchDetail {
     @Column(name = "reference_no")
     private String referenceNo;
 
-    @ManyToOne
-    @JoinColumn(name = "vendor_id")
-    private Vendor vendor;
-
-    @Column(name = "total_required_weight_kg")
-    private BigDecimal totalRequiredWeightKg;
+    @Column(name = "total_documented_weight_kg")
+    private BigDecimal totalDocumentedWeightKg;
 
     @Column(name = "total_received_weight_kg")
     private BigDecimal totalReceivedWeightKg;

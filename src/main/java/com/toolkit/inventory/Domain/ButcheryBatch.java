@@ -31,6 +31,10 @@ public class ButcheryBatch {
     @JoinColumn(name = "vendor_warehouse_id")
     private VendorWarehouse vendorWarehouse;
 
+    @ManyToOne
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
+
     @Column(name = "remarks")
     private String remarks;
 

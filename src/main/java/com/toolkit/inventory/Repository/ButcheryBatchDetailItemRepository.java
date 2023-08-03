@@ -14,7 +14,7 @@ import java.util.Set;
 public interface ButcheryBatchDetailItemRepository extends JpaRepository<ButcheryBatchDetailItem, Long> {
 
     @Query(value = "SELECT b.butcheryBatchDetail AS butcheryBatchDetail, " +
-            "SUM(b.requiredWeightKg) AS totalRequiredWeightKg,  " +
+            "SUM(b.documentedWeightKg) AS totalDocumentedWeightKg,  " +
             "SUM(b.receivedWeightKg) AS totalReceivedWeightKg " +
             "FROM ButcheryBatchDetailItem b " +
             "WHERE b.butcheryBatchDetail.butcheryBatchDetailId = :butcheryBatchDetailId")

@@ -8,6 +8,6 @@ import java.math.BigDecimal;
 @Projection(name = "butcheryBatchDetailItemAggregatedView", types = { ButcheryBatchDetail.class })
 public interface ButcheryBatchDetailItemAggregatedView {
     ButcheryBatchDetail getButcheryBatchDetail();
-    BigDecimal getTotalRequiredWeightKg();
+    BigDecimal getTotalDocumentedWeightKg();
     BigDecimal getTotalReceivedWeightKg();
 }

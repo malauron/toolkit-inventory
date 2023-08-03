@@ -71,15 +71,27 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
 
         ButcheryBatch butcheryBatch = butcheryBatchDto.getButcheryBatch();
 
+        Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
+                .findByVendorWarehouseId(butcheryBatch.getVendorWarehouse().getVendorWarehouseId());
+        if (vendorWarehouse.isEmpty()) {
+            butcheryBatchDto.setError("Storage provider not found.");
+            return butcheryBatchDto;
+        }
+
+        Optional<Vendor> vendor = this.vendorRepository.findById(butcheryBatch.getVendor().getVendorId());
+        if (vendor.isEmpty()) {
+            butcheryBatchDto.setError("Vendor not found");
+            return butcheryBatchDto;
+        }
+
         if (butcheryBatch.getButcheryBatchId() > 0) {
 
             ButcheryBatch optBatch = this.butcheryBatchRepository
                     .findById(butcheryBatchDto.getButcheryBatch().getButcheryBatchId()).get();
 
-            if (optBatch.getBatchStatus() == "Unposted") {
-                Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
-                        .findByVendorWarehouseId(butcheryBatch.getVendorWarehouse().getVendorWarehouseId());
+            if (optBatch.getBatchStatus().equals("Unposted")) {
                 optBatch.setVendorWarehouse(vendorWarehouse.get());
+                optBatch.setVendor(vendor.get());
             }
 
             optBatch.setRemarks(butcheryBatch.getRemarks());
@@ -95,21 +107,15 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             butcheryBatch.setBatchStatus("Unposted");
             butcheryBatch.setHasInventory(false);
             butcheryBatch.setIsOpen(false);
-
-            Optional<VendorWarehouse> vendorWarehouse = this.vendorWarehouseRepository
-                    .findByVendorWarehouseId(butcheryBatch.getVendorWarehouse().getVendorWarehouseId());
-
             butcheryBatch.setVendorWarehouse(vendorWarehouse.get());
+            butcheryBatch.setVendor(vendor.get());
 
             Optional<User> user = this.userRepository.findByUsername(butcheryBatch.getCreatedBy().getUsername());
             butcheryBatch.setCreatedBy(user.get());
 
             butcheryBatch.getButcheryBatchDetails().forEach(batchDetail -> {
 
-                Optional<Vendor> optVendor = this.vendorRepository.findById(batchDetail.getVendor().getVendorId());
-
-                batchDetail.setVendor(optVendor.get());
-                batchDetail.setTotalRequiredWeightKg(BigDecimal.ZERO);
+                batchDetail.setTotalDocumentedWeightKg(BigDecimal.ZERO);
                 batchDetail.setTotalReceivedWeightKg(BigDecimal.ZERO);
 
                 batchDetail.getButcheryBatchDetailItems().forEach(batchDetailItem -> {
@@ -132,7 +138,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                         batchDetailItem.setBaseQty(optItemUom.get().getQuantity());
                     }
 
-                    batchDetail.setTotalRequiredWeightKg(batchDetail.getTotalRequiredWeightKg().add(batchDetailItem.getRequiredWeightKg()));
+                    batchDetail.setTotalDocumentedWeightKg(batchDetail.getTotalDocumentedWeightKg().add(batchDetailItem.getDocumentedWeightKg()));
                     batchDetail.setTotalReceivedWeightKg(batchDetail.getTotalReceivedWeightKg().add(batchDetailItem.getReceivedWeightKg()));
 
                 });
@@ -179,13 +185,9 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                         }
                     } else {
                         butcheryBatchDetail.setButcheryBatch(butcheryBatch);
-                        butcheryBatchDetail.setTotalRequiredWeightKg(new BigDecimal(0));
+                        butcheryBatchDetail.setTotalDocumentedWeightKg(new BigDecimal(0));
                         butcheryBatchDetail.setTotalReceivedWeightKg(new BigDecimal(0));
                     }
-
-                    Optional<Vendor> optVendor = this.vendorRepository.findById(tmpDetail.getVendor().getVendorId());
-
-                    butcheryBatchDetail.setVendor(optVendor.get());
 
                     butcheryBatchDetail = this.butcheryBatchDetailRepository.saveAndFlush(butcheryBatchDetail);
 
@@ -228,9 +230,9 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                 if (optDetailItem.isPresent()) {
                     butcheryBatchDetailItem = optDetailItem.get();
 
-                    butcheryBatchDetailItem.setRequiredQty(tmpDetailItem.getRequiredQty());
+                    butcheryBatchDetailItem.setDocumentedQty(tmpDetailItem.getDocumentedQty());
                     butcheryBatchDetailItem.setReceivedQty(tmpDetailItem.getReceivedQty());
-                    butcheryBatchDetailItem.setRequiredWeightKg(tmpDetailItem.getRequiredWeightKg());
+                    butcheryBatchDetailItem.setDocumentedWeightKg(tmpDetailItem.getDocumentedWeightKg());
                     butcheryBatchDetailItem.setReceivedWeightKg(tmpDetailItem.getReceivedWeightKg());
                 } else {
                     butcheryBatchDto.setError("Batch detail item not found.");
@@ -265,7 +267,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                     .getBatchDetailById(butcheryBatchDetail.getButcheryBatchDetailId());
 
             if (optDetailView.isPresent()) {
-                butcheryBatchDetail.setTotalRequiredWeightKg(optDetailView.get().getTotalRequiredWeightKg());
+                butcheryBatchDetail.setTotalDocumentedWeightKg(optDetailView.get().getTotalDocumentedWeightKg());
                 butcheryBatchDetail.setTotalReceivedWeightKg(optDetailView.get().getTotalReceivedWeightKg());
             }
 
@@ -309,7 +311,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                     .getBatchDetailById(butcheryBatchDetail.getButcheryBatchDetailId());
 
             if (optDetailView.isPresent()) {
-                butcheryBatchDetail.setTotalRequiredWeightKg(optDetailView.get().getTotalRequiredWeightKg());
+                butcheryBatchDetail.setTotalDocumentedWeightKg(optDetailView.get().getTotalDocumentedWeightKg());
                 butcheryBatchDetail.setTotalReceivedWeightKg(optDetailView.get().getTotalReceivedWeightKg());
             }
 
