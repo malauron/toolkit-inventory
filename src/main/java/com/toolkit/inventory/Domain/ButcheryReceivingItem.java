@@ -60,7 +60,7 @@ public class ButcheryReceivingItem {
     private BigDecimal receivedQty;
 
     @Column(name = "documented_weight_kg")
-    private BigDecimal documented_weight_kg;
+    private BigDecimal documentedWeightKg;
 
     @Column(name = "received_weight_kg")
     private BigDecimal receivedWeightKg;

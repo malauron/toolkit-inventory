@@ -29,7 +29,8 @@ public interface ItemCostRepository extends JpaRepository<ItemCost, Long> {
     void setQtyCost(BigDecimal qty, BigDecimal cost, Item item, Warehouse warehouse);
 
     @Modifying
-    @Query(value = "UPDATE ItemCost i SET i.qty = i.qty + :qty WHERE i.itemCostId = :itemCostId")
+    @Query(value = "UPDATE ItemCost i SET i.qty = i.qty + :qty, i.version = i.version + 1 " +
+                   "WHERE i.itemCostId = :itemCostId")
     void setQty(BigDecimal qty, Long itemCostId);
 
     Optional<ItemCost> findByItemAndWarehouse(Item item, Warehouse warehouse);

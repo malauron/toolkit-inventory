@@ -341,9 +341,11 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                 newReceivingItem.setBaseUom(item.getUom());
                 newReceivingItem.setItemClass(item.getItemClass());
                 newReceivingItem.setRequiredUom(butcheryReceivingItem.getRequiredUom());
-                newReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
                 newReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
                 newReceivingItem.setDocumentedQty(butcheryReceivingItem.getDocumentedQty());
+                newReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
+                newReceivingItem.setDocumentedWeightKg(butcheryReceivingItem.getDocumentedWeightKg());
+                newReceivingItem.setReceivedWeightKg(butcheryReceivingItem.getReceivedWeightKg());
                 newReceivingItem.setUsedQty(BigDecimal.ZERO);
                 newReceivingItem.setRemarks(butcheryReceivingItem.getRemarks());
                 newReceivingItem.setIsAvailable(false);
@@ -390,8 +392,12 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
                 this.butcheryReceivingItemRepository.deleteById(receivingItemId);
 
-                receiving.setTotalAmount(this.butcheryReceivingRepository
-                        .getTotalAmount(receiving));
+                BigDecimal ttlAmt = this.butcheryReceivingRepository.getTotalAmount(receiving);
+                if (ttlAmt == null) {
+                    receiving.setTotalAmount(BigDecimal.ZERO);
+                } else {
+                    receiving.setTotalAmount(ttlAmt);
+                }
             }
         }
 

@@ -98,9 +98,7 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
             optBatch.setDateReceived(butcheryBatch.getDateReceived());
             optBatch.setIsOpen(butcheryBatch.getIsOpen());
 
-            this.butcheryBatchRepository.saveAndFlush(optBatch);
-
-            butcheryBatch.setCreatedBy(null);
+            butcheryBatchDto.setButcheryBatch(this.butcheryBatchRepository.saveAndFlush(optBatch));
 
         } else {
 

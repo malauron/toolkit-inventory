@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Set;
+
 @RepositoryRestResource(excerptProjection = ButcheryBatchView.class)
 public interface ButcheryBatchRepository  extends JpaRepository<ButcheryBatch, Long> {
 
@@ -16,11 +18,14 @@ public interface ButcheryBatchRepository  extends JpaRepository<ButcheryBatch, L
     Page<ButcheryBatch> findAllBatches(Pageable pageable);
 
     @Query(value = "SELECT b FROM ButcheryBatch  b " +
-            "WHERE b.vendorWarehouse.vendorWarehouseName like %:searchDesc% " +
-            "OR b.remarks like %:searchDesc% " +
+            "WHERE (b.vendorWarehouse.vendorWarehouseName like %:searchDesc% " +
+            "OR b.vendor.vendorName like %:searchDesc% OR b.remarks like %:searchDesc%) " +
+            "AND b.batchStatus IN :batchStatuses AND b.isOpen in :isOpen " +
             "ORDER BY b.butcheryBatchId DESC")
-    Page<ButcheryBatch> findByWarehouseRemarks(
+    Page<ButcheryBatch> findByCustomParams(
             @RequestParam("searchDesc") String searchDesc,
+            @RequestParam("batchStatuses") Set<String> batchStatuses,
+            @RequestParam("isOpen") Set<Boolean> isOpen,
             Pageable pageable);
 
 }
