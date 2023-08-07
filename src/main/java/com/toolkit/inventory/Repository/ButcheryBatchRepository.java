@@ -5,10 +5,12 @@ import com.toolkit.inventory.Projection.ButcheryBatchView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @RepositoryRestResource(excerptProjection = ButcheryBatchView.class)

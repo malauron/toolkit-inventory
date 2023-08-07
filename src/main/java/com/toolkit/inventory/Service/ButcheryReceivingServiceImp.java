@@ -18,28 +18,31 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
     final ButcheryReceivingRepository butcheryReceivingRepository;
     final ButcheryReceivingItemRepository butcheryReceivingItemRepository;
     final ButcheryBatchRepository butcheryBatchRepository;
+    final ButcheryBatchInventoryRepository butcheryBatchInventoryRepository;
     final ItemRepository itemRepository;
     final ItemUomRepository itemUomRepository;
     final ItemCostRepository itemCostRepository;
     final WarehouseRepository warehouseRepository;
-    final VendorRepository customerRepository;
+    final VendorRepository vendorRepository;
 
     @Autowired
     public ButcheryReceivingServiceImp(ButcheryReceivingRepository butcheryReceivingRepository,
                                        ButcheryReceivingItemRepository butcheryReceivingItemRepository,
                                        ButcheryBatchRepository butcheryBatchRepository,
+                                       ButcheryBatchInventoryRepository butcheryBatchInventoryRepository,
                                        ItemRepository itemRepository, ItemUomRepository itemUomRepository,
                                        ItemCostRepository itemCostRepository,
                                        WarehouseRepository warehouseRepository,
-                                       VendorRepository customerRepository) {
+                                       VendorRepository vendorRepository) {
         this.butcheryReceivingRepository = butcheryReceivingRepository;
         this.butcheryReceivingItemRepository = butcheryReceivingItemRepository;
         this.butcheryBatchRepository = butcheryBatchRepository;
+        this.butcheryBatchInventoryRepository = butcheryBatchInventoryRepository;
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
         this.warehouseRepository = warehouseRepository;
-        this.customerRepository = customerRepository;
+        this.vendorRepository = vendorRepository;
 
     }
 
@@ -107,7 +110,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
             newButcheryReceiving.setButcheryBatch(optBatch.get());
         }
 
-        Optional<Vendor> optVend = this.customerRepository.findById(butcheryReceivingDto.getVendor().getVendorId());
+        Optional<Vendor> optVend = this.vendorRepository.findById(butcheryReceivingDto.getVendor().getVendorId());
 
         if (optVend.isPresent()) {
             newButcheryReceiving.setVendor(optVend.get());
@@ -148,9 +151,11 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
             newButcheryReceivingItem.setItemClass(item.getItemClass());
             newButcheryReceivingItem.setBaseUom(item.getUom());
             newButcheryReceivingItem.setRequiredUom(butcheryReceivingItem.getRequiredUom());
-            newButcheryReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
-            newButcheryReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
             newButcheryReceivingItem.setDocumentedQty(butcheryReceivingItem.getDocumentedQty());
+            newButcheryReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
+            newButcheryReceivingItem.setDocumentedWeightKg(butcheryReceivingItem.getDocumentedWeightKg());
+            newButcheryReceivingItem.setReceivedWeightKg(butcheryReceivingItem.getReceivedWeightKg());
+            newButcheryReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
             newButcheryReceivingItem.setUsedQty(BigDecimal.ZERO);
             newButcheryReceivingItem.setRemarks(butcheryReceivingItem.getRemarks());
             newButcheryReceivingItem.setIsAvailable(false);
@@ -189,8 +194,16 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                     butcheryReceiving.setWarehouse(butcheryReceivingDto.getWarehouse());
                 }
 
+                if (butcheryReceivingDto.getButcheryBatch() != null) {
+                    Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository
+                            .findById(butcheryReceivingDto.getButcheryBatch().getButcheryBatchId());
+                    butcheryReceiving.setButcheryBatch(optBatch.get());
+                }
+
                 if (butcheryReceivingDto.getVendor() != null) {
-                    butcheryReceiving.setVendor(butcheryReceivingDto.getVendor());
+                    Optional<Vendor> optVendor = this.vendorRepository
+                            .findById(butcheryReceivingDto.getVendor().getVendorId());
+                    butcheryReceiving.setVendor(optVendor.get());
                 }
 
                 if (butcheryReceivingDto.getReferenceCode() != null) {
@@ -246,11 +259,22 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                         Item item = butcheryReceivingItem.getItem();
                         BigDecimal baseQty = butcheryReceivingItem.getBaseQty();
                         BigDecimal receivedQty = butcheryReceivingItem.getReceivedQty();
+                        BigDecimal receivedWeightKg = butcheryReceivingItem.getReceivedWeightKg();
                         BigDecimal itemCost = butcheryReceivingItem.getItemCost();
                         BigDecimal ttQty =  receivedQty.multiply(baseQty);
                         BigDecimal cost = itemCost.divide(baseQty);
 
-                        this.itemCostRepository.setQtyCost(ttQty, cost, item, warehouse);
+                        this.itemCostRepository.setQtyCost(ttQty, receivedWeightKg, cost, item, warehouse);
+
+                        Optional<ButcheryBatchInventory> optItem =
+                                this.butcheryBatchInventoryRepository.findByItemIdAndButcheryBatchId(
+                                        butcheryReceiving.getButcheryBatch().getButcheryBatchId(),
+                                        item.getItemId());
+
+                        this.butcheryBatchInventoryRepository
+                                .updateQuantities(receivedQty.multiply(BigDecimal.valueOf(-1)),
+                                        receivedWeightKg.multiply(BigDecimal.valueOf(-1)),
+                                        optItem.get().getButcheryBatchInventoryId());
 
                         this.butcheryReceivingItemRepository.save(butcheryReceivingItem);
 

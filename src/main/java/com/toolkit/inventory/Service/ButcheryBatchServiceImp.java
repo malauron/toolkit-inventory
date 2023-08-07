@@ -309,8 +309,19 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
                     .getBatchDetailById(butcheryBatchDetail.getButcheryBatchDetailId());
 
             if (optDetailView.isPresent()) {
-                butcheryBatchDetail.setTotalDocumentedWeightKg(optDetailView.get().getTotalDocumentedWeightKg());
-                butcheryBatchDetail.setTotalReceivedWeightKg(optDetailView.get().getTotalReceivedWeightKg());
+                BigDecimal documentedWeightKg = new BigDecimal(0);
+                BigDecimal receivedWeightKg = new BigDecimal(0);
+
+                if (optDetailView.get().getTotalDocumentedWeightKg() != null) {
+                    documentedWeightKg.equals(optDetailView.get().getTotalDocumentedWeightKg());
+                }
+
+                if (optDetailView.get().getTotalReceivedWeightKg() != null) {
+                    receivedWeightKg.equals(optDetailView.get().getTotalReceivedWeightKg());
+                }
+
+                butcheryBatchDetail.setTotalDocumentedWeightKg(documentedWeightKg);
+                butcheryBatchDetail.setTotalReceivedWeightKg(receivedWeightKg);
             }
 
             butcheryBatchDetail = this.butcheryBatchDetailRepository.saveAndFlush(butcheryBatchDetail);

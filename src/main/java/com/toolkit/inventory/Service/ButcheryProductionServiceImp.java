@@ -211,6 +211,14 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                 if (butcheryProductionDto.getWarehouse() != null) {
                     butcheryProduction.setWarehouse(butcheryProductionDto.getWarehouse());
                 }
+
+                if (butcheryProductionDto.getButcheryBatch() != null) {
+                    Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository
+                            .findById(butcheryProductionDto.getButcheryBatch().getButcheryBatchId());
+                    if (optBatch.isPresent()) {
+                        butcheryProduction.setButcheryBatch(optBatch.get());
+                    }
+                }
             }
 
             this.butcheryProductionRepository.save(butcheryProduction);
@@ -294,7 +302,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                         BigDecimal totalQty =  producedQty.multiply(baseQty);
                         BigDecimal cost = productionCost.divide(baseQty);
 
-                        this.itemCostRepository.setQtyCost(totalQty, cost, item, warehouse);
+                        this.itemCostRepository.setQtyCost(totalQty, BigDecimal.ZERO, cost, item, warehouse);
 
                     });
 

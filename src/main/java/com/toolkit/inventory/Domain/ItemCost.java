@@ -29,6 +29,9 @@ public class ItemCost {
   @Column(name = "qty")
   private BigDecimal qty;
 
+  @Column(name = "weight_kg")
+  private BigDecimal weightKg;
+
   @Column(name = "cost")
   private BigDecimal cost;
 
