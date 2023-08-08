@@ -40,10 +40,4 @@ public interface ButcheryReceivingItemRepository extends JpaRepository<ButcheryR
             @RequestParam("warehouseId") Long warehouseId,
             @RequestParam("itemName") String itemName,
             Pageable pageable);
-
-    @Modifying
-    @Query(value = "UPDATE ButcheryReceivingItem b SET b.usedQty = b.usedQty + :usedQty, " +
-            "b.isAvailable = CASE WHEN (b.usedQty >= b.receivedQty) THEN FALSE ELSE b.isAvailable END " +
-            "WHERE b.butcheryReceivingItemId = :id")
-    void setUsedQty(BigDecimal usedQty, Long id);
 }

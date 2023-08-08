@@ -14,6 +14,5 @@ import java.util.Set;
 @Projection(name = "butcheryProductionSourceView", types = { ButcheryProductionSource.class })
 public interface ButcheryProductionSourceView {
     Long getButcheryProductionSourceId();
-    ButcheryReceivingItemView getButcheryReceivingItem();
     BigDecimal getRequiredQty();
 }

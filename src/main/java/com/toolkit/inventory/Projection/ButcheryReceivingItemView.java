@@ -17,7 +17,6 @@ public interface ButcheryReceivingItemView {
   BigDecimal getItemCost();
   BigDecimal getTotalAmount();
   BigDecimal getDocumentedQty();
-  BigDecimal getUsedQty();
   String getRemarks();
   Boolean getIsAvailable();
 }

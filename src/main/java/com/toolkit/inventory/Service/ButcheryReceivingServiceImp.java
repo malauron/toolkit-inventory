@@ -156,7 +156,6 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
             newButcheryReceivingItem.setDocumentedWeightKg(butcheryReceivingItem.getDocumentedWeightKg());
             newButcheryReceivingItem.setReceivedWeightKg(butcheryReceivingItem.getReceivedWeightKg());
             newButcheryReceivingItem.setItemCost(butcheryReceivingItem.getItemCost());
-            newButcheryReceivingItem.setUsedQty(BigDecimal.ZERO);
             newButcheryReceivingItem.setRemarks(butcheryReceivingItem.getRemarks());
             newButcheryReceivingItem.setIsAvailable(false);
             newButcheryReceivingItem.setTotalAmount(butcheryReceivingItem.getTotalAmount());
@@ -370,7 +369,6 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                 newReceivingItem.setReceivedQty(butcheryReceivingItem.getReceivedQty());
                 newReceivingItem.setDocumentedWeightKg(butcheryReceivingItem.getDocumentedWeightKg());
                 newReceivingItem.setReceivedWeightKg(butcheryReceivingItem.getReceivedWeightKg());
-                newReceivingItem.setUsedQty(BigDecimal.ZERO);
                 newReceivingItem.setRemarks(butcheryReceivingItem.getRemarks());
                 newReceivingItem.setIsAvailable(false);
                 newReceivingItem.setTotalAmount((butcheryReceivingItem.getTotalAmount()));

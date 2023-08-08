@@ -16,9 +16,9 @@ public interface ButcheryProductionService {
     ButcheryProductionDto putButcheryProductionItem(ButcheryProductionItem butcheryProductionItem);
     ButcheryProductionDto deleteButcheryProductionSource(ButcheryProductionSource butcheryProductionSource);
     ButcheryProductionDto putButcheryProductionSource(ButcheryProductionSource butcheryProductionSource);
-    ButcheryProductionDto findByButcheryReceivingId(Long butcheryReceivingId);
+//    ButcheryProductionDto findByButcheryReceivingId(Long butcheryReceivingId);
 
-    Set<ButcheryProductionSourceAggregatedView> unitTest(Long id);
+//    Set<ButcheryProductionSourceAggregatedView> unitTest(Long id);
     Set<ButcheryProductionItemAggregatedView> unitTest2(Long id);
     Set<ButcheryProductionAggregatedView> unitTest3();
 //    Set<ButcheryProductionSourceShortView> unitTest4();

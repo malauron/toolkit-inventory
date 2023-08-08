@@ -53,6 +53,9 @@ public class ButcheryProductionItem {
     @Column(name = "produced_qty")
     private BigDecimal producedQty;
 
+    @Column(name = "produced_weight_kg")
+    private BigDecimal producedWeightKg;
+
     @Column(name = "production_cost")
     private BigDecimal productionCost;
 

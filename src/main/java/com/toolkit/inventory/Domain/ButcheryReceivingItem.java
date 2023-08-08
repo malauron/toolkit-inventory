@@ -71,9 +71,6 @@ public class ButcheryReceivingItem {
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
-    @Column(name = "used_qty")
-    private BigDecimal usedQty;
-
     @Column(name = "remarks")
     private String remarks;
 

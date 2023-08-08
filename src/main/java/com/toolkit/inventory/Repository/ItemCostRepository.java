@@ -24,7 +24,7 @@ public interface ItemCostRepository extends JpaRepository<ItemCost, Long> {
 
     @Modifying
     @Query(value = "UPDATE ItemCost i SET i.qty = i.qty + :qty, " +
-                    "i.weightKg = i.weightKg + :weightKg, " +
+                    "i.weightKg = i.weightKg + :weightKg, i.version = i.version + 1, " +
                     "i.cost = CASE WHEN (i.cost > 0) THEN ((i.cost + :cost)/2) ELSE (:cost) END " +
                     "WHERE i.item = :item AND i.warehouse = :warehouse")
     void setQtyCost(BigDecimal qty,

@@ -92,11 +92,11 @@ public class ButcheryProductionController {
 
   }
 
-  @GetMapping("/unitTest")
-  public Set<ButcheryProductionSourceAggregatedView> unitTest(@RequestParam Long id) {
-
-    return this.butcheryProductionService.unitTest(id);
-  }
+//  @GetMapping("/unitTest")
+//  public Set<ButcheryProductionSourceAggregatedView> unitTest(@RequestParam Long id) {
+//
+//    return this.butcheryProductionService.unitTest(id);
+//  }
 
   @GetMapping("/unitTest2")
   public Set<ButcheryProductionItemAggregatedView> unitTest2(@RequestParam Long id) {
@@ -110,9 +110,9 @@ public class ButcheryProductionController {
     return this.butcheryProductionService.unitTest3();
   }
 
-  @GetMapping("/butcheryProductionSources")
-  public ButcheryProductionDto findByButcheryReceivingId(@RequestParam Long butcheryReceivingId) {
-
-    return this.butcheryProductionService.findByButcheryReceivingId(butcheryReceivingId);
-  }
+//  @GetMapping("/butcheryProductionSources")
+//  public ButcheryProductionDto findByButcheryReceivingId(@RequestParam Long butcheryReceivingId) {
+//
+//    return this.butcheryProductionService.findByButcheryReceivingId(butcheryReceivingId);
+//  }
 }
