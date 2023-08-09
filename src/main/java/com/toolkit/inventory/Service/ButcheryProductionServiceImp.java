@@ -117,7 +117,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
             Item item = null;
             Uom requiredUom = null;
-            ItemUom itemUom = null;
             ItemUomId itemUomId = new ItemUomId();
 
             Optional<Item> optItem = this.itemRepository.findById(butcheryProductionSource.getItem().getItemId());
@@ -133,15 +132,19 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
             itemUomId.setItemId(item.getItemId());
             itemUomId.setUomId(requiredUom.getUomId());
 
+            BigDecimal baseQty;
+
             Optional<ItemUom> optItemUom = this.itemUomRepository.findById(itemUomId);
             if (optItemUom.isPresent()) {
-                itemUom = optItemUom.get();
+                baseQty = optItemUom.get().getQuantity();
+            } else {
+                baseQty = BigDecimal.ONE;
             }
 
             ButcheryProductionSource newButcheryProductionSource = new ButcheryProductionSource();
             newButcheryProductionSource.setItem(item);
             newButcheryProductionSource.setBaseUom(item.getUom());
-            newButcheryProductionSource.setBaseQty(itemUom.getQuantity());
+            newButcheryProductionSource.setBaseQty(baseQty);
             newButcheryProductionSource.setRequiredUom(requiredUom);
             newButcheryProductionSource.setRequiredQty(butcheryProductionSource.getRequiredQty());
             newButcheryProductionSource.setRequiredWeightKg(butcheryProductionSource.getRequiredWeightKg());

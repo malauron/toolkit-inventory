@@ -1,9 +1,6 @@
 package com.toolkit.inventory.Projection;
 
-import com.toolkit.inventory.Domain.ButcheryProduction;
-import com.toolkit.inventory.Domain.ButcheryProductionSource;
-import com.toolkit.inventory.Domain.ButcheryReceivingItem;
-import com.toolkit.inventory.Domain.Warehouse;
+import com.toolkit.inventory.Domain.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -14,5 +11,8 @@ import java.util.Set;
 @Projection(name = "butcheryProductionSourceView", types = { ButcheryProductionSource.class })
 public interface ButcheryProductionSourceView {
     Long getButcheryProductionSourceId();
+    Item getItem();
+    Uom getRequiredUom();
     BigDecimal getRequiredQty();
+    BigDecimal getRequiredWeightKg();
 }
