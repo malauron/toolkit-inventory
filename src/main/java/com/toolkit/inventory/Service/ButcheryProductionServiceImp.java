@@ -302,8 +302,8 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                             ItemCost itemCost = optItemCost.get();
 
                             BigDecimal totalQty = butcheryProductionSource.getRequiredQty().multiply(new BigDecimal(-1));
-
-                            this.itemCostRepository.setQty(totalQty, itemCost.getItemCostId());
+                            BigDecimal requiredWeightKg = butcheryProductionSource.getRequiredWeightKg().multiply(new BigDecimal(-1));
+                            this.itemCostRepository.setQty(totalQty, requiredWeightKg, itemCost.getItemCostId());
 
                         }
 
@@ -321,11 +321,12 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                         Item item = butcheryProductionItem.getItem();
                         BigDecimal baseQty = butcheryProductionItem.getBaseQty();
                         BigDecimal producedQty = butcheryProductionItem.getProducedQty();
+                        BigDecimal producedWeightKg = butcheryProductionItem.getProducedWeightKg();
                         BigDecimal productionCost = butcheryProductionItem.getProductionCost();
                         BigDecimal totalQty =  producedQty.multiply(baseQty);
                         BigDecimal cost = productionCost.divide(baseQty);
 
-                        this.itemCostRepository.setQtyCost(totalQty, BigDecimal.ZERO, cost, item, warehouse);
+                        this.itemCostRepository.setQtyCost(totalQty, producedWeightKg, cost, item, warehouse);
 
                     });
 
@@ -384,20 +385,14 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                 }
 
                 ItemUomId itemUomId = new ItemUomId();
-
                 itemUomId.setItemId(item.getItemId());
                 itemUomId.setUomId(butcheryProductionItem.getRequiredUom().getUomId());
 
                 Optional<ItemUom> itemUom = this.itemUomRepository.findById(itemUomId);
-
                 if (itemUom.isPresent()) {
-
                     newProductionItem.setBaseQty(itemUom.get().getQuantity());
-
                 } else {
-
                     newProductionItem.setBaseQty(new BigDecimal(1));
-
                 }
 
                 newProductionItem.setItem(item);
@@ -406,6 +401,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                 newProductionItem.setItemClass(item.getItemClass());
                 newProductionItem.setRequiredUom(butcheryProductionItem.getRequiredUom());
                 newProductionItem.setProducedQty(butcheryProductionItem.getProducedQty());
+                newProductionItem.setProducedWeightKg(butcheryProductionItem.getProducedWeightKg());
                 newProductionItem.setProductionCost(butcheryProductionItem.getProductionCost());
                 newProductionItem.setTotalAmount((butcheryProductionItem.getTotalAmount()));
                 newProductionItem.setWarehouse(butcheryProduction.getWarehouse());
@@ -452,8 +448,12 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
                 this.butcheryProductionItemRepository.deleteById(productionItemId);
 
-                production.setTotalAmount(this.butcheryProductionRepository
-                        .getTotalAmount(production));
+                BigDecimal ttlAmt = this.butcheryProductionRepository.getTotalAmount(production);
+                if (ttlAmt == null) {
+                    production.setTotalAmount(BigDecimal.ZERO);
+                } else {
+                    production.setTotalAmount(ttlAmt);
+                }
             }
         }
 
@@ -524,7 +524,35 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
                 }
 
+                Item item = null;
+                Uom requiredUom = null;
+
+                Optional<Item> optItem = this.itemRepository.findById(butcheryProductionSource.getItem().getItemId());
+                if (optItem.isPresent()) {
+                    item = optItem.get();
+                }
+
+                Optional<Uom> optUom = this.uomRepository.findById(butcheryProductionSource.getRequiredUom().getUomId());
+                if (optUom.isPresent()) {
+                    requiredUom = optUom.get();
+                }
+
+                ItemUomId itemUomId = new ItemUomId();
+                itemUomId.setItemId(item.getItemId());
+                itemUomId.setUomId(requiredUom.getUomId());
+
+                Optional<ItemUom> optItemUom = this.itemUomRepository.findById(itemUomId);
+                if (optItemUom.isPresent()) {
+                    newProductionSource.setBaseQty(optItemUom.get().getQuantity());
+                } else {
+                    newProductionSource.setBaseQty(new BigDecimal(1));
+                }
+
+                newProductionSource.setItem(item);
+                newProductionSource.setBaseUom(item.getUom());
+                newProductionSource.setRequiredUom(requiredUom);
                 newProductionSource.setRequiredQty(butcheryProductionSource.getRequiredQty());
+                newProductionSource.setRequiredWeightKg(butcheryProductionSource.getRequiredWeightKg());
 
                 this.butcheryProductionSourceRepository.save(newProductionSource);
 

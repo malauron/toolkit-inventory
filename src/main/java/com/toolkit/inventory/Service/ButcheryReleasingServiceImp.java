@@ -254,7 +254,7 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                                                             .multiply(new BigDecimal(-1));
 
                             this.butcheryReleasingItemRepository.save(butcheryReleasingItem);
-                            this.itemCostRepository.setQty(ttlQty, itemCost.getItemCostId());
+                            this.itemCostRepository.setQty(ttlQty, BigDecimal.ZERO, itemCost.getItemCostId());
 
                         }
 

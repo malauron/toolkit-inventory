@@ -156,7 +156,7 @@ public class OrderServiceImp  implements OrderService {
                                       .multiply(new BigDecimal(-1));
 
               this.orderMenuIngredientRepository.save(orderMenuIngredient);
-              this.itemCostRepository.setQty(qty, itemCost.getItemCostId());
+              this.itemCostRepository.setQty(qty, BigDecimal.ZERO, itemCost.getItemCostId());
 
             }
 

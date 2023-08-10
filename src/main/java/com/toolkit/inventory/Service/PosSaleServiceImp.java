@@ -235,7 +235,7 @@ public class PosSaleServiceImp implements PosSaleService {
                                                             .multiply(new BigDecimal(-1));
 
                             this.posSaleItemRepository.save(posSaleItem);
-                            this.itemCostRepository.setQty(ttlQty, itemCost.getItemCostId());
+                            this.itemCostRepository.setQty(ttlQty, BigDecimal.ZERO, itemCost.getItemCostId());
 
                         }
 
