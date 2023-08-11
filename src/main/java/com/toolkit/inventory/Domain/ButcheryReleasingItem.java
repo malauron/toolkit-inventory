@@ -52,6 +52,9 @@ public class ButcheryReleasingItem {
     @Column(name = "released_qty")
     private BigDecimal releasedQty;
 
+    @Column(name = "released_weight_kg")
+    private BigDecimal releasedWeightKg;
+
     @Column(name = "item_price")
     private BigDecimal itemPrice;
 

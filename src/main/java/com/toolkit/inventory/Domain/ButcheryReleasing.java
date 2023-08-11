@@ -34,6 +34,10 @@ public class ButcheryReleasing {
     private Warehouse warehouse;
 
     @ManyToOne
+    @JoinColumn(name = "butchery_batch_id")
+    private ButcheryBatch butcheryBatch;
+
+    @ManyToOne
     @JoinColumn(name = "destination_warehouse_id")
     private Warehouse destinationWarehouse;
 
@@ -43,6 +47,9 @@ public class ButcheryReleasing {
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
+
+    @Column(name = "total_weight_kg")
+    private BigDecimal totalWeightKg;
 
     @Column(name = "releasing_status")
     private String releasingStatus;

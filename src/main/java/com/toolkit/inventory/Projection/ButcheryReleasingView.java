@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Projection;
 
+import com.toolkit.inventory.Domain.ButcheryBatch;
 import com.toolkit.inventory.Domain.ButcheryReleasing;
 import com.toolkit.inventory.Domain.Customer;
 import com.toolkit.inventory.Domain.Warehouse;
@@ -12,9 +13,11 @@ import java.util.Date;
 public interface ButcheryReleasingView {
     Long getButcheryReleasingId();
     Warehouse getWarehouse();
+    ButcheryBatchView getButcheryBatch();
     Warehouse getDestinationWarehouse();
     Customer getCustomer();
     BigDecimal getTotalAmount();
+    BigDecimal getTotalWeightKg();
     String getReleasingStatus();
     Date getDateCreated();
 }

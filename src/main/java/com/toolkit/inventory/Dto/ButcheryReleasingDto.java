@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Dto;
 
+import com.toolkit.inventory.Domain.ButcheryBatch;
 import com.toolkit.inventory.Domain.ButcheryReleasingItem;
 import com.toolkit.inventory.Domain.Customer;
 import com.toolkit.inventory.Domain.Warehouse;
@@ -15,11 +16,13 @@ import java.util.Set;
 public class ButcheryReleasingDto {
     private Long butcheryReleasingId;
     private Warehouse warehouse;
+    private ButcheryBatch butcheryBatch;
     private Warehouse destinationWarehouse;
     private Customer customer;
     private Set<ButcheryReleasingItem> butcheryReleasingItems;
     private ButcheryReleasingItem butcheryReleasingItem;
     private BigDecimal totalAmount;
+    private BigDecimal totalWeightKg;
     private String releasingStatus;
     private Date dateCreated;
     private String errorDescription;

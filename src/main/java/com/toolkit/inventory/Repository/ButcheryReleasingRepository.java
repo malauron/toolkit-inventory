@@ -26,6 +26,10 @@ public interface ButcheryReleasingRepository extends JpaRepository<ButcheryRelea
                    "WHERE b.butcheryReleasing = :butcheryReleasing")
     BigDecimal getTotalAmount(ButcheryReleasing butcheryReleasing);
 
+    @Query(value = "SELECT SUM(b.releasedWeightKg) AS totalWeightKg FROM ButcheryReleasingItem b " +
+            "WHERE b.butcheryReleasing = :butcheryReleasing")
+    BigDecimal getTotalWeightKg(ButcheryReleasing butcheryReleasing);
+
     @Query(value = "SELECT b FROM ButcheryReleasing b " +
                    "WHERE (CONCAT(b.butcheryReleasingId,'') LIKE %:butcheryReleasingId% " +
                    "OR b.destinationWarehouse.warehouseName LIKE %:destinationWhse% " +
