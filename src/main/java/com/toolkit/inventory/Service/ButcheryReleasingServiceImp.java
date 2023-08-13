@@ -266,20 +266,20 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
 
                         }
 
-                        Optional<ButcheryProductionItem> optProdItem = this.butcheryProductionItemRepository
-                                .findFirstByBarcodeAndItemAndWarehouseAndIsAvailableIsTrue(
-                                        butcheryReleasingItem.getBarcode(),
-                                        butcheryReleasingItem.getItem(),
-                                        butcheryReleasingItem.getButcheryReleasing().getWarehouse()
-                                );
-
-                        if (optProdItem.isPresent()) {
-                            optProdItem.get().setIsAvailable(false);
-                            this.butcheryProductionItemRepository.save(optProdItem.get());
-
-                            butcheryReleasingItem.setButcheryProductionItem(optProdItem.get());
-                            this.butcheryReleasingItemRepository.save(butcheryReleasingItem);
-                        }
+//                        Optional<ButcheryProductionItem> optProdItem = this.butcheryProductionItemRepository
+//                                .findFirstByBarcodeAndItemAndWarehouseAndIsAvailableIsTrue(
+//                                        butcheryReleasingItem.getBarcode(),
+//                                        butcheryReleasingItem.getItem(),
+//                                        butcheryReleasingItem.getButcheryReleasing().getWarehouse()
+//                                );
+//
+//                        if (optProdItem.isPresent()) {
+//                            optProdItem.get().setIsAvailable(false);
+//                            this.butcheryProductionItemRepository.save(optProdItem.get());
+//
+//                            butcheryReleasingItem.setButcheryProductionItem(optProdItem.get());
+//                            this.butcheryReleasingItemRepository.save(butcheryReleasingItem);
+//                        }
 
                     });
 

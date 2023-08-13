@@ -191,6 +191,7 @@ public class ItemServiceImp implements ItemService {
                 itemCost.setItem(newItem);
                 itemCost.setWarehouse(warehouse);
                 itemCost.setQty(BigDecimal.ZERO);
+                itemCost.setWeightKg(BigDecimal.ZERO);
                 itemCost.setCost(BigDecimal.ZERO);
 
                 this.itemCostRepository.save(itemCost);
