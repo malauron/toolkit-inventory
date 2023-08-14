@@ -3,6 +3,7 @@ package com.toolkit.inventory.Controller;
 import com.toolkit.inventory.Dto.ButcheryBatchDto;
 import com.toolkit.inventory.Service.ButcheryBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -22,6 +23,16 @@ public class ButcheryBatchController {
     public ButcheryBatchDto getButcheryBatch(@RequestParam Long butcheryBatchId) {
         return this.butcheryBatchService.getButcheryBatch(butcheryBatchId);
     }
+
+    @GetMapping("/butcheryBatches/inventorySummary")
+    public Page getButcheryBatchInventorySummary(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam Long vendorWarehouseId,
+            @RequestParam String itemName){
+
+        return this.butcheryBatchService.getButcheryBatchInventorySummary(page, size, vendorWarehouseId, itemName);
+    };
 
     @PostMapping("/butcheryBatches")
     public ButcheryBatchDto save(@RequestBody ButcheryBatchDto butcheryBatchDto) {

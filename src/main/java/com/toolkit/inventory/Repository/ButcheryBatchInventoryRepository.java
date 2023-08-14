@@ -2,6 +2,8 @@ package com.toolkit.inventory.Repository;
 
 import com.toolkit.inventory.Domain.ButcheryBatchInventory;
 import com.toolkit.inventory.Domain.Item;
+import com.toolkit.inventory.Projection.ButcheryBatchInventorySummary;
+import com.toolkit.inventory.Projection.ButcheryBatchInventoryView;
 import com.toolkit.inventory.Projection.ItemView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-@RepositoryRestResource
+@RepositoryRestResource(excerptProjection = ButcheryBatchInventoryView.class)
 public interface ButcheryBatchInventoryRepository extends JpaRepository<ButcheryBatchInventory, Long> {
 
     @Query(value = "SELECT i FROM ButcheryBatchInventory i " +
@@ -31,6 +33,26 @@ public interface ButcheryBatchInventoryRepository extends JpaRepository<Butchery
     Page<Item> findItemByButcheryBatchId(
             @RequestParam("butcheryBatchId") Long butcheryBatchId,
             @RequestParam("searchDesc") String searchDesc,
+            Pageable pageable);
+
+    @Query(value = "SELECT i FROM ButcheryBatchInventory i " +
+                   "WHERE i.butcheryBatch.vendorWarehouse.vendorWarehouseId = :vendorWarehouseId " +
+                   "ORDER BY i.item.itemName")
+    Page<ButcheryBatchInventory> findByVendorWarehouseIdAndItemName(
+            @RequestParam("vendorWarehouseId") Long vendorWarehouseId,
+            Pageable pageable);
+
+    @Query(value = "SELECT i.item AS item, SUM(i.receivedQty) AS receivedQty, " +
+            "SUM(i.receivedWeightKg) AS receivedWeightKg, SUM(i.remainingQty) AS remainingQty, " +
+            "SUM(i.remainingWeightKg) as remainingWeightKg " +
+            "FROM ButcheryBatchInventory i " +
+            "WHERE i.butcheryBatch.vendorWarehouse.vendorWarehouseId = :vendorWarehouseId " +
+            "AND i.item.itemName like %:itemName% " +
+            "GROUP BY i.item " +
+            "ORDER BY i.item.itemName")
+    Page<ButcheryBatchInventorySummary> getInventorySummaryByVendorWarehouse(
+            @RequestParam("vendorWarehouseId") Long vendorWarehouseId,
+            @RequestParam("itemName") String itemName,
             Pageable pageable);
 
     @Modifying

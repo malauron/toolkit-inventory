@@ -4,10 +4,14 @@ import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryBatchDto;
 import com.toolkit.inventory.Projection.ButcheryBatchDetailItemAggregatedView;
 import com.toolkit.inventory.Projection.ButcheryBatchDetailItemInventoryView;
+import com.toolkit.inventory.Projection.ButcheryBatchInventorySummary;
 import com.toolkit.inventory.Repository.*;
 import com.toolkit.inventory.Security.Domain.User;
 import com.toolkit.inventory.Security.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -63,6 +67,17 @@ public class ButcheryBatchServiceImp implements ButcheryBatchService{
         butcheryBatchDto.setButcheryBatch(optBatch.get());
 
         return butcheryBatchDto;
+    }
+
+    @Override
+    public Page getButcheryBatchInventorySummary(int page, int size, Long vendorWarehouseId, String itemName) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ButcheryBatchInventorySummary> butcheryBatchInventorySummaries =
+                this.butcheryBatchInventoryRepository.getInventorySummaryByVendorWarehouse(
+                        vendorWarehouseId,
+                        itemName,
+                        pageable);
+        return butcheryBatchInventorySummaries;
     }
 
     @Override
