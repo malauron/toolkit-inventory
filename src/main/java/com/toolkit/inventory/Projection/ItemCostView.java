@@ -12,6 +12,7 @@ public interface ItemCostView {
   ItemView getItem();
   Warehouse getWarehouse();
   BigDecimal getQty();
+  BigDecimal getWeightKg();
   BigDecimal getCost();
 
 }
