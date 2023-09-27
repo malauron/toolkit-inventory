@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.LockModeType;
@@ -43,17 +42,4 @@ public interface ButcheryReleasingRepository extends JpaRepository<ButcheryRelea
             @RequestParam("releasingStatus") Set<String> releasingStatus,
             Pageable pageable);
 
-
-//    @Query(value = "SELECT b FROM ButcheryReleasing b " +
-//            "WHERE (CONCAT(b.butcheryReleasingId,'') LIKE %:butcheryReleasingId% " +
-//            "OR b.customer.customerName LIKE %:customerName% " +
-//            "OR b.warehouse.warehouseName LIKE %:warehouseName%) " +
-//            "AND b.releasingStatus IN :releasingStatus " +
-//            "ORDER BY b.butcheryReleasingId DESC")
-//    Page<ButcheryReleasing> findByCustomParam(
-//            @RequestParam("butcheryReleasingId") String butcheryReleasingId,
-//            @RequestParam("warehouseName") String warehouseName,
-//            @RequestParam("customerName") String customerName,
-//            @RequestParam("releasingStatus") Set<String> releasingStatus,
-//            Pageable pageable);
 }

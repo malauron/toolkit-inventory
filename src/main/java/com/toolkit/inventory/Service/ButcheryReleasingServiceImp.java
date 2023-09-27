@@ -16,7 +16,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
 
     final ButcheryReleasingRepository butcheryReleasingRepository;
     final ButcheryReleasingItemRepository butcheryReleasingItemRepository;
-    final ButcheryBatchRepository butcheryBatchRepository;
     final ItemRepository itemRepository;
     final ItemUomRepository itemUomRepository;
     final ItemCostRepository itemCostRepository;
@@ -28,7 +27,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
     @Autowired
     public ButcheryReleasingServiceImp(ButcheryReleasingRepository butcheryReleasingRepository,
                                        ButcheryReleasingItemRepository butcheryReleasingItemRepository,
-                                       ButcheryBatchRepository butcheryBatchRepository,
                                        ItemRepository itemRepository, ItemUomRepository itemUomRepository,
                                        ItemCostRepository itemCostRepository,
                                        ItemGenericRepository itemGenericRepository,
@@ -37,7 +35,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                                        ButcheryProductionItemRepository butcheryProductionItemRepository) {
         this.butcheryReleasingRepository = butcheryReleasingRepository;
         this.butcheryReleasingItemRepository = butcheryReleasingItemRepository;
-        this.butcheryBatchRepository = butcheryBatchRepository;
         this.itemRepository = itemRepository;
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
@@ -60,7 +57,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
         if (optRel.isPresent()) {
             butcheryReleasingDto.setButcheryReleasingId(butcheryReleasingId);
             butcheryReleasingDto.setWarehouse(optRel.get().getWarehouse());
-            butcheryReleasingDto.setButcheryBatch(optRel.get().getButcheryBatch());
             butcheryReleasingDto.setDestinationWarehouse(optRel.get().getDestinationWarehouse());
             butcheryReleasingDto.setCustomer(optRel.get().getCustomer());
             butcheryReleasingDto.setTotalAmount(optRel.get().getTotalAmount());
@@ -88,11 +84,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
         newButcheryReleasing.setTotalAmount(butcheryReleasingDto.getTotalAmount());
         newButcheryReleasing.setTotalWeightKg(butcheryReleasingDto.getTotalWeightKg());
         newButcheryReleasing.setReleasingStatus("Unposted");
-
-        Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryReleasingDto.getButcheryBatch().getButcheryBatchId());
-        if (optBatch.isPresent()) {
-            newButcheryReleasing.setButcheryBatch(optBatch.get());
-        }
 
         Optional<Warehouse> optWhse = this.warehouseRepository.findById(butcheryReleasingDto.getWarehouse().getWarehouseId());
         if (optWhse.isPresent()) {
@@ -186,11 +177,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                     butcheryReleasing.setWarehouse(optWhse.get());
                 }
 
-                if (butcheryReleasingDto.getButcheryBatch() != null) {
-                    Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryReleasingDto.getButcheryBatch().getButcheryBatchId());
-                    butcheryReleasing.setButcheryBatch(optBatch.get());
-                }
-
                 if (butcheryReleasingDto.getDestinationWarehouse() != null) {
                     Optional<Warehouse> optDestWhse = this.warehouseRepository.findById(butcheryReleasingDto.getDestinationWarehouse().getWarehouseId());
                     butcheryReleasing.setDestinationWarehouse(optDestWhse.get());
@@ -265,21 +251,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                             this.itemCostRepository.setQty(ttlQty, releasedWeightKg, itemCost.getItemCostId());
 
                         }
-
-//                        Optional<ButcheryProductionItem> optProdItem = this.butcheryProductionItemRepository
-//                                .findFirstByBarcodeAndItemAndWarehouseAndIsAvailableIsTrue(
-//                                        butcheryReleasingItem.getBarcode(),
-//                                        butcheryReleasingItem.getItem(),
-//                                        butcheryReleasingItem.getButcheryReleasing().getWarehouse()
-//                                );
-//
-//                        if (optProdItem.isPresent()) {
-//                            optProdItem.get().setIsAvailable(false);
-//                            this.butcheryProductionItemRepository.save(optProdItem.get());
-//
-//                            butcheryReleasingItem.setButcheryProductionItem(optProdItem.get());
-//                            this.butcheryReleasingItemRepository.save(butcheryReleasingItem);
-//                        }
 
                     });
 

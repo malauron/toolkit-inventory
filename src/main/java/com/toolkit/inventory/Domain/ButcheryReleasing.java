@@ -34,10 +34,6 @@ public class ButcheryReleasing {
     private Warehouse warehouse;
 
     @ManyToOne
-    @JoinColumn(name = "butchery_batch_id")
-    private ButcheryBatch butcheryBatch;
-
-    @ManyToOne
     @JoinColumn(name = "destination_warehouse_id")
     private Warehouse destinationWarehouse;
 
