@@ -18,7 +18,6 @@ import java.util.Set;
 @RepositoryRestResource
 public interface ItemCostRepository extends JpaRepository<ItemCost, Long> {
 
-
     @Modifying
     @Query(value = "UPDATE ItemCost i SET i.qty = i.qty + :qty, " +
                     "i.weightKg = i.weightKg + :weightKg, i.version = i.version + 1, " +
@@ -42,6 +41,7 @@ public interface ItemCostRepository extends JpaRepository<ItemCost, Long> {
     Set<ItemCost> findByWarehouseId(Long warehouseId);
 
     @Query(value = "SELECT i FROM ItemCost i WHERE i.warehouse.warehouseId = :warehouseId " +
+                   "AND i.item.itemCode LIKE %:itemName% " +
                    "AND i.item.itemName LIKE %:itemName% " +
                    "AND i.version > 0 " +
                    "ORDER BY i.item.itemName")
@@ -49,6 +49,5 @@ public interface ItemCostRepository extends JpaRepository<ItemCost, Long> {
             @RequestParam("warehouseId") Long warehouseId,
             @RequestParam("itemName") String itemName,
             Pageable pageable);
-
 
 }
