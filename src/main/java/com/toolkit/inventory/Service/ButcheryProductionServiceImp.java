@@ -20,7 +20,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
     final ButcheryProductionSourceRepository butcheryProductionSourceRepository;
     final ButcheryReceivingRepository butcheryReceivingRepository;
     final ButcheryReceivingItemRepository butcheryReceivingItemRepository;
-    final ButcheryBatchRepository butcheryBatchRepository;
     final ItemRepository itemRepository;
     final UomRepository uomRepository;
     final ItemUomRepository itemUomRepository;
@@ -33,7 +32,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                                         ButcheryProductionSourceRepository butcheryProductionSourceRepository,
                                         ButcheryReceivingRepository butcheryReceivingRepository,
                                         ButcheryReceivingItemRepository butcheryReceivingItemRepository,
-                                        ButcheryBatchRepository butcheryBatchRepository,
                                         ItemRepository itemRepository,
                                         UomRepository uomRepository,
                                         ItemUomRepository itemUomRepository,
@@ -44,7 +42,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         this.butcheryProductionSourceRepository = butcheryProductionSourceRepository;
         this.butcheryReceivingRepository = butcheryReceivingRepository;
         this.butcheryReceivingItemRepository = butcheryReceivingItemRepository;
-        this.butcheryBatchRepository = butcheryBatchRepository;
         this.itemRepository = itemRepository;
         this.uomRepository = uomRepository;
         this.itemUomRepository = itemUomRepository;
@@ -64,7 +61,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         if (optProd.isPresent()) {
             butcheryProductionDto.setButcheryProductionId(butcheryProductionId);
             butcheryProductionDto.setWarehouse(optProd.get().getWarehouse());
-            butcheryProductionDto.setButcheryBatch(optProd.get().getButcheryBatch());
             butcheryProductionDto.setTotalAmount(optProd.get().getTotalAmount());
             butcheryProductionDto.setProductionStatus(optProd.get().getProductionStatus());
             butcheryProductionDto.setDateCreated(optProd.get().getDateCreated());
@@ -74,12 +70,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                             .findByButcheryProductionOrderByButcheryReceivingItemIdView(optProd.get());
 
             butcheryProductionDto.setButcheryProductionSourceViews(butcheryProductionSources);
-
-//            Set<ButcheryProductionSource> butcheryProductionSources =
-//                    this.butcheryProductionSourceRepository
-//                            .findByButcheryProductionOrderByButcheryReceivingItemId(optProd.get());
-//
-//            butcheryProductionDto.setButcheryProductionSources(butcheryProductionSources);
 
             Set<ButcheryProductionItem> butcheryProductionItems =
                     this.butcheryProductionItemRepository
@@ -105,12 +95,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         if (optWhse.isPresent()) {
             newButcheryProduction.setWarehouse(optWhse.get());
-        }
-
-        Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryProductionDto.getButcheryBatch().getButcheryBatchId());
-
-        if (optBatch.isPresent()) {
-            newButcheryProduction.setButcheryBatch(optBatch.get());
         }
 
         butcheryProductionDto.getButcheryProductionSources().forEach(butcheryProductionSource -> {
@@ -238,14 +222,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
             if (butcheryProduction.getProductionStatus().equals("Unposted")) {
                 if (butcheryProductionDto.getWarehouse() != null) {
                     butcheryProduction.setWarehouse(butcheryProductionDto.getWarehouse());
-                }
-
-                if (butcheryProductionDto.getButcheryBatch() != null) {
-                    Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository
-                            .findById(butcheryProductionDto.getButcheryBatch().getButcheryBatchId());
-                    if (optBatch.isPresent()) {
-                        butcheryProduction.setButcheryBatch(optBatch.get());
-                    }
                 }
             }
 
