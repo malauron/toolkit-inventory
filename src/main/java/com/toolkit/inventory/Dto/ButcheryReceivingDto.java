@@ -1,6 +1,5 @@
 package com.toolkit.inventory.Dto;
 
-import com.toolkit.inventory.Domain.ButcheryBatch;
 import com.toolkit.inventory.Domain.ButcheryReceivingItem;
 import com.toolkit.inventory.Domain.Vendor;
 import com.toolkit.inventory.Domain.Warehouse;
@@ -15,7 +14,6 @@ import java.util.Set;
 @Setter
 public class ButcheryReceivingDto {
     private Long butcheryReceivingId;
-    private ButcheryBatch butcheryBatch;
     private Warehouse warehouse;
     private Vendor vendor;
     private String referenceCode;

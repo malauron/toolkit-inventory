@@ -57,7 +57,6 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
         if (optRecv.isPresent()) {
             butcheryReceivingDto.setButcheryReceivingId(butcheryReceivingId);
-            butcheryReceivingDto.setButcheryBatch(optRecv.get().getButcheryBatch());
             butcheryReceivingDto.setWarehouse(optRecv.get().getWarehouse());
             butcheryReceivingDto.setVendor(optRecv.get().getVendor());
             butcheryReceivingDto.setReferenceCode(optRecv.get().getReferenceCode());
@@ -102,12 +101,6 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
         if (optWhse.isPresent()) {
             newButcheryReceiving.setWarehouse(optWhse.get());
-        }
-
-        Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository.findById(butcheryReceivingDto.getButcheryBatch().getButcheryBatchId());
-
-        if (optBatch.isPresent()) {
-            newButcheryReceiving.setButcheryBatch(optBatch.get());
         }
 
         Optional<Vendor> optVend = this.vendorRepository.findById(butcheryReceivingDto.getVendor().getVendorId());
@@ -193,12 +186,6 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                     butcheryReceiving.setWarehouse(butcheryReceivingDto.getWarehouse());
                 }
 
-                if (butcheryReceivingDto.getButcheryBatch() != null) {
-                    Optional<ButcheryBatch> optBatch = this.butcheryBatchRepository
-                            .findById(butcheryReceivingDto.getButcheryBatch().getButcheryBatchId());
-                    butcheryReceiving.setButcheryBatch(optBatch.get());
-                }
-
                 if (butcheryReceivingDto.getVendor() != null) {
                     Optional<Vendor> optVendor = this.vendorRepository
                             .findById(butcheryReceivingDto.getVendor().getVendorId());
@@ -266,9 +253,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                         this.itemCostRepository.setQtyCost(ttQty, receivedWeightKg, cost, item, warehouse);
 
                         Optional<ButcheryBatchInventory> optItem =
-                                this.butcheryBatchInventoryRepository.findByItemIdAndButcheryBatchId(
-                                        butcheryReceiving.getButcheryBatch().getButcheryBatchId(),
-                                        item.getItemId());
+                                this.butcheryBatchInventoryRepository.findByItemId(item.getItemId());
 
                         this.butcheryBatchInventoryRepository
                                 .updateQuantities(receivedQty.multiply(BigDecimal.valueOf(-1)),
@@ -311,16 +296,12 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
             receivingDto.setReceivingStatus(butcheryReceiving.getReceivingStatus());
 
-//            ButcheryReceivingItem newReceivingItem = new ButcheryReceivingItem();
             ButcheryReceivingItem newReceivingItem;
 
 
             if (butcheryReceiving.getReceivingStatus().equals("Unposted")) {
 
                 if (butcheryReceivingItem.getButcheryReceivingItemId() != null) {
-
-//                    newReceivingItem.setButcheryReceivingItemId(
-//                            butcheryReceivingItem.getButcheryReceivingItemId());
 
                         newReceivingItem = this.butcheryReceivingItemRepository.findById(
                                 butcheryReceivingItem.getButcheryReceivingItemId()
