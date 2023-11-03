@@ -252,15 +252,27 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
                         this.itemCostRepository.setQtyCost(ttQty, receivedWeightKg, cost, item, warehouse);
 
-                        Optional<ButcheryBatchInventory> optItem =
+                        this.butcheryReceivingItemRepository.save(butcheryReceivingItem);
+
+                        Set<ButcheryBatchInventory> optItems =
                                 this.butcheryBatchInventoryRepository.findByItemId(item.getItemId());
 
-                        this.butcheryBatchInventoryRepository
-                                .updateQuantities(receivedQty.multiply(BigDecimal.valueOf(-1)),
-                                        receivedWeightKg.multiply(BigDecimal.valueOf(-1)),
-                                        optItem.get().getButcheryBatchInventoryId());
+                        // Used a for loop instead of for-each loop since the latter requires final variables
+                        for (ButcheryBatchInventory butcheryBatchInventory : optItems) {
+                            BigDecimal remainingWtKg = butcheryBatchInventory.getRemainingWeightKg();
 
-                        this.butcheryReceivingItemRepository.save(butcheryReceivingItem);
+                            if (remainingWtKg.compareTo(BigDecimal.ZERO) > 0) { //Remaining inventory must not be zero
+                                if (remainingWtKg.compareTo(receivedWeightKg) > 0) { // remaining qty is greater than the received qty
+                                    butcheryBatchInventory.setRemainingWeightKg(remainingWtKg.subtract(receivedWeightKg));
+                                    receivedWeightKg = BigDecimal.ZERO;
+                                } else { // remaining qty is less than the received qty
+                                    butcheryBatchInventory.setRemainingWeightKg(BigDecimal.ZERO);
+                                    receivedWeightKg = receivedWeightKg.subtract(remainingWtKg);
+                                }
+                            }
+                            this.butcheryBatchInventoryRepository.save(butcheryBatchInventory);
+
+                        }
 
                     });
 
