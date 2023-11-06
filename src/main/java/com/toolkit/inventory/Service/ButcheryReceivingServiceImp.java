@@ -259,18 +259,46 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
 
                         // Used a for loop instead of for-each loop since the latter requires final variables
                         for (ButcheryBatchInventory butcheryBatchInventory : optItems) {
-                            BigDecimal remainingWtKg = butcheryBatchInventory.getRemainingWeightKg();
 
-                            if (remainingWtKg.compareTo(BigDecimal.ZERO) > 0) { //Remaining inventory must not be zero
-                                if (remainingWtKg.compareTo(receivedWeightKg) > 0) { // remaining qty is greater than the received qty
-                                    butcheryBatchInventory.setRemainingWeightKg(remainingWtKg.subtract(receivedWeightKg));
-                                    receivedWeightKg = BigDecimal.ZERO;
-                                } else { // remaining qty is less than the received qty
-                                    butcheryBatchInventory.setRemainingWeightKg(BigDecimal.ZERO);
-                                    receivedWeightKg = receivedWeightKg.subtract(remainingWtKg);
+                            // Updates inventory if received weight or qty is greater than zero
+                            if (receivedWeightKg.compareTo(BigDecimal.ZERO) >0 && receivedQty.compareTo(BigDecimal.ZERO) > 0) {
+
+                                BigDecimal remainingWeightKg = butcheryBatchInventory.getRemainingWeightKg();
+                                BigDecimal remainingQty = butcheryBatchInventory.getRemainingQty();
+
+                                // Updates Kg inventory
+                                if (remainingWeightKg.compareTo(BigDecimal.ZERO) > 0 &&
+                                        receivedWeightKg.compareTo(BigDecimal.ZERO) > 0) { // Remaining Kg inventory must not be zero
+
+                                    if (remainingWeightKg.compareTo(receivedWeightKg) > 0) { // Remaining Kg is greater than the received Kg
+                                        butcheryBatchInventory.setRemainingWeightKg(remainingWeightKg.subtract(receivedWeightKg));
+                                        receivedWeightKg = BigDecimal.ZERO;
+                                    } else { // Remaining Kg is less than the received Kg
+                                        butcheryBatchInventory.setRemainingWeightKg(BigDecimal.ZERO);
+                                        receivedWeightKg = receivedWeightKg.subtract(remainingWeightKg);
+                                    }
+
                                 }
+
+                                // Updates Qty inventory
+                                if (remainingQty.compareTo(BigDecimal.ZERO) > 0 &&
+                                        receivedQty.compareTo(BigDecimal.ZERO) > 0) { // Remaining Qty inventory must not be zero
+
+                                    if (remainingQty.compareTo(receivedQty) > 0) { // Remaining qty is greater than the received qty
+                                        butcheryBatchInventory.setRemainingQty(remainingQty.subtract(receivedQty));
+                                        receivedQty = BigDecimal.ZERO;
+                                    } else { // Remaining qty is less than the received qty
+                                        butcheryBatchInventory.setRemainingQty(BigDecimal.ZERO);
+                                        receivedQty = remainingQty.subtract(receivedQty);
+                                    }
+
+                                }
+
+                                this.butcheryBatchInventoryRepository.save(butcheryBatchInventory);
+
+                            } else {
+                                break;
                             }
-                            this.butcheryBatchInventoryRepository.save(butcheryBatchInventory);
 
                         }
 
