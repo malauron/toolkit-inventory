@@ -23,7 +23,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
     final ItemUomRepository itemUomRepository;
     final ItemCostRepository itemCostRepository;
     final WarehouseRepository warehouseRepository;
-    final VendorRepository vendorRepository;
+    final VendorWarehouseRepository vendorWarehouseRepository;
 
     @Autowired
     public ButcheryReceivingServiceImp(ButcheryReceivingRepository butcheryReceivingRepository,
@@ -33,7 +33,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                                        ItemRepository itemRepository, ItemUomRepository itemUomRepository,
                                        ItemCostRepository itemCostRepository,
                                        WarehouseRepository warehouseRepository,
-                                       VendorRepository vendorRepository) {
+                                       VendorWarehouseRepository vendorWarehouseRepository) {
         this.butcheryReceivingRepository = butcheryReceivingRepository;
         this.butcheryReceivingItemRepository = butcheryReceivingItemRepository;
         this.butcheryBatchRepository = butcheryBatchRepository;
@@ -42,7 +42,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
         this.itemUomRepository = itemUomRepository;
         this.itemCostRepository = itemCostRepository;
         this.warehouseRepository = warehouseRepository;
-        this.vendorRepository = vendorRepository;
+        this.vendorWarehouseRepository = vendorWarehouseRepository;
 
     }
 
@@ -58,7 +58,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
         if (optRecv.isPresent()) {
             butcheryReceivingDto.setButcheryReceivingId(butcheryReceivingId);
             butcheryReceivingDto.setWarehouse(optRecv.get().getWarehouse());
-            butcheryReceivingDto.setVendor(optRecv.get().getVendor());
+            butcheryReceivingDto.setVendorWarehouse(optRecv.get().getVendorWarehouse());
             butcheryReceivingDto.setReferenceCode(optRecv.get().getReferenceCode());
             butcheryReceivingDto.setTotalAmount(optRecv.get().getTotalAmount());
             butcheryReceivingDto.setReceivingStatus(optRecv.get().getReceivingStatus());
@@ -103,10 +103,10 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
             newButcheryReceiving.setWarehouse(optWhse.get());
         }
 
-        Optional<Vendor> optVend = this.vendorRepository.findById(butcheryReceivingDto.getVendor().getVendorId());
+        Optional<VendorWarehouse> optVendWhse = this.vendorWarehouseRepository.findById(butcheryReceivingDto.getVendorWarehouse().getVendorWarehouseId());
 
-        if (optVend.isPresent()) {
-            newButcheryReceiving.setVendor(optVend.get());
+        if (optVendWhse.isPresent()) {
+            newButcheryReceiving.setVendorWarehouse(optVendWhse.get());
         }
 
         butcheryReceivingDto.getButcheryReceivingItems().forEach(butcheryReceivingItem -> {
@@ -186,10 +186,10 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                     butcheryReceiving.setWarehouse(butcheryReceivingDto.getWarehouse());
                 }
 
-                if (butcheryReceivingDto.getVendor() != null) {
-                    Optional<Vendor> optVendor = this.vendorRepository
-                            .findById(butcheryReceivingDto.getVendor().getVendorId());
-                    butcheryReceiving.setVendor(optVendor.get());
+                if (butcheryReceivingDto.getVendorWarehouse() != null) {
+                    Optional<VendorWarehouse> optVendorWhse = this.vendorWarehouseRepository
+                            .findById(butcheryReceivingDto.getVendorWarehouse().getVendorWarehouseId());
+                    butcheryReceiving.setVendorWarehouse(optVendorWhse.get());
                 }
 
                 if (butcheryReceivingDto.getReferenceCode() != null) {

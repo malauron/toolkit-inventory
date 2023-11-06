@@ -34,8 +34,8 @@ public class ButcheryReceiving {
     private Warehouse warehouse;
 
     @ManyToOne
-    @JoinColumn(name = "vendor_id")
-    private Vendor vendor;
+    @JoinColumn(name = "vendor_warehouse_id")
+    private VendorWarehouse vendorWarehouse;
 
     @Column(name = "reference_code")
     private String referenceCode;

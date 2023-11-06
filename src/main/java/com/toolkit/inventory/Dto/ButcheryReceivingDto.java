@@ -2,6 +2,7 @@ package com.toolkit.inventory.Dto;
 
 import com.toolkit.inventory.Domain.ButcheryReceivingItem;
 import com.toolkit.inventory.Domain.Vendor;
+import com.toolkit.inventory.Domain.VendorWarehouse;
 import com.toolkit.inventory.Domain.Warehouse;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import java.util.Set;
 public class ButcheryReceivingDto {
     private Long butcheryReceivingId;
     private Warehouse warehouse;
-    private Vendor vendor;
+    private VendorWarehouse vendorWarehouse;
     private String referenceCode;
     private Set<ButcheryReceivingItem> butcheryReceivingItems;
     private ButcheryReceivingItem butcheryReceivingItem;

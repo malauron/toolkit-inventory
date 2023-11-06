@@ -28,7 +28,7 @@ public interface ButcheryReceivingRepository extends JpaRepository<ButcheryRecei
 
     @Query(value = "SELECT b FROM ButcheryReceiving b " +
                    "WHERE (CONCAT(b.butcheryReceivingId,'') LIKE %:butcheryReceivingId% " +
-                   "OR b.vendor.vendorName LIKE %:vendorName%) " +
+                   "OR b.vendorWarehouse.vendorWarehouseName LIKE %:vendorName%) " +
                    "AND b.receivingStatus IN :receivingStatus " +
                    "AND b.warehouse.warehouseId = :warehouseId " +
                    "ORDER BY b.butcheryReceivingId DESC")

@@ -1,9 +1,6 @@
 package com.toolkit.inventory.Projection;
 
-import com.toolkit.inventory.Domain.ButcheryBatch;
-import com.toolkit.inventory.Domain.ButcheryReceiving;
-import com.toolkit.inventory.Domain.Vendor;
-import com.toolkit.inventory.Domain.Warehouse;
+import com.toolkit.inventory.Domain.*;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.math.BigDecimal;
@@ -13,7 +10,7 @@ import java.util.Date;
 public interface ButcheryReceivingView {
     Long getButcheryReceivingId();
     Warehouse getWarehouse();
-    Vendor getVendor();
+    VendorWarehouse getVendorWarehouse();
     String getReferenceCode();
     BigDecimal getTotalAmount();
     String getReceivingStatus();
