@@ -32,7 +32,8 @@ public interface ButcheryBatchInventoryRepository extends JpaRepository<Butchery
     @Query(value = "SELECT i FROM ButcheryBatchInventory i " +
             "WHERE i.item.itemId = :itemId " +
             "AND i.butcheryBatch.vendorWarehouse.vendorWarehouseId  = :vendorWarehouseId  " +
-            "AND i.remainingWeightKg > 0 " +
+            "AND (i.remainingWeightKg > 0 " +
+            "OR i.remainingQty > 0) " +
             "ORDER BY i.butcheryBatchInventoryId")
     Set<ButcheryBatchInventory> findByItemId(
             @RequestParam("itemId") Long itemId,
