@@ -255,13 +255,14 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                         this.butcheryReceivingItemRepository.save(butcheryReceivingItem);
 
                         Set<ButcheryBatchInventory> optItems =
-                                this.butcheryBatchInventoryRepository.findByItemId(item.getItemId());
+                                this.butcheryBatchInventoryRepository.findByItemId(item.getItemId(),
+                                        butcheryReceiving.getVendorWarehouse().getVendorWarehouseId());
 
                         // Used a for loop instead of for-each loop since the latter requires final variables
                         for (ButcheryBatchInventory butcheryBatchInventory : optItems) {
 
                             // Updates inventory if received weight or qty is greater than zero
-                            if (receivedWeightKg.compareTo(BigDecimal.ZERO) >0 && receivedQty.compareTo(BigDecimal.ZERO) > 0) {
+                            if (receivedWeightKg.compareTo(BigDecimal.ZERO) >0 || receivedQty.compareTo(BigDecimal.ZERO) > 0) {
 
                                 BigDecimal remainingWeightKg = butcheryBatchInventory.getRemainingWeightKg();
                                 BigDecimal remainingQty = butcheryBatchInventory.getRemainingQty();
@@ -289,7 +290,7 @@ public class ButcheryReceivingServiceImp implements ButcheryReceivingService {
                                         receivedQty = BigDecimal.ZERO;
                                     } else { // Remaining qty is less than the received qty
                                         butcheryBatchInventory.setRemainingQty(BigDecimal.ZERO);
-                                        receivedQty = remainingQty.subtract(receivedQty);
+                                        receivedQty = receivedQty.subtract(remainingQty);
                                     }
 
                                 }

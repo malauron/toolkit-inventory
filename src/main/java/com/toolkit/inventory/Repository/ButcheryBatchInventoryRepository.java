@@ -31,10 +31,12 @@ public interface ButcheryBatchInventoryRepository extends JpaRepository<Butchery
     @Lock(LockModeType.OPTIMISTIC)
     @Query(value = "SELECT i FROM ButcheryBatchInventory i " +
             "WHERE i.item.itemId = :itemId " +
+            "AND i.butcheryBatch.vendorWarehouse.vendorWarehouseId  = :vendorWarehouseId  " +
             "AND i.remainingWeightKg > 0 " +
             "ORDER BY i.butcheryBatchInventoryId")
     Set<ButcheryBatchInventory> findByItemId(
-            @RequestParam("itemId") Long itemId);
+            @RequestParam("itemId") Long itemId,
+            @RequestParam("vendorWarehouseId") Long vendorWarehouseId);
 
     @Query(value = "SELECT i.item FROM ButcheryBatchInventory i " +
                    "WHERE i.butcheryBatch.butcheryBatchId = :butcheryBatchId " +
