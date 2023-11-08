@@ -56,12 +56,6 @@ public class ButcheryProductionItem {
     @Column(name = "produced_weight_kg")
     private BigDecimal producedWeightKg;
 
-    @Column(name = "production_cost")
-    private BigDecimal productionCost;
-
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
-
     @Column(name = "is_available")
     private Boolean isAvailable;
 

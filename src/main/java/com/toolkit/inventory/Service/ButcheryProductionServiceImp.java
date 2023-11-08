@@ -61,7 +61,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         if (optProd.isPresent()) {
             butcheryProductionDto.setButcheryProductionId(butcheryProductionId);
             butcheryProductionDto.setWarehouse(optProd.get().getWarehouse());
-            butcheryProductionDto.setTotalAmount(optProd.get().getTotalAmount());
+            butcheryProductionDto.setTotalProducedWeightKg(optProd.get().getTotalProducedWeightKg());
             butcheryProductionDto.setProductionStatus(optProd.get().getProductionStatus());
             butcheryProductionDto.setDateCreated(optProd.get().getDateCreated());
 
@@ -88,7 +88,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         ButcheryProduction newButcheryProduction = new ButcheryProduction();
 
-        newButcheryProduction.setTotalAmount(butcheryProductionDto.getTotalAmount());
+        newButcheryProduction.setTotalProducedWeightKg(butcheryProductionDto.getTotalProducedWeightKg());
         newButcheryProduction.setProductionStatus("Unposted");
 
         Optional<Warehouse> optWhse = this.warehouseRepository.findById(butcheryProductionDto.getWarehouse().getWarehouseId());
@@ -173,8 +173,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
             newButcheryProductionItem.setRequiredUom(butcheryProductionItem.getRequiredUom());
             newButcheryProductionItem.setProducedQty(butcheryProductionItem.getProducedQty());
             newButcheryProductionItem.setProducedWeightKg(butcheryProductionItem.getProducedWeightKg());
-            newButcheryProductionItem.setProductionCost(butcheryProductionItem.getProductionCost());
-            newButcheryProductionItem.setTotalAmount(butcheryProductionItem.getTotalAmount());
             newButcheryProductionItem.setWarehouse(newButcheryProduction.getWarehouse());
             newButcheryProductionItem.setIsAvailable(false);
 
@@ -188,7 +186,7 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
         newButcheryProductionDto.setButcheryProductionId(newButcheryProduction.getButcheryProductionId());
         newButcheryProductionDto.setProductionStatus(newButcheryProduction.getProductionStatus());
-        newButcheryProductionDto.setTotalAmount(newButcheryProduction.getTotalAmount());
+        newButcheryProductionDto.setTotalProducedWeightKg(newButcheryProduction.getTotalProducedWeightKg());
         newButcheryProductionDto.setDateCreated(newButcheryProduction.getDateCreated());
         newButcheryProductionDto.setButcheryProductionItems(newButcheryProduction.getButcheryProductionItems());
         newButcheryProductionDto.setButcheryProductionSourceViews(
@@ -298,11 +296,9 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                         BigDecimal baseQty = butcheryProductionItem.getBaseQty();
                         BigDecimal producedQty = butcheryProductionItem.getProducedQty();
                         BigDecimal producedWeightKg = butcheryProductionItem.getProducedWeightKg();
-                        BigDecimal productionCost = butcheryProductionItem.getProductionCost();
                         BigDecimal totalQty =  producedQty.multiply(baseQty);
-                        BigDecimal cost = productionCost.divide(baseQty);
 
-                        this.itemCostRepository.setQtyCost(totalQty, producedWeightKg, cost, item, warehouse);
+                        this.itemCostRepository.setQtyCost(totalQty, producedWeightKg, BigDecimal.ZERO, item, warehouse);
 
                     });
 
@@ -378,14 +374,12 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
                 newProductionItem.setRequiredUom(butcheryProductionItem.getRequiredUom());
                 newProductionItem.setProducedQty(butcheryProductionItem.getProducedQty());
                 newProductionItem.setProducedWeightKg(butcheryProductionItem.getProducedWeightKg());
-                newProductionItem.setProductionCost(butcheryProductionItem.getProductionCost());
-                newProductionItem.setTotalAmount((butcheryProductionItem.getTotalAmount()));
                 newProductionItem.setWarehouse(butcheryProduction.getWarehouse());
                 newProductionItem.setIsAvailable(false);
 
                 this.butcheryProductionItemRepository.save(newProductionItem);
 
-                butcheryProduction.setTotalAmount(this.butcheryProductionRepository.getTotalAmount(butcheryProduction));
+                butcheryProduction.setTotalProducedWeightKg(this.butcheryProductionRepository.getTotalProducedWeightKg(butcheryProduction));
 
                 this.butcheryProductionRepository.save(butcheryProduction);
 
@@ -424,11 +418,11 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
 
                 this.butcheryProductionItemRepository.deleteById(productionItemId);
 
-                BigDecimal ttlAmt = this.butcheryProductionRepository.getTotalAmount(production);
+                BigDecimal ttlAmt = this.butcheryProductionRepository.getTotalProducedWeightKg(production);
                 if (ttlAmt == null) {
-                    production.setTotalAmount(BigDecimal.ZERO);
+                    production.setTotalProducedWeightKg(BigDecimal.ZERO);
                 } else {
-                    production.setTotalAmount(ttlAmt);
+                    production.setTotalProducedWeightKg(ttlAmt);
                 }
             }
         }
@@ -545,14 +539,6 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         return productionDto;
     }
 
-//    @Override
-//    public Set<ButcheryProductionSourceAggregatedView> unitTest(Long id) {
-//
-//        Optional<ButcheryProduction> opt = this.butcheryProductionRepository.findById(id);
-//
-//        return this.butcheryProductionSourceRepository.searchByButcheryProduction(opt.get());
-//    }
-
     @Override
     public Set<ButcheryProductionItemAggregatedView> unitTest2(Long id) {
 
@@ -566,12 +552,4 @@ public class ButcheryProductionServiceImp implements ButcheryProductionService {
         return this.butcheryProductionRepository.searchButcheryProduction();
     }
 
-//    @Override
-//    public ButcheryProductionDto findByButcheryReceivingId(Long butcheryReceivingId) {
-//
-//        ButcheryProductionDto dto = new ButcheryProductionDto();
-//        dto.setButcheryProductionSourceShortViews(this.butcheryProductionSourceRepository.findByButcheryReceivingId(butcheryReceivingId));
-//
-//        return dto;
-//    }
 }

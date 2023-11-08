@@ -13,7 +13,7 @@ import java.util.Set;
 public interface ButcheryProductionAggregatedView {
     Long getButcheryProductionId();
     Warehouse getWarehouse();
-    BigDecimal getTotalAmount();
+    BigDecimal getTotalProducedWeightKg();
     String getProductionStatus();
     Date getDateCreated();
 

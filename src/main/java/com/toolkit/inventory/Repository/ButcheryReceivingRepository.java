@@ -22,9 +22,9 @@ public interface ButcheryReceivingRepository extends JpaRepository<ButcheryRecei
     @Lock(LockModeType.OPTIMISTIC)
     Optional<ButcheryReceiving> findByButcheryReceivingId(Long id);
 
-    @Query(value = "SELECT SUM(b.totalAmount) AS totalAmount FROM ButcheryReceivingItem b " +
+    @Query(value = "SELECT SUM(b.receivedWeightKg) AS totalKg FROM ButcheryReceivingItem b " +
                    "WHERE b.butcheryReceiving = :butcheryReceiving")
-    BigDecimal getTotalAmount(ButcheryReceiving butcheryReceiving);
+    BigDecimal getTotalKg(ButcheryReceiving butcheryReceiving);
 
     @Query(value = "SELECT b FROM ButcheryReceiving b " +
                    "WHERE (CONCAT(b.butcheryReceivingId,'') LIKE %:butcheryReceivingId% " +

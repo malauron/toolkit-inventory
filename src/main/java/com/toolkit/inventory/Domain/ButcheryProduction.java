@@ -38,8 +38,8 @@ public class ButcheryProduction {
     @JoinColumn(name = "warehouse_id")
     private Warehouse warehouse;
 
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
+    @Column(name = "total_produced_weight_kg")
+    private BigDecimal totalProducedWeightKg;
 
     @Column(name = "production_status")
     private String productionStatus;

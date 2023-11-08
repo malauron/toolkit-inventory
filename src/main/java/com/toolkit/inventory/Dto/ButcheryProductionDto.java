@@ -24,7 +24,7 @@ public class ButcheryProductionDto {
     private ButcheryProductionSource butcheryProductionSource;
     private ButcheryProductionSourceView butcheryProductionSourceView;
     private Set<ButcheryProductionSourceShortView> butcheryProductionSourceShortViews;
-    private BigDecimal totalAmount;
+    private BigDecimal totalProducedWeightKg;
     private String productionStatus;
     private Date dateCreated;
 }

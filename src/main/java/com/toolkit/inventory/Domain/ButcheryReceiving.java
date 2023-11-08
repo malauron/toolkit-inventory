@@ -43,8 +43,8 @@ public class ButcheryReceiving {
     @Column(name = "receiving_status")
     private String receivingStatus;
 
-    @Column(name = "total_amount")
-    private BigDecimal totalAmount;
+    @Column(name = "total_kg")
+    private BigDecimal totalKg;
 
     @CreationTimestamp
     @Column(name = "date_created")

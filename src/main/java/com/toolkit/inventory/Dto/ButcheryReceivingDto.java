@@ -20,7 +20,7 @@ public class ButcheryReceivingDto {
     private String referenceCode;
     private Set<ButcheryReceivingItem> butcheryReceivingItems;
     private ButcheryReceivingItem butcheryReceivingItem;
-    private BigDecimal totalAmount;
+    private BigDecimal totalKg;
     private String receivingStatus;
     private Date dateCreated;
     private String errorDescription;

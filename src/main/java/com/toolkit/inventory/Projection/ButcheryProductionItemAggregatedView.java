@@ -12,5 +12,5 @@ public interface ButcheryProductionItemAggregatedView {
   Item getItem();
   Uom getRequiredUom();
   BigDecimal getProducedQty();
-  BigDecimal getTotalAmount();
+  BigDecimal getTotalProducedWeightKg();
 }

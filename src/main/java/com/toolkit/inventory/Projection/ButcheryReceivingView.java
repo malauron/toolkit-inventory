@@ -12,7 +12,7 @@ public interface ButcheryReceivingView {
     Warehouse getWarehouse();
     VendorWarehouse getVendorWarehouse();
     String getReferenceCode();
-    BigDecimal getTotalAmount();
+    BigDecimal getTotalKg();
     String getReceivingStatus();
     Date getDateCreated();
 }
