@@ -3,6 +3,7 @@ package com.toolkit.inventory.Controller;
 import com.toolkit.inventory.Domain.ButcheryReleasing;
 import com.toolkit.inventory.Domain.ButcheryReleasingItem;
 import com.toolkit.inventory.Dto.ButcheryReleasingDto;
+import com.toolkit.inventory.Projection.ButcheryReleasingSummaryView;
 import com.toolkit.inventory.Service.ButcheryReleasingService;
 import org.hibernate.StaleStateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,13 @@ public class ButcheryReleasingController {
           @RequestParam Long butcheryReleasingId) {
 
     return this.butcheryReleasingService.getButcheryReleasing(butcheryReleasingId);
+
+  }
+
+  @GetMapping("/butcheryReleasings/summary")
+  public Set<ButcheryReleasingSummaryView> getButcheryReleasingSummary(@RequestParam Long warehouseId) {
+
+    return this.butcheryReleasingService.getButcheryReleasingSummary(warehouseId);
 
   }
 

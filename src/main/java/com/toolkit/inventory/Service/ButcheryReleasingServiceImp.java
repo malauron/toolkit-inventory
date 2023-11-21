@@ -2,6 +2,7 @@ package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ButcheryReleasingDto;
+import com.toolkit.inventory.Projection.ButcheryReleasingSummaryView;
 import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -403,6 +404,13 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
     public Set<ButcheryReleasingItem> getButcheryReleasingItems(Long butcheryReleasingId) {
 
         return this.butcheryReleasingItemRepository.findByButcheryReleasingIdOrderByItemName(butcheryReleasingId);
+
+    }
+
+    @Override
+    public Set<ButcheryReleasingSummaryView> getButcheryReleasingSummary(Long warehouseId) {
+
+        return this.butcheryReleasingRepository.getButcheryReceivingSummaryByWarehouseId(warehouseId);
 
     }
 }

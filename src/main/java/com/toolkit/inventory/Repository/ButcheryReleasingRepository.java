@@ -1,6 +1,7 @@
 package com.toolkit.inventory.Repository;
 
 import com.toolkit.inventory.Domain.ButcheryReleasing;
+import com.toolkit.inventory.Projection.ButcheryReleasingSummaryView;
 import com.toolkit.inventory.Projection.ButcheryReleasingView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,19 @@ public interface ButcheryReleasingRepository extends JpaRepository<ButcheryRelea
 
     @Lock(LockModeType.OPTIMISTIC)
     Optional<ButcheryReleasing> findByButcheryReleasingId(Long id);
+
+//    @Query(value = "SELECT SUM(b.total_amount) AS totalAmount, SUM(b.total_weight_kg) AS totalWeightKg, " +
+//            "DATE(b.date_created) AS dateCreated FROM butchery_releasings b " +
+//            "WHERE b.warehouse_id = :warehouseId " +
+//            "GROUP BY dateCreated " +
+//            "HAVING dateCreated >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) " +
+//            "ORDER BY dateCreated",
+//            nativeQuery = true)
+    @Query(value = "SELECT b.totalAmount AS totalAmount, b.totalWeightKg AS totalWeightKg, b.dateCreated AS dateCreated  " +
+        "FROM butchery_releasing_summary_view_30days b " +
+        "WHERE b.warehouse_id = :warehouseId ",
+        nativeQuery = true)
+    Set<ButcheryReleasingSummaryView> getButcheryReceivingSummaryByWarehouseId(Long warehouseId);
 
     @Query(value = "SELECT SUM(b.totalAmount) AS totalAmount FROM ButcheryReleasingItem b " +
                    "WHERE b.butcheryReleasing = :butcheryReleasing")
