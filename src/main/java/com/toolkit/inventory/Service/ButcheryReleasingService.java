@@ -3,6 +3,7 @@ package com.toolkit.inventory.Service;
 import com.toolkit.inventory.Domain.ButcheryReleasing;
 import com.toolkit.inventory.Domain.ButcheryReleasingItem;
 import com.toolkit.inventory.Dto.ButcheryReleasingDto;
+import com.toolkit.inventory.Dto.ButcheryReleasingSummaryDto;
 import com.toolkit.inventory.Projection.ButcheryReleasingSummaryView;
 
 import java.util.Set;
