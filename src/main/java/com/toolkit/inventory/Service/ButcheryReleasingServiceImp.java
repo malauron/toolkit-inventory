@@ -390,8 +390,6 @@ public class ButcheryReleasingServiceImp implements ButcheryReleasingService {
                     releasing.setTotalWeightKg(BigDecimal.ZERO);
                 }
 
-                releasing.setTotalAmount(this.butcheryReleasingRepository
-                        .getTotalAmount(releasing));
             } else {
                 butcheryReleasingDto.setErrorDescription("Unable to process your request since " +
                         "this transaction has already been tagged as " +
