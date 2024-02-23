@@ -4,23 +4,22 @@ import com.toolkit.inventory.Security.Domain.Role;
 import com.toolkit.inventory.Security.Domain.User;
 import com.toolkit.inventory.Security.Dto.ResponseDto;
 import com.toolkit.inventory.Security.Dto.UserDto;
+import com.toolkit.inventory.Security.Projection.UserView;
 import com.toolkit.inventory.Security.Repository.RoleRepository;
 import com.toolkit.inventory.Security.Repository.UserRepository;
 import com.toolkit.inventory.Security.Utility.JWTTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,12 +30,12 @@ import static org.springframework.http.HttpStatus.OK;
 @Service
 public class UserServiceImp implements UserService {
 
-    private RoleRepository roleRepository;
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private JpaUserDetailsService jpaUserDetailsService;
-    private AuthenticationManager authenticationManager;
-    private JWTTokenProvider jwtTokenProvider;
+    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JpaUserDetailsService jpaUserDetailsService;
+    private final AuthenticationManager authenticationManager;
+    private final JWTTokenProvider jwtTokenProvider;
 
     @Autowired
     public UserServiceImp(RoleRepository roleRepository,
@@ -54,6 +53,11 @@ public class UserServiceImp implements UserService {
 
     }
 
+    @Override
+    public Page<UserView> findUsers(int page, int size, String searchDesc){
+        Pageable pageable = PageRequest.of(page, size);
+        return this.userRepository.findUsers(searchDesc, pageable);
+    }
     @Override
     public ResponseDto login(User user) {
 
