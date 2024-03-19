@@ -52,6 +52,9 @@ public class ProjectContract {
     @Column(name = "ttl_equity_paid")
     private BigDecimal ttlEquityPaid;
 
+    @Column(name = "equity_balance")
+    private BigDecimal equityBalance;
+
     @Column(name = "financing_amt")
     private BigDecimal financingAmt;
 
@@ -64,8 +67,17 @@ public class ProjectContract {
     @Column(name = "financing_balance")
     private BigDecimal financingBalance;
 
+    @Column(name = "ttl_payment")
+    private BigDecimal ttlPayment;
+
+    @Column(name = "ttl_balance")
+    private BigDecimal ttlBalance;
+
     @Column(name = "remarks")
     private String remarks;
+
+    @Column(name = "is_cancelled")
+    private String isCancelled;
 
     @CreationTimestamp
     @Column(name = "date_created")

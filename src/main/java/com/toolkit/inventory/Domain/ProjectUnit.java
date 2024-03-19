@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
@@ -27,9 +29,25 @@ public class ProjectUnit {
     @Column(name = "unit_description")
     private String unitDescription;
 
+    @Column(name = "unit_price")
+    private BigDecimal unitPrice;
+
+    @JsonBackReference
+    @ManyToOne()
+    @JoinColumn(name = "project_id", referencedColumnName = "project_id")
+    private Project project;
+
     @Column(name = "unit_class")
     @Enumerated(EnumType.STRING)
     private ProjectUnitClass unitClass;
+
+    @Column(name = "unit_status")
+    @Enumerated(EnumType.STRING)
+    private ProjectUnitStatus unitStatus;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "current_contract_id", referencedColumnName = "contract_id")
+    private ProjectContract currentContract;
 
     @CreationTimestamp
     @Column(name = "date_created")

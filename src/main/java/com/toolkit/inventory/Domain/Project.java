@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,6 +8,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
@@ -22,6 +25,10 @@ public class Project {
 
     @Column(name = "project_name")
     private String projectName;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private Set<ProjectUnit> units = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "date_created")
