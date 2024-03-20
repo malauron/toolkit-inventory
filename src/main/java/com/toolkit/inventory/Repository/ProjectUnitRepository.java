@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RepositoryRestResource()
 public interface ProjectUnitRepository extends JpaRepository<ProjectUnit, Long> {
 
-    @Query(value = "SELECT u FROM ProjectUnit u " +
-                   "WHERE (u.unitCode LIKE %:searchDesc% " +
-                            "OR u.unitDescription LIKE %:searchDesc% " +
-                            "OR u.currentContract.client.clientName LIKE %:searchDesc%) " +
-                   "ORDER BY u.unitId")
+    //The JDBC driver is not parsing the query correctly, hence the escape
+    //quotes.
+    @Query(value = "SELECT `a`.* FROM `project_units` as `a` " +
+                   "LEFT OUTER JOIN `project_contracts` as `b` ON `a`.`current_contract_id` = `b`.`contract_id` " +
+                   "LEFT OUTER JOIN `project_clients` as `c` ON `b`.`client_id` = `c`.`client_id` " +
+                   "WHERE `a`.`unit_code` LIKE %:searchDesc% " +
+                   "OR `a`.`unit_description` LIKE %:searchDesc% " +
+                   "OR `c`.`client_name` LIKE %:searchDesc% ", nativeQuery = true)
     Page<ProjectUnit> findByCustomParams(
             @RequestParam("searchDesc") String searchDesc,
             Pageable pageable);
