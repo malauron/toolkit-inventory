@@ -1,13 +1,8 @@
 package com.toolkit.inventory.Configuration;
 
-import com.toolkit.inventory.Domain.ButcheryReceivingItem;
-import com.toolkit.inventory.Projection.ButcheryReceivingItemView;
-import com.toolkit.inventory.Projection.CustomerPageView;
-import com.toolkit.inventory.Projection.CustomerSingleView;
-import com.toolkit.inventory.Projection.ItemCostView;
+import com.toolkit.inventory.Projection.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -40,6 +35,7 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
     config.getProjectionConfiguration().addProjection(CustomerSingleView.class);
     config.getProjectionConfiguration().addProjection(ItemCostView.class);
     config.getProjectionConfiguration().addProjection(ButcheryReceivingItemView.class);
+      config.getProjectionConfiguration().addProjection(ProjectPaymentView.class);
 
     // call an internal helper method
     exposeIds(config);

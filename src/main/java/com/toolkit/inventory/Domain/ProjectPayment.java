@@ -46,8 +46,8 @@ public class ProjectPayment {
     private User createdBy;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "projectPayment", cascade = CascadeType.ALL)
-    private Set<ProjectPaymentDetail> projectPaymentDetails =
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
+    private Set<ProjectPaymentDetail> paymentDetails =
             new HashSet<>();
 
     @CreationTimestamp

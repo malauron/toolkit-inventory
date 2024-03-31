@@ -1,17 +1,11 @@
 package com.toolkit.inventory.Domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
@@ -28,7 +22,7 @@ public class ProjectPaymentDetail {
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "payment_id")
-    private ProjectPayment projectPayment;
+    private ProjectPayment payment;
 
     @ManyToOne
     @JoinColumn(name = "contract_id")
