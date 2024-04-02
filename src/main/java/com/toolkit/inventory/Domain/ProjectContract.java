@@ -1,5 +1,7 @@
 package com.toolkit.inventory.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,6 +35,7 @@ public class ProjectContract {
     @JoinColumn(name = "broker_id")
     private ProjectBroker broker;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "unit_id")
     private ProjectUnit unit;

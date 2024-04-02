@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RepositoryRestResource()
 public interface ProjectUnitRepository extends JpaRepository<ProjectUnit, Long> {
 
-    //The JDBC driver is not parsing the query correctly, hence the escape
-    //quotes.
+    //The JDBC driver is not parsing the query correctly, hence the escape quotes.
     @Query(value = "SELECT `a`.* FROM `project_units` as `a` " +
                    "LEFT OUTER JOIN `project_contracts` as `b` ON `a`.`current_contract_id` = `b`.`contract_id` " +
                    "LEFT OUTER JOIN `project_clients` as `c` ON `b`.`client_id` = `c`.`client_id` " +
