@@ -13,6 +13,7 @@ public class ProjectUnitDto {
     private String unitCode;
     private String unitDescription;
     private BigDecimal unitPrice;
+    private BigDecimal reservationAmt;
     private ProjectUnitClass unitClass;
     private ProjectUnitStatus unitStatus;
     private ProjectContract currentContract;

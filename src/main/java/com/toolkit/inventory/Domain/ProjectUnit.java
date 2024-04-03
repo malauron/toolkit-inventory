@@ -32,6 +32,9 @@ public class ProjectUnit {
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
 
+    @Column(name = "reservation_amt")
+    private BigDecimal reservationAmt;
+
     @JsonBackReference
     @ManyToOne()
     @JoinColumn(name = "project_id", referencedColumnName = "project_id")
