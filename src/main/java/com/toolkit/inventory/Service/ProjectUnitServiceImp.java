@@ -51,7 +51,10 @@ public class ProjectUnitServiceImp implements ProjectUnitService {
 
     @Override
     @Transactional
-    public ProjectUnit save(ProjectUnitDto projectUnitDto) {
+    public ProjectUnitDto save(ProjectUnitDto projectUnitDto) {
+
+        projectUnitDto.setErrorCode(null);
+        projectUnitDto.setErrorDescription(null);
 
         ProjectUnit newUnit = new ProjectUnit();
 
@@ -69,7 +72,11 @@ public class ProjectUnitServiceImp implements ProjectUnitService {
 
         this.unitRepository.save(newUnit);
 
-        return newUnit;
+        projectUnitDto.setUnitId(newUnit.getUnitId());
+        projectUnitDto.setUnitStatus(newUnit.getUnitStatus());
+        projectUnitDto.setProject(newUnit.getProject());
+
+        return projectUnitDto;
     }
 
 }

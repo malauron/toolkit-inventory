@@ -26,9 +26,9 @@ public class Project {
     @Column(name = "project_name")
     private String projectName;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private Set<ProjectUnit> units = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+//    private Set<ProjectUnit> units = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "date_created")

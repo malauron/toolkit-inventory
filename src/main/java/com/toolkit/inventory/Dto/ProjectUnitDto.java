@@ -18,4 +18,6 @@ public class ProjectUnitDto {
     private ProjectUnitStatus unitStatus;
     private ProjectContract currentContract;
     private Project project;
+    private String errorCode;
+    private String errorDescription;
 }

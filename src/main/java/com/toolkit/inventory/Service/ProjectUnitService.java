@@ -11,5 +11,5 @@ import java.util.Set;
 
 public interface ProjectUnitService {
     ProjectUnitDto getUnit(Long unitId);
-    ProjectUnit save(ProjectUnitDto projectUnitDto);
+    ProjectUnitDto save(ProjectUnitDto projectUnitDto);
 }

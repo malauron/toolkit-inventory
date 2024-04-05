@@ -24,7 +24,7 @@ public class ProjectUnitController {
     }
 
     @PostMapping("/projectUnits")
-    public ProjectUnit save(@RequestBody ProjectUnitDto projectUnitDto) {
+    public ProjectUnitDto save(@RequestBody ProjectUnitDto projectUnitDto) {
 
         return this.unitService.save(projectUnitDto);
 
