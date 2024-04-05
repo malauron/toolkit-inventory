@@ -1,5 +1,6 @@
 package com.toolkit.inventory.Controller;
 
+import com.toolkit.inventory.Domain.ProjectUnit;
 import com.toolkit.inventory.Dto.ProjectUnitDto;
 import com.toolkit.inventory.Service.ProjectUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,12 @@ public class ProjectUnitController {
     @GetMapping("/projectUnits")
     public ProjectUnitDto getProjectUnit(@RequestParam Long unitId) {
         return this.unitService.getUnit(unitId);
+    }
+
+    @PostMapping("/projectUnits")
+    public ProjectUnit save(@RequestBody ProjectUnitDto projectUnitDto) {
+
+        return this.unitService.save(projectUnitDto);
+
     }
 }

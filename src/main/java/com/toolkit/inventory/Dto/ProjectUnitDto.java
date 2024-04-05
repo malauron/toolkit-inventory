@@ -17,4 +17,5 @@ public class ProjectUnitDto {
     private ProjectUnitClass unitClass;
     private ProjectUnitStatus unitStatus;
     private ProjectContract currentContract;
+    private Project project;
 }
