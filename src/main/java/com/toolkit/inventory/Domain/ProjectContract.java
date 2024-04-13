@@ -40,11 +40,11 @@ public class ProjectContract {
     @JoinColumn(name = "unit_id")
     private ProjectUnit unit;
 
-    @Column(name = "reservation_amt")
-    private BigDecimal reservationAmt;
-
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
+
+    @Column(name = "reservation_amt")
+    private BigDecimal reservationAmt;
 
     @Column(name = "equity_amt")
     private BigDecimal equityAmt;
