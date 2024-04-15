@@ -46,6 +46,12 @@ public class ProjectContract {
     @Column(name = "reservation_amt")
     private BigDecimal reservationAmt;
 
+    @Column(name = "ttl_reservation_paid")
+    private BigDecimal ttlReservationPaid;
+
+    @Column(name = "reservation_balance")
+    private BigDecimal reservationBalance;
+
     @Column(name = "equity_amt")
     private BigDecimal equityAmt;
 
