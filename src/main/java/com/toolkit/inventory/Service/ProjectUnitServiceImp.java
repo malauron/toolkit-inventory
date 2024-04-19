@@ -6,10 +6,16 @@ import com.toolkit.inventory.Domain.ProjectUnitStatus;
 import com.toolkit.inventory.Dto.ProjectUnitDto;
 import com.toolkit.inventory.Repository.ProjectRepository;
 import com.toolkit.inventory.Repository.ProjectUnitRepository;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.UnexpectedRollbackException;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLNonTransientException;
 import java.util.Optional;
 
 @Service
@@ -29,7 +35,6 @@ public class ProjectUnitServiceImp implements ProjectUnitService {
 
     @Override
     public ProjectUnitDto getUnit(Long unitId) {
-
         ProjectUnitDto unitDto = new ProjectUnitDto();
 
         Optional<ProjectUnit> optUnit = this.unitRepository.findById(unitId);
@@ -51,32 +56,52 @@ public class ProjectUnitServiceImp implements ProjectUnitService {
 
     @Override
     @Transactional
-    public ProjectUnitDto save(ProjectUnitDto projectUnitDto) {
+    public ProjectUnitDto save(ProjectUnitDto unitDto) throws Exception {
+        unitDto.setErrorCode(null);
+        unitDto.setErrorDescription(null);
 
-        projectUnitDto.setErrorCode(null);
-        projectUnitDto.setErrorDescription(null);
+        ProjectUnit unit = null;
 
-        ProjectUnit newUnit = new ProjectUnit();
+        if (unitDto.getUnitId() == null || unitDto.getUnitId() == 0) {
+            unit = new ProjectUnit();
 
-        newUnit.setUnitCode(projectUnitDto.getUnitCode());
-        newUnit.setUnitDescription(projectUnitDto.getUnitDescription());
-        newUnit.setUnitPrice(projectUnitDto.getUnitPrice());
-        newUnit.setReservationAmt(projectUnitDto.getReservationAmt());
-        newUnit.setUnitStatus(ProjectUnitStatus.AVAILABLE);
-        newUnit.setUnitClass(projectUnitDto.getUnitClass());
+            unit.setUnitStatus(ProjectUnitStatus.AVAILABLE);
 
-        Optional<Project> optProject = this.projectRepository.findById(projectUnitDto.getProject().getProjectId());
-        if (optProject.isPresent()) {
-            newUnit.setProject(optProject.get());
+            Optional<Project> optProject = this.projectRepository.findById(unitDto.getProject().getProjectId());
+
+            if (optProject.isPresent()) {
+                unit.setProject(optProject.get());
+            } else {
+                unitDto.setErrorCode("1");
+                unitDto.setErrorDescription("Project not found.");
+                return unitDto;
+            }
+        } else {
+            Optional<ProjectUnit> optUnit = this.unitRepository.findById(unitDto.getUnitId());
+
+            if (optUnit.isPresent()) {
+                unit = optUnit.get();
+            } else {
+                unitDto.setErrorCode("1");
+                unitDto.setErrorDescription("Unit not found.");
+                return unitDto;
+            }
+
         }
 
-        this.unitRepository.save(newUnit);
+        unit.setUnitCode(unitDto.getUnitCode());
+        unit.setUnitDescription(unitDto.getUnitDescription());
+        unit.setUnitPrice(unitDto.getUnitPrice());
+        unit.setReservationAmt(unitDto.getReservationAmt());
+        unit.setUnitClass(unitDto.getUnitClass());
 
-        projectUnitDto.setUnitId(newUnit.getUnitId());
-        projectUnitDto.setUnitStatus(newUnit.getUnitStatus());
-        projectUnitDto.setProject(newUnit.getProject());
+        this.unitRepository.save(unit);
 
-        return projectUnitDto;
+        unitDto.setUnitId(unit.getUnitId());
+        unitDto.setUnitStatus(unit.getUnitStatus());
+        unitDto.setProject(unit.getProject());
+
+        return unitDto;
     }
 
 }

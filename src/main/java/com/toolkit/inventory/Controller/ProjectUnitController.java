@@ -1,6 +1,5 @@
 package com.toolkit.inventory.Controller;
 
-import com.toolkit.inventory.Domain.ProjectUnit;
 import com.toolkit.inventory.Dto.ProjectUnitDto;
 import com.toolkit.inventory.Service.ProjectUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,14 @@ public class ProjectUnitController {
     }
 
     @PostMapping("/projectUnits")
-    public ProjectUnitDto save(@RequestBody ProjectUnitDto projectUnitDto) {
+    public ProjectUnitDto save(@RequestBody ProjectUnitDto projectUnitDto)  {
 
-        return this.unitService.save(projectUnitDto);
-
+        try {
+            return this.unitService.save(projectUnitDto);
+        } catch (Exception e) {
+            projectUnitDto.setErrorCode(e.getClass().getName());
+            projectUnitDto.setErrorDescription(e.getMessage());
+            return projectUnitDto;
+        }
     }
 }

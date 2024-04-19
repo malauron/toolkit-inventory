@@ -1,15 +1,13 @@
 package com.toolkit.inventory.Service;
 
-import com.toolkit.inventory.Domain.ProjectBroker;
-import com.toolkit.inventory.Domain.ProjectBrokerage;
-import com.toolkit.inventory.Domain.ProjectClient;
-import com.toolkit.inventory.Domain.ProjectUnit;
+import com.toolkit.inventory.Domain.*;
 import com.toolkit.inventory.Dto.ProjectContractDto;
 import com.toolkit.inventory.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -37,8 +35,15 @@ public class ProjectContractServiceImp implements ProjectContractService {
     }
     @Override
     @Transactional
-    public ProjectContractDto save(ProjectContractDto contractDto){
-        if (contractDto.getContractId() == null) {
+    public ProjectContractDto save(ProjectContractDto contractDto) throws Exception {
+
+        contractDto.setErrorCode(null);
+        contractDto.setErrorDescription(null);
+
+        ProjectUnit unit = null;
+        ProjectContract contract = null;
+
+        if (contractDto.getContractId() == null || contractDto.getContractId() == 0) {
 
             if (contractDto.getUnit() == null) {
                 contractDto.setErrorCode("1");
@@ -58,51 +63,36 @@ public class ProjectContractServiceImp implements ProjectContractService {
                 return contractDto;
             }
 
-            if (contractDto.getClient().getClientId() == null) {
+            if (contractDto.getClient().getClientId() == null || contractDto.getClient().getClientId() == 0) {
                 contractDto.setErrorCode("1");
                 contractDto.setErrorDescription("No client specified.");
                 return contractDto;
             }
 
-            if (contractDto.getBroker() == null) {
-                contractDto.setErrorCode("1");
-                contractDto.setErrorDescription("No broker specified.");
-                return contractDto;
-            }
-
-            if (contractDto.getBroker().getBrokerId() == null) {
-                contractDto.setErrorCode("1");
-                contractDto.setErrorDescription("No broker specified.");
-                return contractDto;
-            }
-
-            if (contractDto.getBrokerage() == null) {
-                contractDto.setErrorCode("1");
-                contractDto.setErrorDescription("No brokerage specified.");
-                return contractDto;
-            }
-
-            if (contractDto.getBrokerage().getBrokerageId() == null) {
-                contractDto.setErrorCode("1");
-                contractDto.setErrorDescription("No brokerage specified.");
-                return contractDto;
-            }
-
             Optional<ProjectUnit> optUnit = this.unitRepository.findById(contractDto.getUnit().getUnitId());
+
             if (optUnit.isEmpty()) {
                 contractDto.setErrorCode("1");
                 contractDto.setErrorDescription("Unit not found");
                 return contractDto;
             }  else {
+
                 if (contractDto.getUnit().getVersion() != optUnit.get().getVersion()) {
                     contractDto.setErrorCode("1");
                     contractDto.setErrorDescription("The record you are trying to save contains stale data.");
                     return contractDto;
                 }
-                contractDto.setUnit(optUnit.get());
+
+                unit = optUnit.get();
+
+                unit.setUnitStatus(ProjectUnitStatus.RESERVED);
+
+                contractDto.setUnit(unit);
+
             }
 
             Optional<ProjectClient> optClient = this.clientRepository.findById(contractDto.getClient().getClientId());
+
             if (optClient.isEmpty()) {
                 contractDto.setErrorCode("1");
                 contractDto.setErrorDescription("Client not found.");
@@ -111,25 +101,86 @@ public class ProjectContractServiceImp implements ProjectContractService {
                 contractDto.setClient(optClient.get());
             }
 
-            Optional<ProjectBroker> optBroker = this.brokerRepository.findById(contractDto.getBroker().getBrokerId());
-            if (optBroker.isEmpty()) {
-                contractDto.setErrorCode("1");
-                contractDto.setErrorDescription("Broker not found.");
-                return contractDto;
-            } else {
-                contractDto.setBroker(optBroker.get());
+            if (contractDto.getBroker() != null) {
+
+                if (contractDto.getBroker().getBrokerId() != null) {
+
+                    Optional<ProjectBroker> optBroker = this.brokerRepository.findById(contractDto.getBroker().getBrokerId());
+
+                    if (optBroker.isEmpty()) {
+                        contractDto.setErrorCode("1");
+                        contractDto.setErrorDescription("Broker not found.");
+                        return contractDto;
+                    } else {
+                        contractDto.setBroker(optBroker.get());
+                    }
+
+                }
+
             }
 
-            Optional<ProjectBrokerage> optBrokerage = this.brokerageRepository.findById(contractDto.getBrokerage().getBrokerageId());
-            if (optBrokerage.isEmpty()) {
-                contractDto.setErrorCode("1");
-                contractDto.setErrorDescription("Brokerage not found.");
-                return contractDto;
+            if (contractDto.getBrokerage() != null) {
+
+                if (contractDto.getBrokerage().getBrokerageId() != null) {
+
+                    Optional<ProjectBrokerage> optBrokerage = this.brokerageRepository.findById(contractDto.getBrokerage().getBrokerageId());
+
+                    if (optBrokerage.isEmpty()) {
+                        contractDto.setErrorCode("1");
+                        contractDto.setErrorDescription("Brokerage not found.");
+                        return contractDto;
+                    } else {
+                        contractDto.setBrokerage(optBrokerage.get());
+                    }
+
+                }
+
+            }
+
+            contract = new ProjectContract();
+
+            contract.setUnit(contractDto.getUnit());
+            contract.setClient(contractDto.getClient());
+            contract.setBroker(contractDto.getBroker());
+            contract.setBrokerage(contractDto.getBrokerage());
+            contract.setUnitPrice(contractDto.getUnit().getUnitPrice());
+            contract.setReservationAmt(contractDto.getUnit().getReservationAmt());
+            contract.setTtlReservationPaid(BigDecimal.ZERO);
+            contract.setReservationBalance(BigDecimal.ZERO);
+            contract.setEquityAmt(BigDecimal.ZERO);
+            contract.setTtlEquityPaid(BigDecimal.ZERO);
+            contract.setEquityBalance(BigDecimal.ZERO);
+            contract.setFinancingAmt(BigDecimal.ZERO);
+            contract.setTtlFinancingPaid(BigDecimal.ZERO);
+            contract.setFinancingBalance(BigDecimal.ZERO);
+            contract.setTtlBalance(contractDto.getUnit().getUnitPrice());
+            contract.setTtlPayment(BigDecimal.ZERO);
+
+            this.unitRepository.save(unit);
+
+        } else {
+
+            Optional<ProjectContract> optContract = this.contractRepository.findById(contractDto.getContractId());
+
+            if (optContract.isPresent()) {
+                contract = optContract.get();
             } else {
-                contractDto.setBrokerage(optBrokerage.get());
+                contractDto.setErrorCode("1");
+                contractDto.setErrorDescription("Contract not found.");
+                return contractDto;
             }
 
         }
-        return null;
+
+        contract.setRemarks(contractDto.getRemarks());
+
+        this.contractRepository.save(contract);
+
+        contractDto.setContractId(contract.getContractId());
+        contractDto.setUnit(unit);
+
+        return contractDto;
+
     }
+
 }
