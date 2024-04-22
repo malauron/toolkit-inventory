@@ -6,16 +6,10 @@ import com.toolkit.inventory.Domain.ProjectUnitStatus;
 import com.toolkit.inventory.Dto.ProjectUnitDto;
 import com.toolkit.inventory.Repository.ProjectRepository;
 import com.toolkit.inventory.Repository.ProjectUnitRepository;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.UnexpectedRollbackException;
 
 import javax.transaction.Transactional;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.SQLNonTransientException;
 import java.util.Optional;
 
 @Service
@@ -48,6 +42,7 @@ public class ProjectUnitServiceImp implements ProjectUnitService {
             unitDto.setUnitClass(optUnit.get().getUnitClass());
             unitDto.setUnitStatus(optUnit.get().getUnitStatus());
             unitDto.setCurrentContract(optUnit.get().getCurrentContract());
+            unitDto.setVersion(optUnit.get().getVersion());
         }
 
         return unitDto;

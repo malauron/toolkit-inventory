@@ -1,7 +1,6 @@
 package com.toolkit.inventory.Domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -86,7 +85,7 @@ public class ProjectContract {
     private String remarks;
 
     @Column(name = "is_cancelled")
-    private String isCancelled;
+    private Boolean isCancelled;
 
     @CreationTimestamp
     @Column(name = "date_created")

@@ -83,11 +83,18 @@ public class ProjectContractServiceImp implements ProjectContractService {
                     return contractDto;
                 }
 
-                unit = optUnit.get();
+                if (optUnit.get().getUnitStatus().equals(ProjectUnitStatus.AVAILABLE)) {
+                    unit = optUnit.get();
 
-                unit.setUnitStatus(ProjectUnitStatus.RESERVED);
+                    unit.setUnitStatus(ProjectUnitStatus.RESERVED);
 
-                contractDto.setUnit(unit);
+                    contractDto.setUnit(unit);
+                } else {
+                    contractDto.setErrorCode("1");
+                    contractDto.setErrorDescription("Unit is not longer available.");
+
+                    return contractDto;
+                }
 
             }
 
@@ -141,22 +148,25 @@ public class ProjectContractServiceImp implements ProjectContractService {
 
             contract.setUnit(contractDto.getUnit());
             contract.setClient(contractDto.getClient());
-            contract.setBroker(contractDto.getBroker());
-            contract.setBrokerage(contractDto.getBrokerage());
-            contract.setUnitPrice(contractDto.getUnit().getUnitPrice());
-            contract.setReservationAmt(contractDto.getUnit().getReservationAmt());
+            if (contractDto.getBroker() != null) contract.setBroker(contractDto.getBroker());
+            if (contractDto.getBrokerage() != null)  contract.setBrokerage(contractDto.getBrokerage());
+            contract.setUnitPrice(unit.getUnitPrice());
+            contract.setReservationAmt(unit.getReservationAmt());
             contract.setTtlReservationPaid(BigDecimal.ZERO);
             contract.setReservationBalance(BigDecimal.ZERO);
+            contract.setEquityPct(BigDecimal.ZERO);
             contract.setEquityAmt(BigDecimal.ZERO);
             contract.setTtlEquityPaid(BigDecimal.ZERO);
             contract.setEquityBalance(BigDecimal.ZERO);
+            contract.setFinancingPct(BigDecimal.ZERO);
             contract.setFinancingAmt(BigDecimal.ZERO);
             contract.setTtlFinancingPaid(BigDecimal.ZERO);
             contract.setFinancingBalance(BigDecimal.ZERO);
-            contract.setTtlBalance(contractDto.getUnit().getUnitPrice());
+            contract.setTtlBalance(unit.getUnitPrice());
             contract.setTtlPayment(BigDecimal.ZERO);
+            contract.setIsCancelled(false);
 
-            this.unitRepository.save(unit);
+            this.unitRepository.saveAndFlush(unit);
 
         } else {
 

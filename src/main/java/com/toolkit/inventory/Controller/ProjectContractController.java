@@ -3,7 +3,6 @@ package com.toolkit.inventory.Controller;
 import com.toolkit.inventory.Dto.ProjectContractDto;
 import com.toolkit.inventory.Service.ProjectContractService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -19,7 +18,7 @@ public class ProjectContractController {
 
     }
 
-    @GetMapping("/projectContracts")
+    @PostMapping("/projectContracts")
     public ProjectContractDto save(@RequestBody ProjectContractDto contractDto) {
 
         try {
