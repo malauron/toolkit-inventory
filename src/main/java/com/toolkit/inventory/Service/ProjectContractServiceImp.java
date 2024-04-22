@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -19,19 +20,23 @@ public class ProjectContractServiceImp implements ProjectContractService {
     final ProjectBrokerRepository brokerRepository;
     final ProjectBrokerageRepository brokerageRepository;
 
+    final ProjectParameterRepository parameterRepository;
+
     @Autowired
     public ProjectContractServiceImp(
             ProjectContractRepository contractRepository,
             ProjectUnitRepository unitRepository,
             ProjectClientRepository clientRepository,
             ProjectBrokerRepository brokerRepository,
-            ProjectBrokerageRepository brokerageRepository
+            ProjectBrokerageRepository brokerageRepository,
+            ProjectParameterRepository parameterRepository
     ){
         this.contractRepository = contractRepository;
         this.unitRepository = unitRepository;
         this.clientRepository = clientRepository;
         this.brokerRepository = brokerRepository;
         this.brokerageRepository = brokerageRepository;
+        this.parameterRepository = parameterRepository;
     }
     @Override
     @Transactional
@@ -144,30 +149,61 @@ public class ProjectContractServiceImp implements ProjectContractService {
 
             }
 
+            BigDecimal unitPrice;
+            BigDecimal equityPrc;
+            BigDecimal equityAmt;
+            BigDecimal equityBalance;
+            BigDecimal financingPrc;
+            BigDecimal financingAmt;
+            BigDecimal financingBalance;
+
+            ProjectParameter param = this.parameterRepository.findById(1L).get();
+
+            equityPrc = param.getEquityPrc();
+            unitPrice = unit.getUnitPrice();
+            equityAmt = equityPrc.multiply(unitPrice);
+            equityBalance = equityAmt;
+            financingPrc = param.getFinancingPrc();
+            financingAmt = unitPrice.subtract(equityAmt);
+            financingBalance = financingAmt;
+
             contract = new ProjectContract();
 
             contract.setUnit(contractDto.getUnit());
             contract.setClient(contractDto.getClient());
-            if (contractDto.getBroker() != null) contract.setBroker(contractDto.getBroker());
-            if (contractDto.getBrokerage() != null)  contract.setBrokerage(contractDto.getBrokerage());
+
+            if (contractDto.getBroker().getBrokerId() != null) {
+                contract.setBroker(contractDto.getBroker());
+            }
+            if (contractDto.getBrokerage().getBrokerageId() != null)  {
+                contract.setBrokerage(contractDto.getBrokerage());
+            }
+
             contract.setUnitPrice(unit.getUnitPrice());
             contract.setReservationAmt(unit.getReservationAmt());
             contract.setTtlReservationPaid(BigDecimal.ZERO);
-            contract.setReservationBalance(BigDecimal.ZERO);
-            contract.setEquityPct(BigDecimal.ZERO);
-            contract.setEquityAmt(BigDecimal.ZERO);
+            contract.setReservationBalance(unit.getReservationAmt());
+            contract.setEquityPct(equityPrc);
+            contract.setEquityAmt(equityAmt);
             contract.setTtlEquityPaid(BigDecimal.ZERO);
-            contract.setEquityBalance(BigDecimal.ZERO);
-            contract.setFinancingPct(BigDecimal.ZERO);
-            contract.setFinancingAmt(BigDecimal.ZERO);
+            contract.setEquityBalance(equityBalance);
+            contract.setFinancingPct(financingPrc);
+            contract.setFinancingAmt(financingAmt);
             contract.setTtlFinancingPaid(BigDecimal.ZERO);
-            contract.setFinancingBalance(BigDecimal.ZERO);
+            contract.setFinancingBalance(financingBalance);
             contract.setTtlBalance(unit.getUnitPrice());
             contract.setTtlPayment(BigDecimal.ZERO);
             contract.setIsCancelled(false);
+            contract.setRemarks(contractDto.getRemarks());
+
+            this.contractRepository.saveAndFlush(contract);
+
+            unit.setCurrentContract(contract);
 
             this.unitRepository.saveAndFlush(unit);
 
+            contractDto.setContractId(contract.getContractId());
+            contractDto.setUnit(unit);
         } else {
 
             Optional<ProjectContract> optContract = this.contractRepository.findById(contractDto.getContractId());
@@ -180,15 +216,12 @@ public class ProjectContractServiceImp implements ProjectContractService {
                 return contractDto;
             }
 
+            contract.setRemarks(contractDto.getRemarks());
+
+            this.contractRepository.saveAndFlush(contract);
         }
 
-        contract.setRemarks(contractDto.getRemarks());
-
-        this.contractRepository.save(contract);
-
-        contractDto.setContractId(contract.getContractId());
-        contractDto.setUnit(unit);
-
+        System.out.println(LocalDate.now().plusDays(45));
         return contractDto;
 
     }
