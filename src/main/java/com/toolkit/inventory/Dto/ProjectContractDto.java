@@ -14,6 +14,18 @@ public class ProjectContractDto {
     private ProjectBroker broker;
     private ProjectBrokerage brokerage;
     private ProjectUnit unit;
+    private BigDecimal unitPrice;
+    private BigDecimal reservationAmt;
+    private BigDecimal ttlReservationPaid;
+    private BigDecimal reservationBalance;
+    private BigDecimal equityAmt;
+    private BigDecimal ttlEquityPaid;
+    private BigDecimal equityBalance;
+    private BigDecimal financingAmt;
+    private BigDecimal ttlFinancingPaid;
+    private BigDecimal financingBalance;
+    private BigDecimal ttlPayment;
+    private BigDecimal ttlBalance;
     private String remarks;
     private String errorCode;
     private String errorDescription;

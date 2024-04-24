@@ -96,7 +96,7 @@ public class ProjectContractServiceImp implements ProjectContractService {
                     contractDto.setUnit(unit);
                 } else {
                     contractDto.setErrorCode("1");
-                    contractDto.setErrorDescription("Unit is not longer available.");
+                    contractDto.setErrorDescription("Unit is not available.");
 
                     return contractDto;
                 }
@@ -203,6 +203,18 @@ public class ProjectContractServiceImp implements ProjectContractService {
             this.unitRepository.saveAndFlush(unit);
 
             contractDto.setContractId(contract.getContractId());
+            contractDto.setUnitPrice(contract.getUnitPrice());
+            contractDto.setReservationAmt(contract.getReservationAmt());
+            contractDto.setTtlReservationPaid(contract.getTtlReservationPaid());
+            contractDto.setReservationBalance(contract.getReservationBalance());
+            contractDto.setEquityAmt(contract.getEquityAmt());
+            contractDto.setTtlEquityPaid(contract.getTtlEquityPaid());
+            contractDto.setEquityBalance(contract.getEquityBalance());
+            contractDto.setFinancingAmt(contract.getFinancingAmt());
+            contractDto.setTtlFinancingPaid(contract.getTtlFinancingPaid());
+            contractDto.setFinancingBalance(contract.getFinancingBalance());
+            contractDto.setTtlPayment(contract.getTtlPayment());
+            contractDto.setTtlBalance(contract.getTtlBalance());
             contractDto.setUnit(unit);
         } else {
 
