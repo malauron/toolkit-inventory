@@ -8,13 +8,19 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Date;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProjectContractServiceImp implements ProjectContractService {
 
     final ProjectContractRepository contractRepository;
+    final ProjectContractEquityScheduleRepository scheduleRepository;
     final ProjectUnitRepository unitRepository;
     final ProjectClientRepository clientRepository;
     final ProjectBrokerRepository brokerRepository;
@@ -25,6 +31,7 @@ public class ProjectContractServiceImp implements ProjectContractService {
     @Autowired
     public ProjectContractServiceImp(
             ProjectContractRepository contractRepository,
+            ProjectContractEquityScheduleRepository scheduleRepository,
             ProjectUnitRepository unitRepository,
             ProjectClientRepository clientRepository,
             ProjectBrokerRepository brokerRepository,
@@ -32,6 +39,7 @@ public class ProjectContractServiceImp implements ProjectContractService {
             ProjectParameterRepository parameterRepository
     ){
         this.contractRepository = contractRepository;
+        this.scheduleRepository = scheduleRepository;
         this.unitRepository = unitRepository;
         this.clientRepository = clientRepository;
         this.brokerRepository = brokerRepository;
@@ -45,8 +53,10 @@ public class ProjectContractServiceImp implements ProjectContractService {
         contractDto.setErrorCode(null);
         contractDto.setErrorDescription(null);
 
-        ProjectUnit unit = null;
-        ProjectContract contract = null;
+        ProjectUnit unit;
+        ProjectContract contract;
+
+        ProjectParameter param = this.parameterRepository.findById(1L).get();
 
         if (contractDto.getContractId() == null || contractDto.getContractId() == 0) {
 
@@ -82,7 +92,7 @@ public class ProjectContractServiceImp implements ProjectContractService {
                 return contractDto;
             }  else {
 
-                if (contractDto.getUnit().getVersion() != optUnit.get().getVersion()) {
+                if (!contractDto.getUnit().getVersion().equals(optUnit.get().getVersion())) {
                     contractDto.setErrorCode("1");
                     contractDto.setErrorDescription("The record you are trying to save contains stale data.");
                     return contractDto;
@@ -149,6 +159,7 @@ public class ProjectContractServiceImp implements ProjectContractService {
 
             }
 
+            Set<ProjectContractEquitySchedule> equitySchedules;
             BigDecimal unitPrice;
             BigDecimal equityPrc;
             BigDecimal equityAmt;
@@ -156,8 +167,6 @@ public class ProjectContractServiceImp implements ProjectContractService {
             BigDecimal financingPrc;
             BigDecimal financingAmt;
             BigDecimal financingBalance;
-
-            ProjectParameter param = this.parameterRepository.findById(1L).get();
 
             equityPrc = param.getEquityPrc();
             unitPrice = unit.getUnitPrice();
@@ -198,6 +207,8 @@ public class ProjectContractServiceImp implements ProjectContractService {
 
             this.contractRepository.saveAndFlush(contract);
 
+            equitySchedules = generateEquitySchedule(contract, LocalDate.now(), param.getEquityStartDay(), contract.getEquityAmt(), param.getEquityMonths());
+
             unit.setCurrentContract(contract);
 
             this.unitRepository.saveAndFlush(unit);
@@ -216,6 +227,8 @@ public class ProjectContractServiceImp implements ProjectContractService {
             contractDto.setTtlPayment(contract.getTtlPayment());
             contractDto.setTtlBalance(contract.getTtlBalance());
             contractDto.setUnit(unit);
+            contractDto.setEquitySchedules(equitySchedules);
+
         } else {
 
             Optional<ProjectContract> optContract = this.contractRepository.findById(contractDto.getContractId());
@@ -231,10 +244,71 @@ public class ProjectContractServiceImp implements ProjectContractService {
             contract.setRemarks(contractDto.getRemarks());
 
             this.contractRepository.saveAndFlush(contract);
+
         }
 
-        System.out.println(LocalDate.now().plusDays(45));
         return contractDto;
+
+    }
+
+    private Set<ProjectContractEquitySchedule> generateEquitySchedule(
+            ProjectContract contract,
+            LocalDate reservationDate,
+            Long daysCount,
+            BigDecimal equityAmt,
+            Long monthsToPay) {
+
+        LocalDate payDate = reservationDate.plusDays(daysCount);
+        int dayNo = payDate.getDayOfMonth();
+        BigDecimal payableEquity = equityAmt.divide(BigDecimal.valueOf(monthsToPay), 0, RoundingMode.HALF_UP);
+        Set<ProjectContractEquitySchedule> equitySchedules = new HashSet<>();
+
+        while (monthsToPay > 0) {
+
+
+            ProjectContractEquitySchedule equitySchedule = new ProjectContractEquitySchedule();
+
+            equitySchedule.setContract(contract);
+            equitySchedule.setEquityPaid(BigDecimal.ZERO);
+
+            if (dayNo > 28) {
+                try {
+                    payDate = payDate.withDayOfMonth(dayNo);
+                } catch (DateTimeException e1) {
+                    try {
+                        payDate = payDate.withDayOfMonth(30);
+                    } catch (DateTimeException e2) {
+                        try {
+                            payDate = payDate.withDayOfMonth(29);
+                        } catch (DateTimeException e3) {
+                            payDate = payDate.withDayOfMonth(28);
+                        }
+                    }
+                }
+            }
+            equitySchedule.setDueDate(Date.valueOf(payDate));
+
+            if (equityAmt.compareTo(payableEquity) > 0) {
+                if (monthsToPay > 1) {
+                    equitySchedule.setPayableEquity(payableEquity);
+                    equityAmt = equityAmt.subtract(payableEquity);
+                } else {
+                    equitySchedule.setPayableEquity(equityAmt);
+                    equityAmt = BigDecimal.ZERO;
+                }
+            } else {
+                equitySchedule.setPayableEquity(equityAmt);
+                equityAmt = BigDecimal.ZERO;
+            }
+
+            scheduleRepository.save(equitySchedule);
+
+            equitySchedules.add(equitySchedule);
+            payDate = payDate.plusMonths(1);
+            monthsToPay --;
+        }
+
+        return equitySchedules;
 
     }
 

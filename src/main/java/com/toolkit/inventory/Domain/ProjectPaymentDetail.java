@@ -28,14 +28,14 @@ public class ProjectPaymentDetail {
     @JoinColumn(name = "contract_id")
     private ProjectContract contract;
 
-    @Column(name = "reservation")
-    private BigDecimal reservation;
+    @Column(name = "reservation_paid")
+    private BigDecimal reservationPaid;
 
-    @Column(name = "equity")
-    private BigDecimal equity;
+    @Column(name = "equity_paid")
+    private BigDecimal equityPaid;
 
-    @Column(name = "financing")
-    private BigDecimal financing;
+    @Column(name = "financing_paid")
+    private BigDecimal financingPaid;
 
     @Column(name = "others")
     private BigDecimal others;

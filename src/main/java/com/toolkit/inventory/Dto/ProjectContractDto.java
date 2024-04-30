@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -27,6 +28,7 @@ public class ProjectContractDto {
     private BigDecimal ttlPayment;
     private BigDecimal ttlBalance;
     private String remarks;
+    private Set<ProjectContractEquitySchedule> equitySchedules;
     private String errorCode;
     private String errorDescription;
 }

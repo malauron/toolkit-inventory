@@ -24,7 +24,7 @@ public interface ButcheryProductionItemRepository extends JpaRepository<Butchery
     @Query(value = "SELECT b FROM ButcheryProductionItem  b WHERE b.butcheryProduction = :butcheryProduction ORDER BY b.item.itemId")
     Set<ButcheryProductionItem> findByButcheryProductionOrderByItemId(ButcheryProduction butcheryProduction);
 
-    @Query(value = "SELect b.item AS item, b.requiredUom AS requiredUom, SUM(b.producedQty) AS producedQty, SUM(b.producedWeightKg) AS totalProducedWeightKg  " +
+    @Query(value = "SELECT b.item AS item, b.requiredUom AS requiredUom, SUM(b.producedQty) AS producedQty, SUM(b.producedWeightKg) AS totalProducedWeightKg  " +
                     "FROM ButcheryProductionItem  b WHERE b.butcheryProduction = :butcheryProduction " +
                     "AND b.butcheryProduction.productionStatus = 'Posted' " +
                     "GROUP BY b.item, b.requiredUom")

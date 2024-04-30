@@ -33,4 +33,7 @@ public class ProjectParameter {
     @Column(name = "equity_start_day")
     private Long equityStartDay;
 
+    @Column(name = "equity_months")
+    private Long equityMonths;
+
 }

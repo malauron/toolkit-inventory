@@ -1,9 +1,11 @@
 package com.toolkit.inventory.Service;
 
 import com.toolkit.inventory.Domain.Project;
+import com.toolkit.inventory.Domain.ProjectContractEquitySchedule;
 import com.toolkit.inventory.Domain.ProjectUnit;
 import com.toolkit.inventory.Domain.ProjectUnitStatus;
 import com.toolkit.inventory.Dto.ProjectUnitDto;
+import com.toolkit.inventory.Repository.ProjectContractEquityScheduleRepository;
 import com.toolkit.inventory.Repository.ProjectRepository;
 import com.toolkit.inventory.Repository.ProjectUnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,20 +13,24 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProjectUnitServiceImp implements ProjectUnitService {
 
     final ProjectRepository projectRepository;
     final ProjectUnitRepository unitRepository;
+    final ProjectContractEquityScheduleRepository equityScheduleRepository;
 
     @Autowired
     public ProjectUnitServiceImp(
             ProjectRepository projectRepository,
-            ProjectUnitRepository unitRepository
+            ProjectUnitRepository unitRepository,
+            ProjectContractEquityScheduleRepository equityScheduleRepository
     ){
         this.projectRepository = projectRepository;
         this.unitRepository = unitRepository;
+        this.equityScheduleRepository = equityScheduleRepository;
     }
 
     @Override
@@ -43,6 +49,9 @@ public class ProjectUnitServiceImp implements ProjectUnitService {
             unitDto.setUnitStatus(optUnit.get().getUnitStatus());
             unitDto.setCurrentContract(optUnit.get().getCurrentContract());
             unitDto.setVersion(optUnit.get().getVersion());
+
+            Set<ProjectContractEquitySchedule> equitySchedules = this.equityScheduleRepository.findByProjectContract(optUnit.get().getCurrentContract());
+            unitDto.setEquitySchedules(equitySchedules);
         }
 
         return unitDto;
