@@ -17,5 +17,4 @@ public interface ProjectContractCurrentView {
     ProjectBroker getBroker();
     BigDecimal getUnitPrice();
     BigDecimal getEquityBalance();
-
 }
