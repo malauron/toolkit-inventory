@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/toolkit-inventory
+    username: genesis
+    password: svgfile#828
+
+  data:
+    rest:
+      detection-strategy: ANNOTATED
+      base-path: api
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+allowed:
+  origins: '*'
+
+
+server:
+  port: 8443
+
+jwt:
+  secret: 'eyJhbGciOiJIUzUxMiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY2NTExMTIxNywiaWF0IjoxNjY1MTExMjE3fQ.QaOzaad7qQS04PXMWdxEUKbDO8msIcf2uEWqVD4Xi_iV23qWmvOXmqtB4MaaYr6Fe4G23LsbA3GfKfOUUxfE1w'
