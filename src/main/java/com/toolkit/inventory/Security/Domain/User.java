@@ -32,7 +32,7 @@ public class User {
   @Column(name = "password")
   private String password;
 
-  @Singular
+//  @Singular
   @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
           joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
