@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
-@RepositoryRestResource
+//@RepositoryRestResource
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
-    @Query(value = "SELECT u.userId AS userId, u.username AS username, u.roles AS roles " +
+    @Query(value = "SELECT u.userId AS userId, u.username AS username, u.fullName AS fullName, u.email AS email " +
             "FROM User u " +
             "WHERE u.username LIKE %:searchDesc% " +
             "ORDER BY u.username ")
@@ -23,7 +23,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @RequestParam("searchDesc") String searchDesc,
             Pageable pageable);
 
-
+//    @Query(value = "SELECT u " +
+//            "FROM User u " +
+//            "WHERE u.username LIKE %:searchDesc% " +
+//            "ORDER BY u.username ")
+//    Page<UserView> findUsers(
+//            @RequestParam("searchDesc") String searchDesc,
+//            Pageable pageable);
 
 
 //    @Query(value = "select u.* from users u " +

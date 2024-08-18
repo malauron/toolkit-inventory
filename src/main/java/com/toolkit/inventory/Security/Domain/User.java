@@ -32,7 +32,13 @@ public class User {
   @Column(name = "password")
   private String password;
 
-//  @Singular
+  @Column(name = "full_name")
+  private String fullName;
+
+  @Column(name = "email")
+  private String email;
+
+  @Singular
   @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
   @JoinTable(name = "user_roles",
           joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},

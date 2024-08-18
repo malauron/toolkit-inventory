@@ -11,7 +11,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 import java.util.Set;
 
-@RepositoryRestResource
+//@RepositoryRestResource
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
     @Query(value = "select r.* from roles r " +
